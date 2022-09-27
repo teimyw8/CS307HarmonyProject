@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
-import 'package:harmony_app/screens/welcome_screen.dart';
+import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           title: 'Harmony',
           initialRoute: '/',
           routes: {
-            '/': (context) => const WelcomeScreen(),
+            '/': (context) => const LoginScreen(),
           },
         );
       },
