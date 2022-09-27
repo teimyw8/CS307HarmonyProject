@@ -35,6 +35,14 @@ class AppTextStyles {
         fontSize: 18.sp);
   }
 
+  static TextStyle appBar() {
+    return TextStyle(
+        color: AppColors.black,
+        fontWeight: FontWeight.w600,
+        fontFamily: 'Inter',
+        fontSize: 26.sp);
+  }
+
   static TextStyle textField() {
     return TextStyle(
         color: AppColors.grey70,

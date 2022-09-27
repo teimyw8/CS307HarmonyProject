@@ -10,14 +10,14 @@ import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final AuthProvider _authProvider =
       Provider.of<AuthProvider>(Get.context!, listen: false);
 
@@ -31,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColors.white,
         appBar: CustomAppBar(
-          title: "Sign Up",
+          title: "Forgot Password",
           needBackArrow: true,
         ),
         body: SingleChildScrollView(
@@ -43,59 +43,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 builder: (BuildContext context, AuthProvider myAuthProvider,
                     Widget? child) {
                   return Form(
-                    key: myAuthProvider.signUpKey,
+                    key: myAuthProvider.resetPasswordKey,
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        Text(
+                          "To reset password, enter your email address",
+                          style: AppTextStyles.footNote(),
+                        ),
                         CustomTextField(
                           hintText: "Email",
                           hintStyle: AppTextStyles.hintTextField(),
                           style: AppTextStyles.textField(),
                           inputType: TextInputType.emailAddress,
                           validator: FieldValidator.validateEmail,
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        CustomTextField(
-                          hintText: "First Name",
-                          hintStyle: AppTextStyles.hintTextField(),
-                          style: AppTextStyles.textField(),
-                          inputType: TextInputType.name,
-                          validator: FieldValidator.validateEmail,
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        CustomTextField(
-                          hintText: "Last Name",
-                          hintStyle: AppTextStyles.hintTextField(),
-                          style: AppTextStyles.textField(),
-                          inputType: TextInputType.name,
-                          validator: FieldValidator.validateEmail,
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        CustomTextField(
-                          hintText: "Password",
-                          isPassword: true,
-                          isTextObscure: true,
-                          hintStyle: AppTextStyles.hintTextField(),
-                          style: AppTextStyles.textField(),
-                          inputType: TextInputType.text,
-                          validator: FieldValidator.validatePassword,
-                        ),
-                        SizedBox(
-                          height: 20.h,
-                        ),
-                        CustomTextField(
-                          hintText: "Re-enter Password",
-                          isPassword: true,
-                          isTextObscure: true,
-                          hintStyle: AppTextStyles.hintTextField(),
-                          style: AppTextStyles.textField(),
-                          inputType: TextInputType.text,
-                          validator: FieldValidator.validatePassword,
                         ),
                       ],
                     ),
@@ -113,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   buttonColor: AppColors.green,
                   widget: Text(
-                    "Sign Up",
+                    "Reset",
                     style: AppTextStyles.button(),
                   ),
                 ),
