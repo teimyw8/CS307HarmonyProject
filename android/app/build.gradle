@@ -47,10 +47,11 @@ android {
         applicationId "com.example.harmony_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -66,14 +67,9 @@ flutter {
     source '../..'
 }
 
-plugins {
-    // Add the Google services Gradle plugin
-    id 'com.google.gms.google-services'
-}
-
-
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'androidx.multidex:multidex: 2.0.1'
 }
