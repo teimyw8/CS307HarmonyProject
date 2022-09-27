@@ -24,6 +24,14 @@ class AppTextStyles {
         color: AppColors.grey70,
         fontWeight: FontWeight.w400,
         fontFamily: 'Inter',
+        fontSize: 16.sp);
+  }
+
+  static TextStyle footNote() {
+    return TextStyle(
+        color: AppColors.grey70,
+        fontWeight: FontWeight.w400,
+        fontFamily: 'Inter',
         fontSize: 18.sp);
   }
 

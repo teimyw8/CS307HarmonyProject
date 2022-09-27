@@ -77,8 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        //TODO navigate to Forgot Password Page
-                        print("clicked forgot password");
+                        _authProvider.onForgotPasswordTextClicked();
                       },
                       child: Text(
                         "Forgot password?",
@@ -94,7 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   child: CustomAppButton(
                     onTap: () {
-                      //todo call provider function to Login
                       _authProvider.loginUser();
                     },
                     buttonColor: AppColors.green,
@@ -104,6 +102,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("New to Harmony? ", style: AppTextStyles.footNote().copyWith(color: AppColors.black),),
+                    GestureDetector(
+                      onTap: () {
+                        _authProvider.onSignUpTextClicked();
+                      },
+                        child: Text("Sign Up", style: AppTextStyles.footNote(),))
+                  ],)
               ],
             ),
           ),

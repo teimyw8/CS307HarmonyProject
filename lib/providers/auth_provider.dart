@@ -8,7 +8,17 @@ class AuthProvider with ChangeNotifier {
   ///with an appropriate error shows up.
   Future<void> loginUser() async {
     if (loginKey.currentState!.validate()) {
-
+      //todo log user in through Firebase and redirect user to HomePage
     }
+  }
+
+  ///this function is triggered when the user clicks on ForgotPassword text
+  Future<void> onForgotPasswordTextClicked() async {
+
+  }
+
+  ///this function is triggered when the user clicks on SignUp text
+  Future<void> onSignUpTextClicked() async {
+
   }
 }
