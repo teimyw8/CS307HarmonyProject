@@ -52,6 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           style: AppTextStyles.textField(),
                           inputType: TextInputType.emailAddress,
                           validator: FieldValidator.validateEmail,
+                          controller: myAuthProvider.signUpEmailTextEditingController,
                         ),
                         SizedBox(
                           height: 20.h,
@@ -61,7 +62,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintStyle: AppTextStyles.hintTextField(),
                           style: AppTextStyles.textField(),
                           inputType: TextInputType.name,
-                          validator: FieldValidator.validateEmail,
+                          validator: FieldValidator.validateRegularField,
+                          controller: myAuthProvider.signUpFirstNameTextEditingController,
                         ),
                         SizedBox(
                           height: 20.h,
@@ -71,7 +73,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintStyle: AppTextStyles.hintTextField(),
                           style: AppTextStyles.textField(),
                           inputType: TextInputType.name,
-                          validator: FieldValidator.validateEmail,
+                          validator: FieldValidator.validateRegularField,
+                          controller: myAuthProvider.signUpLastNameTextEditingController,
                         ),
                         SizedBox(
                           height: 20.h,
@@ -84,6 +87,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           style: AppTextStyles.textField(),
                           inputType: TextInputType.text,
                           validator: FieldValidator.validatePassword,
+                          controller: myAuthProvider.signUpPasswordTextEditingController,
                         ),
                         SizedBox(
                           height: 20.h,
@@ -95,7 +99,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintStyle: AppTextStyles.hintTextField(),
                           style: AppTextStyles.textField(),
                           inputType: TextInputType.text,
-                          validator: FieldValidator.validatePassword,
+                          validator: (value) => FieldValidator.validateReenterPassword(value, myAuthProvider.signUpPasswordTextEditingController.text),
+                          controller: myAuthProvider.signUpReEnterPasswordTextEditingController,
                         ),
                       ],
                     ),
@@ -110,7 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 52.h,
                 child: CustomAppButton(
                   onTap: () {
-                    _authProvider.loginUser();
+                    _authProvider.signUpUser();
                   },
                   buttonColor: AppColors.green,
                   widget: Text(

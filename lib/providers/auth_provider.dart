@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
+import 'package:harmony_app/screens/home_screen.dart';
 import 'package:harmony_app/screens/sign_up_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
+import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 
 import '../screens/forgot_password_screen.dart';
 
 class AuthProvider with ChangeNotifier {
   AuthService get _authService => GetIt.instance<AuthService>();
+
+  FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
 
   //LoginScreen text editing controllers
   TextEditingController loginEmailTextEditingController =
@@ -32,6 +36,8 @@ class AuthProvider with ChangeNotifier {
       TextEditingController();
   TextEditingController signUpLastNameTextEditingController =
       TextEditingController();
+  TextEditingController signUpUsernameTextEditingController =
+      TextEditingController();
 
   //this is a key used for Form inside LoginScreen()
   final loginKey = GlobalKey<FormState>();
@@ -51,7 +57,7 @@ class AuthProvider with ChangeNotifier {
           password: loginPasswordTextEditingController.text);
       print(loginResult);
       if (loginResult == ServiceConstants.SUCCESS) {
-        //todo redirect user to HomePage
+        Get.to(() => HomeScreen());
       } else {
         PopUpDialog.showAcknowledgePopUpDialog(
             title: "Error!",
@@ -65,7 +71,48 @@ class AuthProvider with ChangeNotifier {
 
   ///this function is triggered when the user clicks on Sign Up button on SignUpScreen
   Future<void> signUpUser() async {
-    if (signUpKey.currentState!.validate()) {}
+    if (signUpKey.currentState!.validate()) {
+      try {
+        var signUpResult = await _authService.signUpUser(
+            email: loginEmailTextEditingController.text,
+            password: loginPasswordTextEditingController.text);
+        if (signUpResult.runtimeType == String) {
+          //then we encountered some error
+          PopUpDialog.showAcknowledgePopUpDialog(
+              title: "Error!",
+              message: signUpResult,
+              onOkClick: () {
+                Get.close(1);
+              });
+        } else {
+          //then we sign user up successfully
+          String addUserToFirestoreResult = await _firestoreService.addUserToFirestore(
+              email: signUpEmailTextEditingController.text,
+              firstName: signUpFirstNameTextEditingController.text,
+              lastName: signUpLastNameTextEditingController.text,
+              userName: signUpUsernameTextEditingController.text);
+          if (addUserToFirestoreResult != ServiceConstants.SUCCESS) {
+            //there was some error creating a user in Firestore
+            PopUpDialog.showAcknowledgePopUpDialog(
+                title: "Error!",
+                message: addUserToFirestoreResult,
+                onOkClick: () {
+                  Get.close(1);
+                });
+          } else {
+            //we signed up user successfully and added the user to Firestore
+            Get.to(() => HomeScreen());
+          }
+        }
+      } catch (e) {
+        PopUpDialog.showAcknowledgePopUpDialog(
+            title: "Error!",
+            message: ServiceConstants.SOMETHINGWENTWRONG,
+            onOkClick: () {
+              Get.close(1);
+            });
+      }
+    }
   }
 
   ///this function is triggered when the user clicks on ForgotPassword text

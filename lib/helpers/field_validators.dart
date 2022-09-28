@@ -16,6 +16,12 @@ class FieldValidator {
     if (value!.isEmpty) return "Enter password";
     return null;
   }
+  static String? validateReenterPassword(
+      String? value, String password) {
+    if (value!.isEmpty) return "Can't be empty";
+    if (value != password) return "Passwords don\'t match";
+    return null;
+  }
 
   static String? validateRegularField(String? value) {
     if (value!.isEmpty) return "Can't be empty";
