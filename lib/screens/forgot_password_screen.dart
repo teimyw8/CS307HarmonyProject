@@ -70,6 +70,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               Container(
                 width: double.infinity,
+                height: 52.h,
                 child: CustomAppButton(
                   onTap: () {
                     _authProvider.loginUser();

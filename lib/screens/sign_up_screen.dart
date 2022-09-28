@@ -107,6 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               Container(
                 width: double.infinity,
+                height: 52.h,
                 child: CustomAppButton(
                   onTap: () {
                     _authProvider.loginUser();

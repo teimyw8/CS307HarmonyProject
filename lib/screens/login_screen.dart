@@ -58,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 CustomTextField(
                                   hintText: "Email",
+                                  controller: myAuthProvider.loginEmailTextEditingController,
                                   hintStyle: AppTextStyles.hintTextField(),
                                   style: AppTextStyles.textField(),
                                   inputType: TextInputType.emailAddress,
@@ -68,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 CustomTextField(
                                   hintText: "Password",
+                                  controller: myAuthProvider.loginPasswordTextEditingController,
                                   isPassword: true,
                                   isTextObscure: true,
                                   hintStyle: AppTextStyles.hintTextField(),
@@ -102,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Container(
                         width: double.infinity,
+                        height: 52.h,
                         child: CustomAppButton(
                           onTap: () {
                             _authProvider.loginUser();
