@@ -33,7 +33,6 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Scaffold(
               backgroundColor: AppColors.white,
-
               body: Align(
                 alignment: Alignment.center,
                 child: SingleChildScrollView(
@@ -58,7 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 CustomTextField(
                                   hintText: "Email",
-                                  controller: myAuthProvider.loginEmailTextEditingController,
+                                  controller: myAuthProvider
+                                      .loginEmailTextEditingController,
                                   hintStyle: AppTextStyles.hintTextField(),
                                   style: AppTextStyles.textField(),
                                   inputType: TextInputType.emailAddress,
@@ -69,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 CustomTextField(
                                   hintText: "Password",
-                                  controller: myAuthProvider.loginPasswordTextEditingController,
+                                  controller: myAuthProvider
+                                      .loginPasswordTextEditingController,
                                   isPassword: true,
                                   isTextObscure: true,
                                   hintStyle: AppTextStyles.hintTextField(),

@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
 import 'package:harmony_app/screens/sign_up_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
+import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 
 import '../screens/forgot_password_screen.dart';
 
@@ -11,18 +12,26 @@ class AuthProvider with ChangeNotifier {
   AuthService get _authService => GetIt.instance<AuthService>();
 
   //LoginScreen text editing controllers
-  TextEditingController loginEmailTextEditingController = TextEditingController();
-  TextEditingController loginPasswordTextEditingController = TextEditingController();
+  TextEditingController loginEmailTextEditingController =
+      TextEditingController();
+  TextEditingController loginPasswordTextEditingController =
+      TextEditingController();
 
   //ForgotPasswordScreen text editing controllers
-  TextEditingController forgotPasswordEmailTextEditingController = TextEditingController();
+  TextEditingController forgotPasswordEmailTextEditingController =
+      TextEditingController();
 
   //SignUpScreen text editing controllers
-  TextEditingController signUpEmailTextEditingController = TextEditingController();
-  TextEditingController signUpPasswordTextEditingController = TextEditingController();
-  TextEditingController signUpReEnterPasswordTextEditingController = TextEditingController();
-  TextEditingController signUpFirstNameTextEditingController = TextEditingController();
-  TextEditingController signUpLastNameTextEditingController = TextEditingController();
+  TextEditingController signUpEmailTextEditingController =
+      TextEditingController();
+  TextEditingController signUpPasswordTextEditingController =
+      TextEditingController();
+  TextEditingController signUpReEnterPasswordTextEditingController =
+      TextEditingController();
+  TextEditingController signUpFirstNameTextEditingController =
+      TextEditingController();
+  TextEditingController signUpLastNameTextEditingController =
+      TextEditingController();
 
   //this is a key used for Form inside LoginScreen()
   final loginKey = GlobalKey<FormState>();
@@ -40,10 +49,16 @@ class AuthProvider with ChangeNotifier {
       String loginResult = await _authService.loginUser(
           email: loginEmailTextEditingController.text,
           password: loginPasswordTextEditingController.text);
+      print(loginResult);
       if (loginResult == ServiceConstants.SUCCESS) {
         //todo redirect user to HomePage
       } else {
-        //todo show error
+        PopUpDialog.showAcknowledgePopUpDialog(
+            title: "Error!",
+            message: loginResult,
+            onOkClick: () {
+              Get.close(1);
+            });
       }
     }
   }
