@@ -9,7 +9,11 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   @override
-  Widget build(BuildContext context)
-    return Container();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+      ),
+    );
   }
 }
