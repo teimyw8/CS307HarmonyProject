@@ -14,6 +14,14 @@ class FieldValidator {
 
   static String? validatePassword(String? value) {
     if (value!.isEmpty) return "Enter password";
+    if (value.length < 6) return "Must be at least 6 characters long.";
+
+    return null;
+  }
+  static String? validateReenterPassword(
+      String? value, String password) {
+    if (value!.isEmpty) return "Can't be empty";
+    if (value != password) return "Passwords don\'t match";
     return null;
   }
 
