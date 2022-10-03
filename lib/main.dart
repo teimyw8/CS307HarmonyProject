@@ -43,9 +43,9 @@ class MyApp extends StatelessWidget {
           },
           debugShowCheckedModeBanner: false,
           title: 'Harmony',
-          initialRoute: '/',
+          initialRoute: '/login',
           routes: {
-            '/': (context) => const LoginScreen(),
+            '/login': (context) => const LoginScreen(),
           },
         );
       },
