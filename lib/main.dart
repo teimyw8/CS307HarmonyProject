@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => AuthService());
 }
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
