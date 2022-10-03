@@ -6,11 +6,13 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
+import 'package:harmony_app/services/firestore_service.dart';
 import 'package:provider/provider.dart';
 
 ///this function sets up the Service variables instances
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => AuthService());
+  GetIt.instance.registerLazySingleton(() => FirestoreService());
 }
 
 void main() async {

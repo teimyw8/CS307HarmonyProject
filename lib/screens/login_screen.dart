@@ -21,6 +21,22 @@ class _LoginScreenState extends State<LoginScreen> {
       Provider.of<AuthProvider>(Get.context!, listen: false);
 
   @override
+  void initState() {
+    Future.delayed(Duration(seconds: 0), () {
+      _authProvider.initializeLoginScreenVariables();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Future.delayed(Duration(seconds: 0), () {
+      _authProvider.disposeLoginScreenVariables();
+    });
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {

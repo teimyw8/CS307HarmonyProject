@@ -22,6 +22,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       Provider.of<AuthProvider>(Get.context!, listen: false);
 
   @override
+  void initState() {
+    Future.delayed(Duration(seconds: 0), () {
+      _authProvider.initializeForgotPasswordScreenVariables();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Future.delayed(Duration(seconds: 0), () {
+      _authProvider.disposeForgotPasswordScreenVariables();
+    });
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {

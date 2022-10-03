@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
 
 class FirestoreService {
@@ -22,25 +23,24 @@ class FirestoreService {
   }
 
   ///this function makes a Logout request to FirebaseAuth.
-  ///RETURN VALUES:
-  /// SUCCESS
-  /// SOMETHINGWENTWRONG
-  Future<dynamic> addUserToFirestore(
-      {required String email,
+  ///THROWS AuthException IF FAILS
+  Future<void> addUserToFirestore(
+      {required String uid,
+        required String email,
       required String firstName,
       required String lastName,
-      required String userName}) async {
+      required String userName,}) async {
     try {
-      var usersCollection =  firebaseFirestore.collection('users');
-      usersCollection.add({
+      var usersDocRef =  firebaseFirestore.collection('users').doc(uid);
+      await usersDocRef.set({
         "email": email,
         "firstName": firstName,
         "lastName": lastName,
-        "userName": userName
+        "userName": userName,
+        "uid": uid,
       });
-      return ServiceConstants.SUCCESS;
     } catch (e) {
-      return ServiceConstants.SOMETHINGWENTWRONG;
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
 }

@@ -14,6 +14,8 @@ class FieldValidator {
 
   static String? validatePassword(String? value) {
     if (value!.isEmpty) return "Enter password";
+    if (value.length < 6) return "Must be at least 6 characters long.";
+
     return null;
   }
   static String? validateReenterPassword(
