@@ -11,7 +11,6 @@ import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import '../screens/forgot_password_screen.dart';
 
 class AuthProvider with ChangeNotifier {
-
   AuthService get _authService => GetIt.instance<AuthService>();
 
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
@@ -70,16 +69,11 @@ class AuthProvider with ChangeNotifier {
 
   ///this function is used to initialize variables for SignUpScreen
   void initializeSignUpScreenVariables() {
-    signUpEmailTextEditingController =
-    TextEditingController();
-    signUpPasswordTextEditingController =
-    TextEditingController();
-    signUpReEnterPasswordTextEditingController =
-    TextEditingController();
-    signUpFirstNameTextEditingController =
-    TextEditingController();
-    signUpLastNameTextEditingController =
-    TextEditingController();
+    signUpEmailTextEditingController = TextEditingController();
+    signUpPasswordTextEditingController = TextEditingController();
+    signUpReEnterPasswordTextEditingController = TextEditingController();
+    signUpFirstNameTextEditingController = TextEditingController();
+    signUpLastNameTextEditingController = TextEditingController();
     notifyListeners();
   }
 
@@ -120,7 +114,7 @@ class AuthProvider with ChangeNotifier {
         await _authService.loginUser(
             email: loginEmailTextEditingController!.text,
             password: loginPasswordTextEditingController!.text);
-        Get.to(() => HomeScreen());
+        goToHomeScreen();
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
       } on FirestoreException catch (e) {
@@ -150,7 +144,7 @@ class AuthProvider with ChangeNotifier {
               userName: signUpUsernameTextEditingController!.text);
         }
         //we signed up user successfully and added the user to Firestore
-        Get.to(() => HomeScreen());
+        goToHomeScreen();
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
       } on FirestoreException catch (e) {
@@ -187,7 +181,6 @@ class AuthProvider with ChangeNotifier {
     Get.to(() => SignUpScreen());
   }
 
-
   ///this function shows an error dialog
   void showErrorDialog(String message) {
     PopUpDialog.showAcknowledgePopUpDialog(
@@ -203,8 +196,14 @@ class AuthProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
   }
+
   void stopLoading() {
     isLoading = false;
     notifyListeners();
+  }
+
+  ///this function pops all the AuthScreens and navigates user to the HomeScreen
+  void goToHomeScreen() async {
+    Get.offAll(() => HomeScreen());
   }
 }

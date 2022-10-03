@@ -7,6 +7,7 @@ import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_loader.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_text_field.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
           return LoadingOverlay(
             isLoading: myAuthProvider.isLoading,
+            progressIndicator: const CustomAppLoader(),
             child: Scaffold(
               resizeToAvoidBottomInset: true,
               backgroundColor: AppColors.white,
