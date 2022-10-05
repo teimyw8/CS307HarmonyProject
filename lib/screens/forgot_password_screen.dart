@@ -37,6 +37,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -47,6 +48,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColors.white,
         appBar: CustomAppBar(
+          isAuthAppBar: true,
           title: "Forgot Password",
           needBackArrow: true,
         ),

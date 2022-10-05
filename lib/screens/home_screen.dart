@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Stack(
           children: [
             Scaffold(
+              appBar: CustomAppBar(title: "Harmony", needBackArrow: false, needAvatar: true, needSettings: true,),
               backgroundColor: AppColors.white,
               body: Align(
                 alignment: Alignment.center,
@@ -38,9 +40,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Home Page",
-                        style: AppTextStyles.largeTitle(),
+                      Consumer<AuthProvider>(
+                        builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+                          return Text(
+                            myAuthProvider.currentUserModel.toString(),
+                            style: AppTextStyles.footNote(),
+                          );
+                        },
                       ),
                     ],
                   ),
