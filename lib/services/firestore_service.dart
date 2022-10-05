@@ -14,11 +14,11 @@ class FirestoreService {
       var userDoc = await firebaseFirestore.collection('users').doc(uid).get();
       var userDocData = userDoc.data();
       if (!userDoc.exists) {
-        return null;
+        throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
       }
       return userDocData;
     } catch (e) {
-      return null;
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
 

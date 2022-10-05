@@ -48,8 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
         builder:
             (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
           return LoadingOverlay(
-            // isLoading: myAuthProvider.isLoading,
-            isLoading: true,
+            isLoading: myAuthProvider.isLoading,
             progressIndicator: const CustomAppLoader(),
             child: Scaffold(
               resizeToAvoidBottomInset: false,

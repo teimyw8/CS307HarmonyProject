@@ -38,9 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Home Page",
-                        style: AppTextStyles.largeTitle(),
+                      Consumer<AuthProvider>(
+                        builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+                          return Text(
+                            myAuthProvider.currentUserModel.toString(),
+                            style: AppTextStyles.footNote(),
+                          );
+                        },
                       ),
                     ],
                   ),

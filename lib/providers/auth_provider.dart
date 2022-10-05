@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
+import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/screens/home_screen.dart';
 import 'package:harmony_app/screens/sign_up_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
@@ -11,6 +12,9 @@ import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import '../screens/forgot_password_screen.dart';
 
 class AuthProvider with ChangeNotifier {
+
+  UserModel? currentUserModel;
+
   AuthService get _authService => GetIt.instance<AuthService>();
 
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
@@ -114,6 +118,8 @@ class AuthProvider with ChangeNotifier {
         await _authService.loginUser(
             email: loginEmailTextEditingController!.text,
             password: loginPasswordTextEditingController!.text);
+        var userDocData = await _firestoreService.retrieveUserFromFirestore(uid: _authService.firebaseAuth.currentUser!.uid);
+        currentUserModel = UserModel.fromJson(userDocData!);
         goToHomeScreen();
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
@@ -142,6 +148,8 @@ class AuthProvider with ChangeNotifier {
               firstName: signUpFirstNameTextEditingController!.text,
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text);
+          var userDocData = await _firestoreService.retrieveUserFromFirestore(uid: uid);
+          currentUserModel = UserModel.fromJson(userDocData!);
         }
         //we signed up user successfully and added the user to Firestore
         goToHomeScreen();
