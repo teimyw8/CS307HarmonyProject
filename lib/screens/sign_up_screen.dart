@@ -55,6 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               resizeToAvoidBottomInset: true,
               backgroundColor: AppColors.white,
               appBar: CustomAppBar(
+                isAuthAppBar: true,
                 title: "Sign Up",
                 needBackArrow: true,
               ),

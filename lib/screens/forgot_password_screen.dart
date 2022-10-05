@@ -47,6 +47,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColors.white,
         appBar: CustomAppBar(
+          isAuthAppBar: true,
           title: "Forgot Password",
           needBackArrow: true,
         ),
