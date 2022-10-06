@@ -169,7 +169,7 @@ class AuthProvider with ChangeNotifier {
     if (resetPasswordKey.currentState!.validate()) {
       startLoading();
       try {
-        //todo call service function here
+        await _authService.forgotPassword(email: forgotPasswordEmailTextEditingController!.text);
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
       } catch (e) {

@@ -51,4 +51,22 @@ class AuthService {
       throw AuthException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
+
+  ///this function makes a forgot password request to FirebaseAuth.
+  ///THROWS AuthException IF FAILS
+  Future<void> forgotPassword(
+      {required String email}) async {
+    try {
+      print(email);
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw AuthException(ServiceConstants.ACCOUNTNOTFOUND);
+      }
+      throw AuthException(ServiceConstants.SOMETHINGWENTWRONG);
+    } catch (e) {
+      throw AuthException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+  }
+
 }

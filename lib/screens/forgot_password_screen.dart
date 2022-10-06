@@ -77,6 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           style: AppTextStyles.textField(),
                           inputType: TextInputType.emailAddress,
                           validator: FieldValidator.validateEmail,
+                          controller: _authProvider.forgotPasswordEmailTextEditingController,
                         ),
                       ],
                     ),
@@ -91,7 +92,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 height: 52.h,
                 child: CustomAppButton(
                   onTap: () {
-                    _authProvider.loginUser();
+                    _authProvider.onResetPasswordClicked();
                   },
                   buttonColor: AppColors.green,
                   widget: Text(
