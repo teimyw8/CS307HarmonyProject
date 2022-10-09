@@ -71,7 +71,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               overflow: TextOverflow.clip,
                               maxLines: 1,
                               style: AppTextStyles.appBar(),
-                              selectionColor: AppColors.green,
                             ),
                           ),
                         ),

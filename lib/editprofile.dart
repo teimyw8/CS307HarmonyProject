@@ -14,8 +14,17 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Profile", needBackArrow: true, needAvatar: true, needSettings: false,),
+      appBar: CustomAppBar(
+        title: "Profile",
+        needBackArrow: true,
+        needAvatar: true,
+        needSettings: false,
+      ),
       backgroundColor: AppColors.white,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.edit),
+      ),
     );
   }
 }
