@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:harmony_app/editprofile.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 
@@ -69,6 +70,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 overflow: TextOverflow.clip,
                                 maxLines: 1,
                                 style: AppTextStyles.appBar()),
+                          ),
+                        ),
+                      if (needSettings)
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return const EditProfile();
+                                  },
+                                ),
+                              );
+                            },
+                            child: const Icon(
+                              Icons.settings,
+                            ),
                           ),
                         ),
                       (needAvatar)

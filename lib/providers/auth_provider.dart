@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
+import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/screens/home_screen.dart';
 import 'package:harmony_app/screens/sign_up_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
@@ -12,33 +13,35 @@ import '../screens/forgot_password_screen.dart';
 
 class AuthProvider with ChangeNotifier {
 
+  UserModel? currentUserModel;
+
   AuthService get _authService => GetIt.instance<AuthService>();
 
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
 
   //LoginScreen text editing controllers
   TextEditingController? loginEmailTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? loginPasswordTextEditingController =
-      TextEditingController();
+  TextEditingController();
 
   //ForgotPasswordScreen text editing controllers
   TextEditingController? forgotPasswordEmailTextEditingController =
-      TextEditingController();
+  TextEditingController();
 
   //SignUpScreen text editing controllers
   TextEditingController? signUpEmailTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpPasswordTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpReEnterPasswordTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpFirstNameTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpLastNameTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpUsernameTextEditingController =
-      TextEditingController();
+  TextEditingController();
 
   //this is a key used for Form inside LoginScreen()
   final loginKey = GlobalKey<FormState>();
@@ -70,16 +73,11 @@ class AuthProvider with ChangeNotifier {
 
   ///this function is used to initialize variables for SignUpScreen
   void initializeSignUpScreenVariables() {
-    signUpEmailTextEditingController =
-    TextEditingController();
-    signUpPasswordTextEditingController =
-    TextEditingController();
-    signUpReEnterPasswordTextEditingController =
-    TextEditingController();
-    signUpFirstNameTextEditingController =
-    TextEditingController();
-    signUpLastNameTextEditingController =
-    TextEditingController();
+    signUpEmailTextEditingController = TextEditingController();
+    signUpPasswordTextEditingController = TextEditingController();
+    signUpReEnterPasswordTextEditingController = TextEditingController();
+    signUpFirstNameTextEditingController = TextEditingController();
+    signUpLastNameTextEditingController = TextEditingController();
     notifyListeners();
   }
 
@@ -120,7 +118,9 @@ class AuthProvider with ChangeNotifier {
         await _authService.loginUser(
             email: loginEmailTextEditingController!.text,
             password: loginPasswordTextEditingController!.text);
-        Get.to(() => HomeScreen());
+        var userDocData = await _firestoreService.retrieveUserFromFirestore(uid: _authService.firebaseAuth.currentUser!.uid);
+        currentUserModel = UserModel.fromJson(userDocData!);
+        goToHomeScreen();
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
       } on FirestoreException catch (e) {
@@ -148,9 +148,11 @@ class AuthProvider with ChangeNotifier {
               firstName: signUpFirstNameTextEditingController!.text,
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text);
+          var userDocData = await _firestoreService.retrieveUserFromFirestore(uid: uid);
+          currentUserModel = UserModel.fromJson(userDocData!);
         }
         //we signed up user successfully and added the user to Firestore
-        Get.to(() => HomeScreen());
+        goToHomeScreen();
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
       } on FirestoreException catch (e) {
@@ -187,7 +189,6 @@ class AuthProvider with ChangeNotifier {
     Get.to(() => SignUpScreen());
   }
 
-
   ///this function shows an error dialog
   void showErrorDialog(String message) {
     PopUpDialog.showAcknowledgePopUpDialog(
@@ -203,8 +204,14 @@ class AuthProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
   }
+
   void stopLoading() {
     isLoading = false;
     notifyListeners();
+  }
+
+  ///this function pops all the AuthScreens and navigates user to the HomeScreen
+  void goToHomeScreen() async {
+    Get.offAll(() => HomeScreen());
   }
 }
