@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -24,9 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        appBar: AppBar(
+
+        ),
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.white,
         body: Stack(
+          alignment: AlignmentDirectional.topStart,
           children: [
             Scaffold(
               backgroundColor: AppColors.white,
@@ -46,6 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+            ),
+            ElevatedButton(
+                onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => friends_list_page())
+                  );
+                },
+                child: Text('friends list temporary button')
             ),
           ],
         ),
