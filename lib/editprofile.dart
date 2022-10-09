@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+
+import 'helpers/colors.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -11,9 +14,8 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
+      appBar: CustomAppBar(title: "Profile", needBackArrow: true, needAvatar: true, needSettings: false,),
+      backgroundColor: AppColors.white,
     );
   }
 }

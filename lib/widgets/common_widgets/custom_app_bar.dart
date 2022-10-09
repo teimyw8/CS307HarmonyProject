@@ -66,14 +66,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         Expanded(
                           child: Align(
                             alignment: Alignment.center,
-                            child: Text(title,
-                                overflow: TextOverflow.clip,
-                                maxLines: 1,
-                                style: AppTextStyles.appBar()),
+                            child: Text(
+                              title,
+                              overflow: TextOverflow.clip,
+                              maxLines: 1,
+                              style: AppTextStyles.appBar(),
+                              selectionColor: AppColors.green,
+                            ),
                           ),
                         ),
                       if (needSettings)
-                        Center(
+                        Container(
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).push(
