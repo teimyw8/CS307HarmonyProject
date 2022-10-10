@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
@@ -20,7 +21,8 @@ void main() async {
   setupLocator();
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => AuthProvider())
+      ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ChangeNotifierProvider(create: (_) => EditProfileProvider()),
     ], child: const MyApp()),
   );
 }
