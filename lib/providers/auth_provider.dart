@@ -12,7 +12,6 @@ import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import '../screens/forgot_password_screen.dart';
 
 class AuthProvider with ChangeNotifier {
-
   UserModel? currentUserModel;
 
   AuthService get _authService => GetIt.instance<AuthService>();
@@ -118,7 +117,8 @@ class AuthProvider with ChangeNotifier {
         await _authService.loginUser(
             email: loginEmailTextEditingController!.text,
             password: loginPasswordTextEditingController!.text);
-        var userDocData = await _firestoreService.retrieveUserFromFirestore(uid: _authService.firebaseAuth.currentUser!.uid);
+        var userDocData = await _firestoreService.retrieveUserFromFirestore(
+            uid: _authService.firebaseAuth.currentUser!.uid);
         currentUserModel = UserModel.fromJson(userDocData!);
         goToHomeScreen();
       } on AuthException catch (e) {
@@ -148,7 +148,8 @@ class AuthProvider with ChangeNotifier {
               firstName: signUpFirstNameTextEditingController!.text,
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text);
-          var userDocData = await _firestoreService.retrieveUserFromFirestore(uid: uid);
+          var userDocData =
+              await _firestoreService.retrieveUserFromFirestore(uid: uid);
           currentUserModel = UserModel.fromJson(userDocData!);
         }
         //we signed up user successfully and added the user to Firestore
@@ -169,7 +170,10 @@ class AuthProvider with ChangeNotifier {
     if (resetPasswordKey.currentState!.validate()) {
       startLoading();
       try {
-        //todo call service function here
+        await _authService.forgotPassword(
+            email: forgotPasswordEmailTextEditingController!.text);
+        forgotPasswordEmailTextEditingController!.clear();
+        PopUpDialog.showAcknowledgePopUpDialog(title: "Email Sent!", message: "Please check your inbox for instructions on how to reset your password", onOkClick: (){Get.close(1);});
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
       } catch (e) {
