@@ -24,7 +24,11 @@ class _friends_list_pageState extends State<friends_list_page> {
         ],
       ),
       body: Column(
-        children: <Widget>[friendsListView()],
+        children: <Widget>[
+          Expanded(
+            child: Container(height: double.infinity, width: double.infinity, child: friendsListView()),
+          ),
+        ],
       ),
     );
   }
@@ -49,6 +53,7 @@ class _friendsListViewState extends State<friendsListView> {
 
         final List<DocumentSnapshot> documents = snapshot.data!.docs;
         return ListView(
+            scrollDirection: Axis.vertical,
             shrinkWrap: true,
             children: documents
                 .map((e) => Card(
