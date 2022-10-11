@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
+import 'package:harmony_app/services/spotify_service.dart';
 import 'package:provider/provider.dart';
 
 ///this function sets up the Service variables instances
@@ -33,15 +34,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.green,
       ),
       home: const MyHomePage(title: 'Settings'),
@@ -69,10 +61,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String synced = "Not Synced";
+  String name = '';
 
-  void _sync() {
+
+  void _sync() async {
+    Album temp = await SpotifyService.fetchAlbum();
     setState(() {
       synced = "Synced";
+      name = temp.getName();
     });
   }
 
@@ -81,6 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
       synced = "Not Synced";
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,19 +91,23 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Container(
-          height: 100.0,
-          width: 100.0,
-          child: FloatingActionButton(
-          onPressed: () {
-            if(synced == "Not Synced"){
-              _sync();
-            } else {
-              _deSync();
-            }
-          },
-          child: Text(synced),
-          ),
+        child:Column (
+          children :  <Widget>[
+             ElevatedButton(
+               onPressed: () {
+                 if(synced == "Not Synced"){
+                   _sync();
+                 } else {
+                   _deSync();
+                 }
+               },
+              child: Text(synced),
+              ),
+            ElevatedButton(
+                onPressed: (){},
+                child: Text(name),
+            ),
+          ],
         ),
 
       ),
