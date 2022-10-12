@@ -27,7 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-
+            actions: [
+            IconButton(
+            onPressed: () {
+              debugPrint('Temporary, must be deleted when we finalize the home page');
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) => (friends_list_page())));
+            }, icon: Icon(Icons.home)),
+      ],
         ),
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.white,
@@ -58,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+
           ],
         ),
       ),

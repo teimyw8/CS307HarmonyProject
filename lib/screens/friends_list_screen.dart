@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/screens/add_friends_page.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_provider.dart';
+var currUser;
 
 class friends_list_page extends StatefulWidget {
   const friends_list_page({Key? key}) : super(key: key);
@@ -44,6 +48,15 @@ class _friends_list_pageState extends State<friends_list_page> {
                 height: double.infinity,
                 width: double.infinity,
                 child: friendsListView()),
+          ),
+          Consumer<AuthProvider> (
+          builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+          debugPrint(myAuthProvider.currentUserModel.toString());
+          currUser = (myAuthProvider.currentUserModel?.uid);
+          debugPrint('friends:');
+          debugPrint(myAuthProvider.currentUserModel?.friends.toString());
+          return const Text("");
+          }
           ),
         ],
       ),
