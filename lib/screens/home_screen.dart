@@ -8,6 +8,8 @@ import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/common_widgets/custom_app_bar.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 

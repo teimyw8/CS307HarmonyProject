@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:harmony_app/screens/edit_profile_screen.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+
+import '../../models/user_model.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -52,19 +55,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             width: 40.w,
                             child: (needBackArrow)
                                 ? GestureDetector(
-                              onTap: () {
-                                Get.back();
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.arrow_back_ios,
-                                    color: AppColors.green,
+                                    onTap: () {
+                                      Get.back();
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_back_ios,
+                                          color: AppColors.green,
+                                        )
+                                      ],
+                                    ),
                                   )
-                                ],
-                              ),
-                            )
                                 : SizedBox(width: 40.w)),
                         if (title.isNotEmpty)
                           Expanded(
@@ -76,17 +80,34 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   style: AppTextStyles.appBar()),
                             ),
                           ),
+                        if (needSettings)
+                          Container(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                      return const EditProfile();
+                                    },
+                                  ),
+                                );
+                              },
+                              child: const Icon(
+                                Icons.settings,
+                              ),
+                            ),
+                          ),
                         (needAvatar)
                             ? Container(
-                          width: 40.w,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [],
-                          ),
-                        )
+                                width: 40.w,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [],
+                                ),
+                              )
                             : SizedBox(
-                          width: 40.w,
-                        )
+                                width: 40.w,
+                              )
                       ],
                     ),
                   ),
@@ -117,21 +138,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       children: <Widget>[
                         (needBackArrow)
                             ? GestureDetector(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: Container(
-                            width: 40.w,
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              color: AppColors.green,
-                            ),
-                          ),
-                        )
+                                onTap: () {
+                                  Get.back();
+                                },
+                                child: Container(
+                                  width: 40.w,
+                                  child: Icon(
+                                    Icons.arrow_back_ios,
+                                    color: AppColors.green,
+                                  ),
+                                ),
+                              )
                             : Text(title,
                                 overflow: TextOverflow.clip,
                                 maxLines: 1,
-                                style: AppTextStyles.largeTitle().copyWith(fontSize: 30.sp, color: AppColors.white)),
+                                style: AppTextStyles.largeTitle().copyWith(
+                                    fontSize: 30.sp, color: AppColors.white)),
                         Row(
                           children: [
                             if (needAvatar) Container(

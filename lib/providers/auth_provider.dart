@@ -12,6 +12,7 @@ import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import '../screens/forgot_password_screen.dart';
 
 class AuthProvider with ChangeNotifier {
+
   UserModel? currentUserModel;
 
   AuthService get _authService => GetIt.instance<AuthService>();
@@ -20,27 +21,27 @@ class AuthProvider with ChangeNotifier {
 
   //LoginScreen text editing controllers
   TextEditingController? loginEmailTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? loginPasswordTextEditingController =
-      TextEditingController();
+  TextEditingController();
 
   //ForgotPasswordScreen text editing controllers
   TextEditingController? forgotPasswordEmailTextEditingController =
-      TextEditingController();
+  TextEditingController();
 
   //SignUpScreen text editing controllers
   TextEditingController? signUpEmailTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpPasswordTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpReEnterPasswordTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpFirstNameTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpLastNameTextEditingController =
-      TextEditingController();
+  TextEditingController();
   TextEditingController? signUpUsernameTextEditingController =
-      TextEditingController();
+  TextEditingController();
 
   //this is a key used for Form inside LoginScreen()
   final loginKey = GlobalKey<FormState>();
