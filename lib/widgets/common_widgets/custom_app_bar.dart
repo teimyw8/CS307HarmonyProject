@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:harmony_app/screens/editprofile.dart';
+import 'package:harmony_app/screens/edit_profile_screen.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+
+import '../../models/user_model.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -21,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.needSettings = false,
       this.needAvatar = false,
       this.needHome = false,
-      this.backArrowLabel = ""})
+      this.backArrowLabel = "",})
       : super(key: key);
 
   @override
