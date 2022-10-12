@@ -52,15 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            ElevatedButton(
-                onPressed: (){
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => friends_list_page())
-                  );
-                },
-                child: Text('friends list temporary button')
-            ),
           ],
         ),
       ),

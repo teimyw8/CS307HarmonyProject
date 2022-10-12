@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firestore_search/firestore_search.dart';
 import '../helpers/colors.dart';
 import '../helpers/text_styles.dart';
+import 'home_screen.dart';
 
 class add_friends extends StatefulWidget {
   const add_friends({Key? key}) : super(key: key);
@@ -23,8 +24,9 @@ class _add_friendsState extends State<add_friends> {
         actions: [
           IconButton(
               onPressed: () {
-                debugPrint('search for other users');
-                //MaterialPageRoute(builder: (context) => (add_friends()));
+                debugPrint('return to home');
+                Navigator.push(context,
+                MaterialPageRoute(builder: (context) => (HomeScreen())));
               },
               icon: Icon(Icons.home)),
           IconButton(
