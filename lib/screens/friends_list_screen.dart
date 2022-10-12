@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:harmony_app/helpers/colors.dart';
+import 'package:harmony_app/helpers/text_styles.dart';
+import 'package:harmony_app/screens/add_friends_page.dart';
 
 class friends_list_page extends StatefulWidget {
   const friends_list_page({Key? key}) : super(key: key);
@@ -13,8 +16,19 @@ class _friends_list_pageState extends State<friends_list_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Friends List'),
+        backgroundColor: AppColors.green,
+        title: Text(''
+            'Harmony',
+            style: AppTextStyles.appBar(),
+        ),
         actions: [
+          IconButton(
+              onPressed: () {
+                debugPrint('search for other users');
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => add_friends()));
+              },
+              icon: Icon(Icons.search)),
           IconButton(
               onPressed: () {
                 debugPrint('refresh button - friends list');
@@ -26,7 +40,10 @@ class _friends_list_pageState extends State<friends_list_page> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: Container(height: double.infinity, width: double.infinity, child: friendsListView()),
+            child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: friendsListView()),
           ),
         ],
       ),
@@ -40,6 +57,10 @@ class friendsListView extends StatefulWidget {
   @override
   _friendsListViewState createState() => _friendsListViewState();
 }
+//get your own user id mcon
+//returns json contains friends
+//for each uid call the display
+//
 
 class _friendsListViewState extends State<friendsListView> {
   @override
@@ -49,6 +70,9 @@ class _friendsListViewState extends State<friendsListView> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Text('Error, reload');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
         }
 
         final List<DocumentSnapshot> documents = snapshot.data!.docs;

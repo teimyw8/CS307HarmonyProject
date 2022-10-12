@@ -22,6 +22,7 @@ dependencies:
   firebase_auth: ^3.10.0
   firebase_core: ^1.23.0
   loading_overlay: ^0.3.0
+  firestore_search: ^0.1.9
 
 
 dev_dependencies:
