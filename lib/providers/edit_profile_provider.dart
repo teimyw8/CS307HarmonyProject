@@ -26,6 +26,7 @@ class EditProfileProvider with ChangeNotifier {
     } else {
       isEditing = true;
     }
+    print(isEditing);
   }
 
   String getUserEmail() {
