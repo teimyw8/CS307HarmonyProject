@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/screens/friends_list_screen.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/common_widgets/custom_app_bar.dart';
@@ -26,9 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Scaffold(
+        appBar: AppBar(
+
+        ),
         resizeToAvoidBottomInset: false,
         backgroundColor: AppColors.white,
         body: Stack(
+          alignment: AlignmentDirectional.topStart,
           children: [
             Scaffold(
               appBar: CustomAppBar(title: "Harmony", needBackArrow: false, needAvatar: true, needSettings: true,),

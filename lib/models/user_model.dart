@@ -7,10 +7,10 @@ class UserModel {
 
   UserModel(
       {required this.email,
-        required this.firstName,
-        required this.lastName,
-        required this.uid,
-        required this.userName});
+      required this.firstName,
+      required this.lastName,
+      required this.uid,
+      required this.userName});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     email: json["email"],
