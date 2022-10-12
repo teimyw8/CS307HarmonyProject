@@ -13,6 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool needHome;
   final String backArrowLabel;
   final bool isAuthAppBar;
+  VoidCallback? onHomeClicked;
 
   CustomAppBar(
       {Key? key,
@@ -22,6 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.needSettings = false,
       this.needAvatar = false,
       this.needHome = false,
+        this.onHomeClicked = null,
       this.backArrowLabel = ""})
       : super(key: key);
 
@@ -136,9 +138,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               width: 40.w,
                                 child: Icon(Icons.person, color: AppColors.white,)
                             ),
-                            if (needHome) Container(
-                              width: 40.w,
-                                child: Icon(Icons.home, color: AppColors.white,)
+                            if (needHome) GestureDetector(
+                              onTap: () {
+                                if (onHomeClicked != null) {
+                                  onHomeClicked!();
+                                }
+                              },
+                              child: Container(
+                                width: 40.w,
+                                  child: Icon(Icons.home, color: AppColors.white,)
+                              ),
                             ),
                             if (needSettings) Container(
                               width: 40.w,
