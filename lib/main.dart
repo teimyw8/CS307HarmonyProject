@@ -60,21 +60,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String synced = "Not Synced";
+  String synced = "Sync";
   String name = '';
 
 
   void _sync() async {
-    Album temp = await SpotifyService.fetchAlbum();
-    setState(() {
-      synced = "Synced";
-      name = temp.getName();
-    });
+    bool connected = await SpotifyService.syncSpotify();
+    if(connected) {
+      setState(() {
+        synced = "Desync";
+      });
+    }
   }
 
   void _deSync() {
     setState(() {
-      synced = "Not Synced";
+      synced = "Sync";
     });
   }
 
@@ -95,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children :  <Widget>[
              ElevatedButton(
                onPressed: () {
-                 if(synced == "Not Synced"){
+                 if(synced == "Sync"){
                    _sync();
                  } else {
                    _deSync();
