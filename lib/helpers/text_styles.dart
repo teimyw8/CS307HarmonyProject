@@ -51,6 +51,14 @@ class AppTextStyles {
         fontSize: 18.sp);
   }
 
+  static TextStyle profileNames() {
+    return TextStyle(
+        color: AppColors.white,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'Inter',
+        fontSize: 28.sp);
+  }
+
   static TextStyle button() {
     return TextStyle(color: AppColors.white, fontWeight: FontWeight.w800, fontFamily: 'Inter', fontSize: 15.sp);
   }
