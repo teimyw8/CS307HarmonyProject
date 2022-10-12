@@ -37,9 +37,9 @@ class AppTextStyles {
 
   static TextStyle appBar() {
     return TextStyle(
-        color: AppColors.black,
-        fontWeight: FontWeight.w600,
-        fontFamily: 'Inter',
+        color: AppColors.white,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'Pacifico',
         fontSize: 26.sp);
   }
 
