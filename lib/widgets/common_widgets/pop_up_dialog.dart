@@ -260,4 +260,77 @@ class PopUpDialog {
           );
         });
   }
+
+  static void showErrorPopUpDialog(
+      {required String title,
+        required String message,
+        required String confirmLabel,
+        required VoidCallback onCloseClick}) {
+    showDialog(
+        barrierDismissible: true,
+        context: Get.context!,
+        builder: (BuildContext context) {
+          return Dialog(
+            insetPadding: EdgeInsets.only(
+              left: 0.h,
+              right: 0.h,
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            child: Container(
+              width: 275.w,
+              child: SingleChildScrollView(
+                child: Container(
+                    padding:
+                    EdgeInsets.symmetric(vertical: 20.h, horizontal: 22.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.r),
+                      color: AppColors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Error: $title',
+                          style: AppTextStyles.headline(),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Text(
+                            message,
+                            style: AppTextStyles.footNote()
+                                .copyWith(color: AppColors.grey80),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 44.w,
+                              height: 44.h,
+                              child: FloatingActionButton.small(
+                                onPressed: () {
+                                  Get.close(1);
+                                  onCloseClick();
+                                },
+                                backgroundColor: AppColors.redError,
+                                child: Icon(Icons.close),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
+              ),
+            ),
+          );
+        });
+  }
 }
