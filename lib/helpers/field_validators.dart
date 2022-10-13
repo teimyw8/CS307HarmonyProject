@@ -12,10 +12,14 @@ class FieldValidator {
     return null;
   }
 
+  //todo add check for username
+  //todo add check if pwd contains a digit
   static String? validatePassword(String? value) {
     if (value!.isEmpty) return "Enter password";
-    if (value.length < 6) return "Must be at least 6 characters long.";
-
+    if (value.contains("!") || value.contains("@") || value.contains("%") || value.contains("*") || value.contains("-") || value.contains("+") || value.contains("=")) {
+      return "Make sure to include a special character";
+    }
+    if (value.length < 6 || value.length > 15) return "Must be between 6-15 characters long.";
     return null;
   }
   static String? validateReenterPassword(

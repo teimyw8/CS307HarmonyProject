@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:harmony_app/screens/edit_profile_screen.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+
+import '../../models/user_model.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -13,6 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool needHome;
   final String backArrowLabel;
   final bool isAuthAppBar;
+  VoidCallback? onHomeClicked;
 
   CustomAppBar(
       {Key? key,
@@ -22,6 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.needSettings = false,
       this.needAvatar = false,
       this.needHome = false,
+      this.onHomeClicked = null,
       this.backArrowLabel = ""})
       : super(key: key);
 
@@ -50,19 +55,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             width: 40.w,
                             child: (needBackArrow)
                                 ? GestureDetector(
-                              onTap: () {
-                                Get.back();
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Icon(
-                                    Icons.arrow_back_ios,
-                                    color: AppColors.green,
+                                    onTap: () {
+                                      Get.back();
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_back,
+                                          color: AppColors.green,
+                                        ),
+                                      ],
+                                    ),
                                   )
-                                ],
-                              ),
-                            )
                                 : SizedBox(width: 40.w)),
                         if (title.isNotEmpty)
                           Expanded(
@@ -76,15 +82,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         (needAvatar)
                             ? Container(
-                          width: 40.w,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [],
-                          ),
-                        )
+                                width: 40.w,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [],
+                                ),
+                              )
                             : SizedBox(
-                          width: 40.w,
-                        )
+                                width: 40.w,
+                              )
                       ],
                     ),
                   ),
@@ -115,35 +121,57 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       children: <Widget>[
                         (needBackArrow)
                             ? GestureDetector(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: Container(
-                            width: 40.w,
-                            child: Icon(
-                              Icons.arrow_back_ios,
-                              color: AppColors.green,
-                            ),
-                          ),
-                        )
+                                onTap: () {
+                                  Get.back();
+                                },
+                                child: Container(
+                                  width: 40.w,
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                              )
                             : Text(title,
                                 overflow: TextOverflow.clip,
                                 maxLines: 1,
-                                style: AppTextStyles.largeTitle().copyWith(fontSize: 30.sp, color: AppColors.white)),
+                                style: AppTextStyles.largeTitle().copyWith(
+                                    fontSize: 30.sp, color: AppColors.white)),
                         Row(
                           children: [
-                            if (needAvatar) Container(
-                              width: 40.w,
-                                child: Icon(Icons.person, color: AppColors.white,)
-                            ),
-                            if (needHome) Container(
-                              width: 40.w,
-                                child: Icon(Icons.home, color: AppColors.white,)
-                            ),
-                            if (needSettings) Container(
-                              width: 40.w,
-                              child: Icon(Icons.settings, color: AppColors.white,)
-                            ),
+                            if (needAvatar)
+                              Container(
+                                  width: 40.w,
+                                  child: Icon(
+                                    Icons.person,
+                                    color: AppColors.white,
+                                  )),
+                            if (needHome)
+                              GestureDetector(
+                                onTap: () {
+                                  if (onHomeClicked != null) {
+                                    onHomeClicked!();
+                                  }
+                                },
+                                child: Container(
+                                    width: 40.w,
+                                    child: Icon(
+                                      Icons.home,
+                                      color: AppColors.white,
+                                    )),
+                              ),
+                            if (needSettings)
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(() => EditProfileScreen());
+                                },
+                                child: Container(
+                                    width: 40.w,
+                                    child: Icon(
+                                      Icons.settings,
+                                      color: AppColors.white,
+                                    )),
+                              ),
                           ],
                         )
                       ],

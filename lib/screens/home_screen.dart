@@ -8,6 +8,8 @@ import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/common_widgets/custom_app_bar.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -25,49 +27,39 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      child: Scaffold(
-        appBar: AppBar(
-            actions: [
-            IconButton(
-            onPressed: () {
-              debugPrint('Temporary, must be deleted when we finalize the home page');
-              Navigator.push(context,
-                MaterialPageRoute(builder: (context) => (friends_list_page())));
-            }, icon: Icon(Icons.home)),
-      ],
-        ),
-        resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.white,
-        body: Stack(
-          alignment: AlignmentDirectional.topStart,
-          children: [
-            Scaffold(
-              appBar: CustomAppBar(title: "Harmony", needBackArrow: false, needAvatar: true, needSettings: true,),
-              backgroundColor: AppColors.white,
-              body: Align(
-                alignment: Alignment.center,
-                child: SingleChildScrollView(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: 60.w, vertical: 20.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Consumer<AuthProvider>(
-                        builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
-                          return Text(
-                            myAuthProvider.currentUserModel.toString(),
-                            style: AppTextStyles.footNote(),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+      child: Stack(
+        alignment: AlignmentDirectional.topStart,
+        children: [
+          Scaffold(
+            appBar: CustomAppBar(title: "Harmony", needBackArrow: false, needAvatar: true, needSettings: true, needHome: true, onHomeClicked: () {
+                debugPrint('Temporary, must be deleted when we finalize the home page');
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => (FriendsListPage())));
+            },),
+            backgroundColor: AppColors.white,
+            body: Align(
+              alignment: Alignment.center,
+              child: SingleChildScrollView(
+                padding:
+                EdgeInsets.symmetric(horizontal: 60.w, vertical: 20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Consumer<AuthProvider>(
+                      builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+                        return Text(
+                          myAuthProvider.currentUserModel.toString(),
+                          style: AppTextStyles.footNote(),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
+          ),
 
-          ],
-        ),
+        ],
       ),
     );
   }
