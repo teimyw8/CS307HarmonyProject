@@ -26,7 +26,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.needSettings = false,
       this.needAvatar = false,
       this.needHome = false,
-        this.onHomeClicked = null,
+      this.onHomeClicked = null,
       this.backArrowLabel = ""})
       : super(key: key);
 
@@ -80,34 +80,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   style: AppTextStyles.appBar()),
                             ),
                           ),
-                        if (needSettings)
-                          Container(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return const EditProfile();
-                                    },
-                                  ),
-                                );
-                              },
-                              child: const Icon(
-                                Icons.settings,
-                              ),
-                            ),
-                          ),
-                        (needAvatar)
-                            ? Container(
-                                width: 40.w,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [],
-                                ),
-                              )
-                            : SizedBox(
-                                width: 40.w,
-                              )
+                        SizedBox(
+                          width: 40.w,
+                        )
                       ],
                     ),
                   ),
@@ -156,25 +131,39 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     fontSize: 30.sp, color: AppColors.white)),
                         Row(
                           children: [
-                            if (needAvatar) Container(
-                              width: 40.w,
-                                child: Icon(Icons.person, color: AppColors.white,)
-                            ),
-                            if (needHome) GestureDetector(
-                              onTap: () {
-                                if (onHomeClicked != null) {
-                                  onHomeClicked!();
-                                }
-                              },
-                              child: Container(
-                                width: 40.w,
-                                  child: Icon(Icons.home, color: AppColors.white,)
+                            if (needAvatar)
+                              Container(
+                                  width: 40.w,
+                                  child: Icon(
+                                    Icons.person,
+                                    color: AppColors.white,
+                                  )),
+                            if (needHome)
+                              GestureDetector(
+                                onTap: () {
+                                  if (onHomeClicked != null) {
+                                    onHomeClicked!();
+                                  }
+                                },
+                                child: Container(
+                                    width: 40.w,
+                                    child: Icon(
+                                      Icons.home,
+                                      color: AppColors.white,
+                                    )),
                               ),
-                            ),
-                            if (needSettings) Container(
-                              width: 40.w,
-                              child: Icon(Icons.settings, color: AppColors.white,)
-                            ),
+                            if (needSettings)
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(() => EditProfileScreen());
+                                },
+                                child: Container(
+                                    width: 40.w,
+                                    child: Icon(
+                                      Icons.settings,
+                                      color: AppColors.white,
+                                    )),
+                              ),
                           ],
                         )
                       ],

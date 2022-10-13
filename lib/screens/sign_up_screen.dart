@@ -105,6 +105,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             height: 20.h,
                           ),
                           CustomTextField(
+                            hintText: "Username",
+                            hintStyle: AppTextStyles.hintTextField(),
+                            style: AppTextStyles.textField(),
+                            inputType: TextInputType.text,
+                            validator: FieldValidator.validateUserName,
+                            controller: myAuthProvider
+                                .signUpUsernameTextEditingController,
+                          ),
+                          SizedBox(
+                            height: 20.h,
+                          ),
+                          CustomTextField(
                             hintText: "Password",
                             isPassword: true,
                             isTextObscure: true,

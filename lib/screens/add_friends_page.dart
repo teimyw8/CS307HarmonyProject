@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firestore_search/firestore_search.dart';
 import '../helpers/colors.dart';
 import '../helpers/text_styles.dart';
 import 'home_screen.dart';
