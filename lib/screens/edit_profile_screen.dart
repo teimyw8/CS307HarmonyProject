@@ -124,7 +124,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onSaved: (String? value) {
                           value ??= "";
                           if (_editProfileProvider.meetsUsernameReqs(value)) {
-                            temp!.userName = value;
+                            temp!.username = value;
                           } else {
                             PopUpDialog.showErrorPopUpDialog(
                                 title: 'Username incorrect',

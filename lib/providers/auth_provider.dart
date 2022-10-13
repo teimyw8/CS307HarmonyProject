@@ -147,10 +147,6 @@ class AuthProvider with ChangeNotifier {
         await _authService.signUpUser(
             email: signUpEmailTextEditingController!.text,
             password: signUpPasswordTextEditingController!.text);
-
-        await _authService.signUpUser(
-            email: signUpEmailTextEditingController!.text,
-            password: signUpPasswordTextEditingController!.text);
         String uid = _authService.firebaseAuth.currentUser?.uid ?? "";
         if (uid != "") {
           await _firestoreService.addUserToFirestore(

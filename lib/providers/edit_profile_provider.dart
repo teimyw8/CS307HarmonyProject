@@ -96,7 +96,7 @@ class EditProfileProvider with ChangeNotifier {
   }
 
   String getUserName() {
-    String? username = currentUserModel?.userName;
+    String? username = currentUserModel?.username;
     username ??= "";
     return username;
   }

@@ -37,7 +37,7 @@ class FirestoreService {
         "email": email,
         "firstName": firstName,
         "lastName": lastName,
-        "userName": userName,
+        "username": userName,
         "uid": uid,
         "password": password,
       });
@@ -49,19 +49,20 @@ class FirestoreService {
   ///this function checks if a user with this username already exists
   Future<void> doesUsernameAlreadyExist(
       {required String username,}) async {
-    try {
-      var usersDocRef = await firebaseFirestore.collection('users').where('username', isEqualTo: username).limit(1).get();
+    //try {
+      print("username: $username");
       final QuerySnapshot result = await firebaseFirestore
-          .collection('company')
+          .collection('users')
           .where('username', isEqualTo: username)
           .limit(1).get();
       final List<DocumentSnapshot> documents = result.docs;
-      if (documents.length > 0) {
+      print("documents: $documents");
+      if (documents.isNotEmpty) {
+        print("THROWING USERNAMEALREADYTAKEN");
         throw FirestoreException(ServiceConstants.USERNAMEALREADYTAKEN);
       }
-    } catch (e) {
-      print(e as FirestoreException);
-      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
-    }
+    // } catch (e) {
+    //   throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    // }
   }
 }

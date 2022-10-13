@@ -3,7 +3,7 @@ class UserModel {
   String firstName;
   String lastName;
   String uid;
-  String userName;
+  String username;
   var friends;
 
   UserModel(
@@ -11,7 +11,7 @@ class UserModel {
       required this.firstName,
       required this.lastName,
       required this.uid,
-      required this.userName,
+      required this.username,
       required this.friends}
       );
 
@@ -21,7 +21,7 @@ class UserModel {
     lastName: json["lastName"],
     friends: json["friends"],
     uid: json["uid"],
-    userName: json["userName"],
+    username: json["username"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -30,11 +30,11 @@ class UserModel {
     "lastName": lastName,
     "friends": friends,
     "uid": uid,
-    "userName": userName,
+    "username": username,
   };
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, userName: $userName}';
+    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username}';
   }
 }
