@@ -10,9 +10,9 @@ class AuthService {
   Future<void> loginUser(
       {required String email, required String password}) async {
     try {
-      await firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+      await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
+      print(e.code);
       if (e.code == 'user-not-found') {
         throw AuthException(ServiceConstants.ACCOUNTNOTFOUND);
       } else if (e.code == 'wrong-password') {
@@ -20,6 +20,7 @@ class AuthService {
       }
       throw AuthException(ServiceConstants.SOMETHINGWENTWRONG);
     } catch (e) {
+      print(e);
       throw AuthException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
