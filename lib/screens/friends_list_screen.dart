@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
 var currUser;
+var friendsList;
 
 class FriendsListPage extends StatefulWidget {
   const FriendsListPage({Key? key}) : super(key: key);
@@ -51,11 +52,12 @@ class _FriendsListPageState extends State<FriendsListPage> {
                 child: friendsListView()),
           ),
           Consumer<AuthProvider> (
-          builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
-          debugPrint(myAuthProvider.currentUserModel.toString());
-          currUser = (myAuthProvider.currentUserModel?.uid);
-          debugPrint('friends:');
-          debugPrint(myAuthProvider.currentUserModel?.friends.toString());
+            builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+            debugPrint(myAuthProvider.currentUserModel.toString());
+            currUser = (myAuthProvider.currentUserModel?.uid);
+            friendsList = (myAuthProvider.currentUserModel?.friends);
+            debugPrint('friends:');
+            debugPrint(myAuthProvider.currentUserModel?.friends.toString());
           return const Text("");
           }
           ),
@@ -80,14 +82,16 @@ class _friendsListViewState extends State<friendsListView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      stream: FirebaseFirestore.instance.collection('users').where("uid", whereIn: friendsList).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+
         if (snapshot.hasError) {
           return const Text('Error, reload');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Text("Loading");
         }
+
         final List<DocumentSnapshot> documents = snapshot.data!.docs;
         return ListView(
             scrollDirection: Axis.vertical,
