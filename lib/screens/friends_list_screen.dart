@@ -56,7 +56,9 @@ class _FriendsListPageState extends State<FriendsListPage> {
                 child: friendsListView()),
           ),
           Consumer<AuthProvider> (
+
             builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+              myAuthProvider.updateCurrentUser();
             debugPrint(myAuthProvider.currentUserModel.toString());
             currUser = (myAuthProvider.currentUserModel?.uid);
             friendsList = (myAuthProvider.currentUserModel?.friends);

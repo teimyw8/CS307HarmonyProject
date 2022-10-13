@@ -223,4 +223,13 @@ class AuthProvider with ChangeNotifier {
   void goToHomeScreen() async {
     Get.offAll(() => HomeScreen());
   }
+
+  ///update currentUserModel
+  Future<void> updateCurrentUser() async {
+    String uid = _authService.firebaseAuth.currentUser?.uid ?? "";
+    var userDocData =
+        await _firestoreService.retrieveUserFromFirestore(uid: uid);
+    UserModel.fromJson(userDocData!);
+    notifyListeners ();
+}
 }
