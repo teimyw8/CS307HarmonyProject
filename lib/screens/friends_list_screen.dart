@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/screens/add_friends_page.dart';
+import 'package:harmony_app/screens/profile_friends_screens.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/auth_provider.dart';
+
 var currUser;
+var friendsList;
+
+//this screen displays the friends list from the current user.
+//it uses a stream builder to query the information from firestore
+//it displays the informations in Cards
 
 class FriendsListPage extends StatefulWidget {
   const FriendsListPage({Key? key}) : super(key: key);
@@ -50,13 +56,14 @@ class _FriendsListPageState extends State<FriendsListPage> {
                 child: friendsListView()),
           ),
           Consumer<AuthProvider> (
-          builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
-          debugPrint(myAuthProvider.currentUserModel.toString());
-          currUser = (myAuthProvider.currentUserModel?.uid);
-          debugPrint('friends:');
-          debugPrint(myAuthProvider.currentUserModel?.friends.toString());
+            builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+            debugPrint(myAuthProvider.currentUserModel.toString());
+            currUser = (myAuthProvider.currentUserModel?.uid);
+            friendsList = (myAuthProvider.currentUserModel?.friends);
+            debugPrint('friends:');
+            debugPrint(myAuthProvider.currentUserModel?.friends.toString());
           return const Text("");
-          }
+          },
           ),
         ],
       ),
@@ -79,8 +86,9 @@ class _friendsListViewState extends State<friendsListView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      stream: FirebaseFirestore.instance.collection('users').where("uid", whereIn: friendsList).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+
         if (snapshot.hasError) {
           return const Text('Error, reload');
         }
@@ -97,7 +105,21 @@ class _friendsListViewState extends State<friendsListView> {
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          Text(e['firstName']),
+                          TextButton(
+                              onPressed: (){
+                                debugPrint('take to friends profile');
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) => friends_profile_screen(name: e['firstName'],)));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  shape: StadiumBorder(),
+                                  primary: AppColors.white,
+                              ),
+                              child: Text(
+                                  e['firstName'],
+                                  style: TextStyle(color: AppColors.green),
+                              ),
+                          ),
                           Spacer(),
                           Container(
                             child: Row(
