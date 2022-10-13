@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../helpers/colors.dart';
+import '../models/user_model.dart';
+import '../services/firestore_service.dart';
 import 'friends_list_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -17,6 +20,8 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
+  final formKey = GlobalKey<FormState>();
+  UserModel? temp;
 
   @override
   Widget build(BuildContext context) {
@@ -43,67 +48,89 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               _editProfileProvider.swapEditingMode();
+              if (!_editProfileProvider.isEditing) {
+                temp = _editProfileProvider.currentUserModel;
+                formKey.currentState!.save();
+                _editProfileProvider.setUserInfo(
+                    UserModel.fromJson(temp!.toJson()));
+              }
               setState(() {});
             },
             child: const Icon(Icons.edit),
           ),
           body: Stack(
             children: [
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: <
-                  Widget>[
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Username',
-                    ),
-                    initialValue: _editProfileProvider.getUserEmail(),
-                    onSaved: (String? value) {},
-                    enabled: _editProfileProvider.isEditing,
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'First Name',
-                    ),
-                    initialValue: _editProfileProvider.getUserFirst(),
-                    onSaved: (String? value) {},
-                    enabled: _editProfileProvider.isEditing,
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Last Name',
-                    ),
-                    initialValue: _editProfileProvider.getUserLast(),
-                    onSaved: (String? value) {},
-                    enabled: _editProfileProvider.isEditing,
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Username',
-                    ),
-                    initialValue: _editProfileProvider.getUserName(),
-                    onSaved: (String? value) {},
-                    enabled: _editProfileProvider.isEditing,
-                  ),
-                ),
-              ]),
+              Form(
+          key: formKey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 16),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'Username',
+                          ),
+                          initialValue: _editProfileProvider.getUserEmail(),
+                          onSaved: (String? value) {},
+                          enabled: _editProfileProvider.isEditing,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 16),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'First Name',
+                          ),
+                          initialValue: _editProfileProvider.getUserFirst(),
+                          onSaved: (String? value) {
+                            value ??= "";
+                            temp!.firstName = value;
+                          },
+                          enabled: _editProfileProvider.isEditing,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 16),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'Last Name',
+                          ),
+                          initialValue: _editProfileProvider.getUserLast(),
+                          onSaved: (String? value) {
+                            value ??= "";
+                            temp!.lastName = value;
+
+                          },
+                          enabled: _editProfileProvider.isEditing,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 16),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'Username',
+                          ),
+                          initialValue: _editProfileProvider.getUserName(),
+                          onSaved: (String? value) {
+                            value ??= "";
+                            if (_editProfileProvider.meetsUsernameReqs(value)) {
+                              temp!.userName = value;
+                            }
+                          },
+                          enabled: _editProfileProvider.isEditing,
+                        ),
+                      ),
+                    ]),
+              ),
             ],
           ),
         ),

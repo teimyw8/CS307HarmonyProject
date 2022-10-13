@@ -1,8 +1,12 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/custom_exceptions.dart';
+import '../helpers/service_constants.dart';
 import '../helpers/text_styles.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
@@ -28,13 +32,20 @@ class EditProfileProvider with ChangeNotifier {
     } else {
       isEditing = true;
     }
-    print(isEditing);
   }
 
   ///this function modifies user profile data in database
-  Future<void> setUserInfo(String uid, String json) async {
-
-    notifyListeners();
+  Future<void> setUserInfo(UserModel temp) async {
+    try {
+      var usersDocRef = _firestoreService.firebaseFirestore.collection('users')
+          .doc(temp.uid);
+      await usersDocRef.set(temp.toJson());
+      currentUserModel = temp;
+      _authProvider.currentUserModel = temp;
+      notifyListeners();
+    } catch (e) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
   }
 
   bool meetsUsernameReqs(String username) {
