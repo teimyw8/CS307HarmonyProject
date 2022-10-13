@@ -229,7 +229,7 @@ class AuthProvider with ChangeNotifier {
     String uid = _authService.firebaseAuth.currentUser?.uid ?? "";
     var userDocData =
         await _firestoreService.retrieveUserFromFirestore(uid: uid);
-    UserModel.fromJson(userDocData!);
+    currentUserModel =  UserModel.fromJson(userDocData!);
     notifyListeners ();
 }
 }
