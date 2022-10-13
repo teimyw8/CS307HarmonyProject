@@ -5,10 +5,14 @@ import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/screens/add_friends_page.dart';
 import 'package:harmony_app/screens/profile_friends_screens.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/auth_provider.dart';
+
 var currUser;
 var friendsList;
+
+//this screen displays the friends list from the current user.
+//it uses a stream builder to query the information from firestore
+//it displays the informations in Cards
 
 class FriendsListPage extends StatefulWidget {
   const FriendsListPage({Key? key}) : super(key: key);
@@ -59,7 +63,7 @@ class _FriendsListPageState extends State<FriendsListPage> {
             debugPrint('friends:');
             debugPrint(myAuthProvider.currentUserModel?.friends.toString());
           return const Text("");
-          }
+          },
           ),
         ],
       ),

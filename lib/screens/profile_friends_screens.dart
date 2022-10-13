@@ -6,6 +6,9 @@ import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import '../helpers/colors.dart';
 import '../helpers/text_styles.dart';
 
+//this screen is the current placeholder for showing the profiles of the friends.
+//As part of sprint 1, this serves as the skeleton framework for how we will implement it
+//This is to be expanded. Right now it only displays the name and a blue circle for a profile picture.
 
 class friends_profile_screen extends StatelessWidget {
   final String name;
