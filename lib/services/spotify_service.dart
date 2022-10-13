@@ -9,10 +9,20 @@ class SpotifyService {
 
   static Future<bool> syncSpotify() async{
 
-    return await SpotifySdk.connectToSpotifyRemote(clientId: clientID, redirectUrl: 'http://localhost:8080');
+    try {
+      bool apiReturn = await SpotifySdk.connectToSpotifyRemote(clientId: clientID, redirectUrl: 'http://localhost:8080');
+      return apiReturn;
+    } catch ( e){
+      return false;
+    }
+
     // var accessToken = await SpotifySdk.getAccessToken(clientId: clientId, redirectUrl: redirectUrl)
 
 
+  }
+
+  static desyncSpotify () async {
+    return await SpotifySdk.disconnect();
   }
 
 }

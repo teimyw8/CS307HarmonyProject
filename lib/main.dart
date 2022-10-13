@@ -69,15 +69,25 @@ class _MyHomePageState extends State<MyHomePage> {
     if(connected) {
       setState(() {
         synced = "Desync";
+        name = '';
+      });
+    } else {
+      setState(() {
+        name = 'Sync failed, please make sure you are signed\n into spotify and try again';
+      });
+
+    }
+  }
+
+  void _deSync() async {
+    bool disconnected = await SpotifyService.desyncSpotify();
+    if(disconnected) {
+      setState(() {
+        synced = "Sync";
       });
     }
   }
 
-  void _deSync() {
-    setState(() {
-      synced = "Sync";
-    });
-  }
 
 
 
@@ -104,10 +114,8 @@ class _MyHomePageState extends State<MyHomePage> {
                },
               child: Text(synced),
               ),
-            ElevatedButton(
-                onPressed: (){},
-                child: Text(name),
-            ),
+            Text(name),
+
           ],
         ),
 
