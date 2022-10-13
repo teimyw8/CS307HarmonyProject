@@ -42,6 +42,9 @@ class AuthProvider with ChangeNotifier {
   TextEditingController();
   TextEditingController? signUpUsernameTextEditingController =
   TextEditingController();
+  TextEditingController? signUpFriendsTextEditingController =
+  TextEditingController();
+
 
   //this is a key used for Form inside LoginScreen()
   final loginKey = GlobalKey<FormState>();
@@ -147,6 +150,7 @@ class AuthProvider with ChangeNotifier {
               uid: uid,
               email: signUpEmailTextEditingController!.text,
               firstName: signUpFirstNameTextEditingController!.text,
+              friends: [],
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text);
           var userDocData =
