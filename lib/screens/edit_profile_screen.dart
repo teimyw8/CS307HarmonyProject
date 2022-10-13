@@ -22,6 +22,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final formKey = GlobalKey<FormState>();
   UserModel? temp;
 
+  String _syncState = 'test';
+
   _test() {
     print("");
   }
@@ -136,6 +138,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         },
                         enabled: _editProfileProvider.isEditing,
                       ),
+                    ),
+                    ElevatedButton(
+                      onPressed:  () {
+
+                      },
+                      child: Text(_syncState),
                     ),
                   ]),
             ),
