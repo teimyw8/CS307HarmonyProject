@@ -4,22 +4,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/user_model.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
 
-class SearchUserTileWidget extends StatefulWidget {
+class FriendRequestTileWidget extends StatefulWidget {
   UserModel userModel;
-  bool isFriendRequestSent;
-  VoidCallback onSendFriendRequest;
+  VoidCallback onAccept;
+  VoidCallback onDeny;
 
-  SearchUserTileWidget(
-      {required this.userModel,
-      required this.onSendFriendRequest,
-      required this.isFriendRequestSent});
+  FriendRequestTileWidget(
+      {required this.userModel, required this.onAccept, required this.onDeny});
 
   @override
-  State<SearchUserTileWidget> createState() => _SearchUserTileWidgetState();
+  State<FriendRequestTileWidget> createState() =>
+      _FriendRequestTileWidgetState();
 }
 
-class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
+class _FriendRequestTileWidgetState extends State<FriendRequestTileWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -64,16 +64,31 @@ class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
               )
             ],
           ),
-          GestureDetector(
-              onTap: () {
-                if (!widget.isFriendRequestSent) {
-                  widget.onSendFriendRequest();
-                }
-              },
-              child: Icon(
-                widget.isFriendRequestSent ? Icons.check : Icons.add,
-                size: 30.h,
-              ))
+          Row(
+            children: [
+              CustomAppButton(
+                buttonColor: AppColors.redError,
+                onTap: () {
+                  widget.onDeny();
+                },
+                widget: Text(
+                  "Deny",
+                  style: AppTextStyles.button(),
+                ),
+              ),
+              SizedBox(width: 10.w,),
+              CustomAppButton(
+                buttonColor: AppColors.green,
+                onTap: () {
+                  widget.onAccept();
+                },
+                widget: Text(
+                  "Accept",
+                  style: AppTextStyles.button(),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
