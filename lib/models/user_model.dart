@@ -4,6 +4,7 @@ class UserModel {
   String lastName;
   String uid;
   String username;
+  String spotifyToken;
   var friends;
 
   UserModel(
@@ -12,7 +13,8 @@ class UserModel {
       required this.lastName,
       required this.uid,
       required this.username,
-      required this.friends}
+      required this.friends,
+      required this.spotifyToken}
       );
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -22,6 +24,7 @@ class UserModel {
     friends: json["friends"],
     uid: json["uid"],
     username: json["username"],
+    spotifyToken: json["spotifyToken"],
   );
 
   Map<String, dynamic> toJson() => {
