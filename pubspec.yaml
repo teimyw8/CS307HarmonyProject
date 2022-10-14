@@ -12,8 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  spotify_sdk:
-
   cupertino_icons: ^1.0.2
   get: ^4.6.5
   provider: ^6.0.3
@@ -26,7 +24,6 @@ dependencies:
   loading_overlay: ^0.3.0
   firestore_search: ^0.1.9
   flutter_spinkit: ^5.1.0
-  cached_network_image: ^3.2.1
 
 
 dev_dependencies:
