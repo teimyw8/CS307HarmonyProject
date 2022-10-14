@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:harmony_app/helpers/field_validators.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
@@ -83,16 +85,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              _editProfileProvider.swapEditingMode();
-              if (!_editProfileProvider.isEditing) {
-                temp = _editProfileProvider.currentUserModel;
-                formKey.currentState!.save();
-                _editProfileProvider
-                    .setUserInfo(UserModel.fromJson(temp!.toJson()));
+              temp = _editProfileProvider.currentUserModel;
+              formKey.currentState!.save();
+              if (!_editProfileProvider.isEditing ||
+                  FieldValidator.validateUserName(temp!.username) == null &&
+                      FieldValidator.validateEmail(temp!.email) == null) {
+                _editProfileProvider.swapEditingMode();
+                if (!_editProfileProvider.isEditing) {
+                  _editProfileProvider
+                      .setUserInfo(UserModel.fromJson(temp!.toJson()));
+                }
+                setState(() {});
               }
-              setState(() {});
             },
-            child: (_editProfileProvider.isEditing) ? const Icon(Icons.save) : const Icon(Icons.edit),
+            child: (_editProfileProvider.isEditing)
+                ? const Icon(Icons.save)
+                : const Icon(Icons.edit),
           ),
           body: SingleChildScrollView(
             child: Form(
@@ -106,10 +114,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: TextFormField(
                         decoration: const InputDecoration(
                           border: UnderlineInputBorder(),
-                          labelText: 'Username',
+                          labelText: 'Email',
                         ),
                         initialValue: _editProfileProvider.getUserEmail(),
-                        onSaved: (String? value) {},
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: FieldValidator.validateEmail,
+                        onSaved: (String? value) {
+                          value ??= "";
+                          //String message =
+                          //_editProfileProvider.validateNewEmail(value) as String;
+                        },
                         enabled: _editProfileProvider.isEditing,
                       ),
                     ),
@@ -154,32 +168,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           labelText: 'Username',
                         ),
                         initialValue: _editProfileProvider.getUserName(),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: FieldValidator.validateUserName,
                         onSaved: (String? value) {
                           value ??= "";
-                          if (_editProfileProvider.meetsUsernameReqs(value)) {
-                            temp!.username = value;
-                          } else {
-                            PopUpDialog.showErrorPopUpDialog(
-                                title: 'Username incorrect',
-                                message:
-                                    'Username must be between 5 and 15 characters (inclusive), only contain alphanumeric characters or ".", and be a unique username.',
-                                confirmLabel: 'Close',
-                                onCloseClick: _test);
-                          }
+                          temp!.username = value;
                         },
                         enabled: _editProfileProvider.isEditing,
                       ),
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor : Color.fromRGBO(29,185,84,1.0)),
-                      onPressed: () {
+                      onPressed:  () {
                         if(_syncState == "Sync with Spotify"){
                           _sync();
                         } else {
                           _desync();
                         }
                       },
-
                       child: Text(_syncState),
                     ),
                     Text(_errorMessage),
