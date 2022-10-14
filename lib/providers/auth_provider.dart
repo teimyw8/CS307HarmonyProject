@@ -154,6 +154,7 @@ class AuthProvider with ChangeNotifier {
               email: signUpEmailTextEditingController!.text,
               firstName: signUpFirstNameTextEditingController!.text,
               friends: [],
+              spotifyToken: "",
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text,
               password: signUpPasswordTextEditingController!.text);

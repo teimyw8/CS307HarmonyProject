@@ -35,6 +35,7 @@ class UserModel {
         //"friendRequests": friendRequests,
         "uid": uid,
         "username": username,
+        "spotifyToken": spotifyToken,
       };
 
   @override

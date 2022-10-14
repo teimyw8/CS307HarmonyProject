@@ -31,6 +31,7 @@ class FirestoreService {
       required List<String> friends,
       required String lastName,
       required String userName,
+        required String spotifyToken,
       required String password}) async {
     try {
       var usersDocRef =  firebaseFirestore.collection('users').doc(uid);
@@ -42,6 +43,7 @@ class FirestoreService {
         "username": userName,
         "uid": uid,
         "password": password,
+        "spotifyToken": spotifyToken,
       });
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
