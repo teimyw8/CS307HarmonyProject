@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../helpers/colors.dart';
 import '../models/user_model.dart';
+import '../providers/auth_provider.dart';
 import 'friends_list_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class EditProfileScreen extends StatefulWidget {
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
+
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
@@ -27,16 +29,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final formKey = GlobalKey<FormState>();
   UserModel? temp;
 
-  String _syncState = 'Sync with Spotify';
+  String _syncState = '';
   String _errorMessage = '';
 
 
   _sync() async {
     String connected = await SpotifyService.syncSpotify();
+
     if(connected != '') {
+      bool paused = await SpotifyService.getPlayerState();
       setState(() {
         _syncState = "Desync";
-        _errorMessage = '';
+        if(paused) {
+          _errorMessage = 'Paused';
+        } else {
+          _errorMessage = 'Playing';
+        }
       });
 
       await FirebaseFirestore.instance.collection('users').doc(_editProfileProvider.currentUserModel!.uid).update({'spotifyToken' : connected});
@@ -67,6 +75,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   _test() {
     print("");
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    AuthProvider _authProvider = Provider.of<AuthProvider>(Get.context!, listen: false);
+    String token = _authProvider.currentUserModel!.spotifyToken;
+    setState(() {
+      if(token == ''){
+        _syncState = 'Sync with Spotify';
+      } else {
+        _syncState = 'Desync';
+      }
+    });
   }
 
   @override
