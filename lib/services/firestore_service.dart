@@ -70,16 +70,39 @@ class FirestoreService {
   ///this function updates the friendRequestsReceived for the user to whom the current user just sent the request
   Future<dynamic> sendFriendRequestToUser({required String sendToUID, required String sendFromUID}) async {
     try {
-      var userDoc = await firebaseFirestore.collection('users').doc(sendToUID).get();
-      var userDocData = userDoc.data();
-      List<dynamic> friendRequestsReceived = userDocData!.containsKey('friendRequestsReceived') ? userDocData['friendRequestsReceived'] : [];
+      var sendToUserDoc = await firebaseFirestore.collection('users').doc(sendToUID).get();
+      var sendFromUserDoc = await firebaseFirestore.collection('users').doc(sendFromUID).get();
+
+      var sendToUserDocData = sendToUserDoc.data();
+      var sendFromUserDocData = sendFromUserDoc.data();
+      List<dynamic> friendRequestsReceived = sendToUserDocData!.containsKey('friendRequestsReceived') ? sendToUserDocData['friendRequestsReceived'] : [];
       if (!friendRequestsReceived.contains(sendFromUID)) {
         friendRequestsReceived.add(sendFromUID);
-        print("friendRequestsReceived: ${friendRequestsReceived}");
         await firebaseFirestore.collection("users").doc(sendToUID).update({
           'friendRequestsReceived': friendRequestsReceived
         });
       }
+      List<dynamic> friendRequestsSent = sendFromUserDocData!.containsKey('friendRequestsSent') ? sendFromUserDocData['friendRequestsSent'] : [];
+      if (!friendRequestsSent.contains(sendToUID)) {
+        friendRequestsSent.add(sendToUID);
+        await firebaseFirestore.collection("users").doc(sendFromUID).update({
+          'friendRequestsSent': friendRequestsSent
+        });
+      }
+    } catch (e) {
+      print(e);
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+  }
+
+
+  ///this function retrieves FriendRequestsReceived for a user from Firestore
+  Future<dynamic> getFriendRequestsReceived({required String currentUserModelUID}) async {
+    try {
+      var currentUserDoc = await firebaseFirestore.collection('users').doc(currentUserModelUID).get();
+      var currentUserDocData = currentUserDoc.data();
+      List<dynamic> friendRequestsReceived = currentUserDocData!.containsKey('friendRequestsReceived') ? currentUserDocData['friendRequestsReceived'] : [];
+      return friendRequestsReceived;
     } catch (e) {
       print(e);
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);

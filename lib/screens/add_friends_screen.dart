@@ -152,7 +152,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                               doc.data() as Map<String, dynamic>))
                           .toList();
 
-
                       return Expanded(
                         child: ListView.builder(
                             padding: EdgeInsets.symmetric(vertical: 15),

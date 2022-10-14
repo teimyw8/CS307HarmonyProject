@@ -103,7 +103,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   width: double.maxFinite,
                   height: preferredSize.height,
                   color: AppColors.green,
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.center,
                   child: Padding(
                     padding: EdgeInsets.only(
                         left: 15.w, right: 15.w, bottom: 0.h, top: 20.h),

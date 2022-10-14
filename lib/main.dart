@@ -11,6 +11,8 @@ import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:provider/provider.dart';
 
+import 'providers/friend_requests_provider.dart';
+
 ///this function sets up the Service variables instances
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => AuthService());
@@ -25,7 +27,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => AuthProvider()),
       ChangeNotifierProvider(create: (_) => EditProfileProvider()),
       ChangeNotifierProvider(create: (_) => AddFriendsProvider()),
-
+      ChangeNotifierProvider(create: (_) => FriendRequestsProvider()),
     ], child: const MyApp()),
   );
 }
