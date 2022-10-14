@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
+import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final formKey = GlobalKey<FormState>();
   UserModel? temp;
 
-  String _syncState = 'test';
+  String _syncState = 'Sync with Spotify';
+  String _errorMessage = '';
+
+
+  _sync() async {
+    String connected = await SpotifyService.syncSpotify();
+    if(connected != '') {
+      setState(() {
+        _syncState = "Desync";
+        _errorMessage = '';
+      });
+
+
+
+    } else {
+      setState(() {
+        _errorMessage = 'Sync failed, please make sure you are signed\n into spotify and try again';
+      });
+
+    }
+  }
+  _desync() async {
+    bool disconnected = await SpotifyService.desyncSpotify();
+    if(disconnected) {
+      setState(() {
+        _syncState = "Sync with Spotify";
+      });
+    }
+  }
+
 
   _test() {
     print("");
@@ -50,6 +80,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             },
           ),
           backgroundColor: AppColors.white,
+
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               _editProfileProvider.swapEditingMode();
@@ -140,11 +171,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed:  () {
-
+                      style: ElevatedButton.styleFrom(backgroundColor : Color.fromRGBO(29,185,84,1.0)),
+                      onPressed: () {
+                        if(_syncState == "Sync with Spotify"){
+                          _sync();
+                        } else {
+                          _desync();
+                        }
                       },
+
                       child: Text(_syncState),
                     ),
+                    Text(_errorMessage),
                   ]),
             ),
           ),
