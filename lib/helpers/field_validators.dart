@@ -26,8 +26,8 @@ class FieldValidator {
     if (!RegExp(r"\d").hasMatch(value)) {
       return "Make sure to include at least one digit.";
     }
-    if (value.length < 6 || value.length > 15) {
-      return "Must be between 6-15 characters long.";
+    if (value.length < 8 || value.length > 26) {
+      return "Must be between 8-26 characters long.";
     }
     return null;
   }
@@ -64,8 +64,12 @@ class FieldValidator {
   static String? validateUserName(String? value) {
     if (value!.isEmpty) {
       return 'Please enter a username.';
-    } else if (!RegExp(r'^[A-Za-z0-9.]+$').hasMatch(value)) {
+    }
+    if (!RegExp(r'^[A-Za-z0-9.]+$').hasMatch(value)) {
       return 'Username can only contain letter, digits, and a period';
+    }
+    if (value.length < 5 || value.length > 15) {
+      return "Must be between 5-15 characters long.";
     }
     return null;
   }

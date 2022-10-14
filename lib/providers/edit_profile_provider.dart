@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -13,6 +11,8 @@ import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
 import 'package:get/get.dart';
 
+import '../widgets/common_widgets/pop_up_dialog.dart';
+
 class EditProfileProvider with ChangeNotifier {
   UserModel? currentUserModel;
   bool isEditing = false;
@@ -20,6 +20,7 @@ class EditProfileProvider with ChangeNotifier {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final AuthProvider _authProvider =
       Provider.of<AuthProvider>(Get.context!, listen: false);
+  final formKey = GlobalKey<FormState>();
 
   EditProfileProvider() {
     currentUserModel = _authProvider.currentUserModel;
@@ -104,19 +105,39 @@ class EditProfileProvider with ChangeNotifier {
   Future<String> validateNewEmail(String email) async {
     User firebaseUser = await _authService.firebaseAuth.currentUser!;
     String message = "";
-    firebaseUser
-        .updateEmail(email)
-        .then(
-          (value) => message = 'Success',
-    )
-        .catchError((onError) => message = onError.toString());
+    await firebaseUser.verifyBeforeUpdateEmail(email);
+    if (firebaseUser.emailVerified) {
+      firebaseUser
+          .updateEmail(email)
+          .then(
+            (value) => message = 'Success',
+      )
+          .catchError((onError) => message = onError.toString());
+    }
     return message;
   }
 
-  /*
-  Future<void> syncProfile() {
-
+  ///this function is triggered when the user clicks on Reset button on ForgotPasswordScreen
+  Future<void> onResetPassword() async {
+    if (formKey.currentState!.validate()) {
+      print('validate was true');
+      _authProvider.startLoading();
+      try {
+        await _authService.forgotPassword(
+            email: currentUserModel!.email);
+        PopUpDialog.showAcknowledgePopUpDialog(
+            title: "Email Sent!",
+            message:
+            "Please check your inbox for instructions on how to reset your password",
+            onOkClick: () {
+              Get.close(1);
+            });
+      } on AuthException catch (e) {
+        _authProvider.showErrorDialog(e.cause);
+      } catch (e) {
+        _authProvider.showErrorDialog(ServiceConstants.SOMETHINGWENTWRONG);
+      }
+      _authProvider.stopLoading();
+    }
   }
-
-   */
 }
