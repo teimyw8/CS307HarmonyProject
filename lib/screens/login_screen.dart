@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     hintStyle: AppTextStyles.hintTextField(),
                                     style: AppTextStyles.textField(),
                                     inputType: TextInputType.text,
-                                    validator: FieldValidator.validatePassword,
+                                    validator: FieldValidator.validateRegularField,
                                   ),
                                 ],
                               ),

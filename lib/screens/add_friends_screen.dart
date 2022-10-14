@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/add_friends_provider.dart';
+import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/add_friends_widgets/user_tile_widget.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
@@ -48,9 +49,11 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
           title: "Add Friends",
           needBackArrow: true,
         ),
-        body: Consumer<AddFriendsProvider>(
+        body: Consumer2<AddFriendsProvider, AuthProvider>(
           builder: (BuildContext context,
-              AddFriendsProvider myAddFriendsProvider, Widget? child) {
+              AddFriendsProvider myAddFriendsProvider,
+              AuthProvider myAuthProvider,
+              Widget? child) {
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(children: [
@@ -58,19 +61,31 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.person_add, size: 40.h,),
-                    SizedBox(width: 5.w,),
-                    Text("Add Friends", style: AppTextStyles.headline().copyWith(fontSize: 32.sp),)
+                    Icon(
+                      Icons.person_add,
+                      size: 40.h,
+                    ),
+                    SizedBox(
+                      width: 5.w,
+                    ),
+                    Text(
+                      "Add Friends",
+                      style: AppTextStyles.headline().copyWith(fontSize: 32.sp),
+                    )
                   ],
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Icon(Icons.search, size: 40.h,),
+                    Icon(
+                      Icons.search,
+                      size: 40.h,
+                    ),
                     Expanded(
                       child: CustomTextField(
                         hintText: "Search...",
-                        controller: myAddFriendsProvider.searchBarEditingController,
+                        controller:
+                            myAddFriendsProvider.searchBarEditingController,
                         onChanged: (value) {
                           setState(() {});
                         },
@@ -78,29 +93,33 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                     ),
                   ],
                 ),
-                if (myAddFriendsProvider
-                    .searchBarEditingController!.text.trim().isNotEmpty)
+                if (myAddFriendsProvider.searchBarEditingController!.text
+                    .trim()
+                    .isNotEmpty)
                   StreamBuilder(
                     stream: _firestoreService.firebaseFirestore
                         .collection('users')
                         .where(
                           'username',
                           isGreaterThanOrEqualTo: myAddFriendsProvider
-                              .searchBarEditingController!.text.trim(),
+                              .searchBarEditingController!.text
+                              .trim(),
                           isLessThan: myAddFriendsProvider
-                                  .searchBarEditingController!.text.trim()
+                                  .searchBarEditingController!.text
+                                  .trim()
                                   .substring(
                                       0,
                                       myAddFriendsProvider
-                                              .searchBarEditingController!
-                                              .text.trim()
+                                              .searchBarEditingController!.text
+                                              .trim()
                                               .length -
                                           1) +
                               String.fromCharCode(myAddFriendsProvider
-                                      .searchBarEditingController!.text.trim()
+                                      .searchBarEditingController!.text
+                                      .trim()
                                       .codeUnitAt(myAddFriendsProvider
-                                              .searchBarEditingController!
-                                              .text.trim()
+                                              .searchBarEditingController!.text
+                                              .trim()
                                               .length -
                                           1) +
                                   1),
@@ -133,7 +152,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                               doc.data() as Map<String, dynamic>))
                           .toList();
 
-                      print("users: $users");
 
                       return Expanded(
                         child: ListView.builder(
@@ -142,7 +160,19 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                             shrinkWrap: true,
                             itemCount: users.length,
                             itemBuilder: (context, index) {
-                              return SearchUserTileWidget(userModel: users[index], onSendFriendRequest: () => myAddFriendsProvider.sendFriendRequest(sendToUID: users[index].uid), isFriendRequestSent: false, );
+                              return (users[index].uid ==
+                                      myAuthProvider.currentUserModel!.uid)
+                                  ? Container()
+                                  : SearchUserTileWidget(
+                                      userModel: users[index],
+                                      onSendFriendRequest: () =>
+                                          myAddFriendsProvider
+                                              .sendFriendRequest(
+                                                  sendToUID: users[index].uid),
+                                      isFriendRequestSent: myAuthProvider
+                                          .currentUserModel!.friendRequestsSent
+                                          .contains(users[index].uid),
+                                    );
                               // return Text(users[index].toString());
                             }),
                       );

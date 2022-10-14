@@ -72,14 +72,16 @@ class FirestoreService {
     try {
       var userDoc = await firebaseFirestore.collection('users').doc(sendToUID).get();
       var userDocData = userDoc.data();
-      List<String> friendRequestsReceived = userDocData!.containsKey('friendRequestsReceived') ? userDocData['friendRequestsReceived'] : [];
-      if (friendRequestsReceived.contains(sendFromUID)) {
+      List<dynamic> friendRequestsReceived = userDocData!.containsKey('friendRequestsReceived') ? userDocData['friendRequestsReceived'] : [];
+      if (!friendRequestsReceived.contains(sendFromUID)) {
         friendRequestsReceived.add(sendFromUID);
+        print("friendRequestsReceived: ${friendRequestsReceived}");
+        await firebaseFirestore.collection("users").doc(sendToUID).update({
+          'friendRequestsReceived': friendRequestsReceived
+        });
       }
-      firebaseFirestore.collection("users").doc(sendToUID).update({
-        'friendRequestsReceived': friendRequestsReceived
-      });
     } catch (e) {
+      print(e);
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }

@@ -6,6 +6,8 @@ class UserModel {
   String username;
   String spotifyToken;
   var friends;
+  List<dynamic> friendRequestsSent;
+  List<dynamic> friendRequestsReceived;
 
   UserModel(
       {required this.email,
@@ -14,7 +16,9 @@ class UserModel {
       required this.uid,
       required this.username,
       required this.friends,
-      required this.spotifyToken}
+      required this.spotifyToken,
+      required this.friendRequestsReceived,
+      required this.friendRequestsSent}
       );
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
@@ -25,6 +29,8 @@ class UserModel {
     uid: json["uid"],
     username: json["username"] ?? "",
     spotifyToken: json["spotifyToken"] ?? "",
+    friendRequestsReceived: json["friendRequestsReceived"] ?? [],
+    friendRequestsSent: json["friendRequestsSent"] ?? [],
   );
 
   Map<String, dynamic> toJson() => {
@@ -34,10 +40,13 @@ class UserModel {
     "friends": friends,
     "uid": uid,
     "username": username,
+    "spotifyToken": spotifyToken,
+    "friendRequestsReceived": friendRequestsReceived,
+    "friendRequestsSent": friendRequestsSent,
   };
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username}';
+    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, uid: $uid, username: $username, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
   }
 }
