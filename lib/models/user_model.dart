@@ -47,6 +47,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, uid: $uid, username: $username, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
+    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
   }
 }

@@ -124,7 +124,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   ),
                                 ),
                               )
-                            : Text(title,
+                            : SizedBox.shrink(),
+                            Text(title,
                                 overflow: TextOverflow.clip,
                                 maxLines: 1,
                                 style: AppTextStyles.largeTitle().copyWith(
