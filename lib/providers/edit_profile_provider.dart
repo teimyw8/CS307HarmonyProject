@@ -1,6 +1,5 @@
 import 'dart:ffi';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
@@ -8,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../helpers/custom_exceptions.dart';
 import '../helpers/service_constants.dart';
+import '../helpers/text_styles.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
@@ -96,21 +96,9 @@ class EditProfileProvider with ChangeNotifier {
   }
 
   String getUserName() {
-    String? username = currentUserModel?.username;
+    String? username = currentUserModel?.userName;
     username ??= "";
     return username;
-  }
-
-  Future<String> validateNewEmail(String email) async {
-    User firebaseUser = await _authService.firebaseAuth.currentUser!;
-    String message = "";
-    firebaseUser
-        .updateEmail(email)
-        .then(
-          (value) => message = 'Success',
-    )
-        .catchError((onError) => message = onError.toString());
-    return message;
   }
 
   /*

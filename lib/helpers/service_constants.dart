@@ -5,6 +5,5 @@ class ServiceConstants {
   static const ACCOUNTNOTFOUND = "Account was not found. Please Sign Up instead.";
   static const SOMETHINGWENTWRONG = "Something went wrong. Please try again!";
   static const EMAILNOTFOUND = "Email was not found.";
-  static const USERNAMEALREADYTAKEN = "This username is already taken.";
 
 }

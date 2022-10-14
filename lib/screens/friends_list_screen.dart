@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
-import 'package:harmony_app/screens/add_friends_screen.dart';
+import 'package:harmony_app/screens/add_friends_page.dart';
 import 'package:harmony_app/screens/profile_friends_screens.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -36,7 +36,7 @@ class _FriendsListPageState extends State<FriendsListPage> {
               onPressed: () {
                 debugPrint('search for other users');
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddFriendsScreen()));
+                    MaterialPageRoute(builder: (context) => add_friends()));
               },
               icon: Icon(Icons.search)),
           IconButton(
