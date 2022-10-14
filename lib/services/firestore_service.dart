@@ -28,7 +28,6 @@ class FirestoreService {
       {required String uid,
         required String email,
       required String firstName,
-      required List<String> friends,
       required String lastName,
       required String userName,
       required String password}) async {
@@ -37,7 +36,6 @@ class FirestoreService {
       await usersDocRef.set({
         "email": email,
         "firstName": firstName,
-        "friends": friends,
         "lastName": lastName,
         "username": userName,
         "uid": uid,

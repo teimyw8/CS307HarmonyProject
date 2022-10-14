@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 
 var currUser;
-late List<dynamic> friendsList;
+var friendsList;
 
 //this screen displays the friends list from the current user.
 //it uses a stream builder to query the information from firestore
@@ -49,39 +49,26 @@ class _FriendsListPageState extends State<FriendsListPage> {
       ),
       body: Column(
         children: <Widget>[
-          Consumer<AuthProvider>(
-            builder: (BuildContext context, AuthProvider myAuthProvider,
-                Widget? child) {
-              myAuthProvider.updateCurrentUser();
-              currUser = (myAuthProvider.currentUserModel?.uid);
-              friendsList = (myAuthProvider.currentUserModel?.friends);
-              return const SizedBox.shrink();
-            },
-          ),
           Expanded(
             child: Container(
                 height: double.infinity,
                 width: double.infinity,
-                child: friendsListView()
-            ),
+                child: friendsListView()),
           ),
-
+          Consumer<AuthProvider> (
+            builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+            debugPrint(myAuthProvider.currentUserModel.toString());
+            currUser = (myAuthProvider.currentUserModel?.uid);
+            friendsList = (myAuthProvider.currentUserModel?.friends);
+            debugPrint('friends:');
+            debugPrint(myAuthProvider.currentUserModel?.friends.toString());
+          return const Text("");
+          },
+          ),
         ],
       ),
     );
   }
-}
-
-void refresh() {
-  Consumer<AuthProvider>(
-    builder: (BuildContext context, AuthProvider myAuthProvider,
-        Widget? child) {
-      myAuthProvider.updateCurrentUser();
-      currUser = (myAuthProvider.currentUserModel?.uid);
-      friendsList = (myAuthProvider.currentUserModel?.friends);
-      return const SizedBox.shrink();
-    },
-  );
 }
 
 class friendsListView extends StatefulWidget {
@@ -98,14 +85,6 @@ class friendsListView extends StatefulWidget {
 class _friendsListViewState extends State<friendsListView> {
   @override
   Widget build(BuildContext context) {
-    if (friendsList.isEmpty) {
-      debugPrint('no friends');
-      refresh();
-      return Text(
-          'No friends',
-          style: AppTextStyles.headline(),
-      );
-    }
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('users').where("uid", whereIn: friendsList).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -116,6 +95,7 @@ class _friendsListViewState extends State<friendsListView> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Text("Loading");
         }
+
         final List<DocumentSnapshot> documents = snapshot.data!.docs;
         return ListView(
             scrollDirection: Axis.vertical,
@@ -152,19 +132,7 @@ class _friendsListViewState extends State<friendsListView> {
                                 IconButton(
                                   icon: const Icon(Icons.remove_circle_outline),
                                   color: Colors.red,
-                                  onPressed: () {
-                                    //debugPrint(e['uid']);
-                                    debugPrint(e.get('uid'));
-                                    var collection = FirebaseFirestore.instance.collection('users');
-                                    collection.doc(currUser).update(
-                                        {
-                                          'friends':FieldValue.arrayRemove([e.get('uid')]),
-                                        });
-                                    debugPrint(friendsList.toString());
-                                    friendsList.remove(e['uid']);
-                                    setState(() {});
-                                    debugPrint(friendsList.toString());
-                                  },
+                                  onPressed: () {},
                                 ),
                               ],
                             ),
