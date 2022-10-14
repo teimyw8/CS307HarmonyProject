@@ -133,23 +133,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 floatingActionButton: FloatingActionButton(
                   onPressed: () {
                     temp = UserModel.fromJson(_editProfileProvider.currentUserModel!.toJson());
-                    _editProfileProvider.formKey.currentState!.save();
-                    if (!_editProfileProvider.isEditing ||
-                        _editProfileProvider.formKey.currentState!.validate()) {
-                      print('passes first if');
-                      _editProfileProvider.swapEditingMode();
-                      if (_editProfileProvider.currentUserModel!.email
-                              .compareTo(temp!.email) !=
-                          0) {
-                        print('passes if');
-                        _editProfileProvider.validateNewEmail(temp!.email);
-                      }
-                      print(_editProfileProvider.currentUserModel?.email);
-                      print(temp?.email);
-                      if (!_editProfileProvider.isEditing) {
-                        _editProfileProvider
-                            .setUserInfo(UserModel.fromJson(temp!.toJson()));
-                      }
+                    _editProfileProvider.update(temp!);
+                    if (!_editProfileProvider.isEditing) {
                       setState(() {});
                     }
                   },

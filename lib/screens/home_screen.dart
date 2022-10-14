@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final AuthProvider _authProvider =
-  Provider.of<AuthProvider>(Get.context!, listen: false);
+      Provider.of<AuthProvider>(Get.context!, listen: false);
 
   @override
   Widget build(BuildContext context) {
@@ -31,22 +31,33 @@ class _HomeScreenState extends State<HomeScreen> {
         alignment: AlignmentDirectional.topStart,
         children: [
           Scaffold(
-            appBar: CustomAppBar(title: "Harmony", needBackArrow: false, needAvatar: true, needSettings: true, needHome: true, onHomeClicked: () {
-                debugPrint('Temporary, must be deleted when we finalize the home page');
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => (FriendsListPage())));
-            },),
+            appBar: CustomAppBar(
+              title: "Harmony",
+              needBackArrow: false,
+              needAvatar: true,
+              needSettings: true,
+              needHome: true,
+              onHomeClicked: () {
+                debugPrint(
+                    'Temporary, must be deleted when we finalize the home page');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => (FriendsListPage())));
+              },
+            ),
             backgroundColor: AppColors.white,
             body: Align(
               alignment: Alignment.center,
               child: SingleChildScrollView(
-                padding:
-                EdgeInsets.symmetric(horizontal: 60.w, vertical: 20.h),
+                padding: EdgeInsets.symmetric(horizontal: 60.w, vertical: 20.h),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Consumer<AuthProvider>(
-                      builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+                      builder: (BuildContext context,
+                          AuthProvider myAuthProvider, Widget? child) {
+                        myAuthProvider.updateCurrentUser();
                         return Text(
                           myAuthProvider.currentUserModel.toString(),
                           style: AppTextStyles.footNote(),
@@ -58,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-
         ],
       ),
     );

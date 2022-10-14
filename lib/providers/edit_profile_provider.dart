@@ -107,11 +107,11 @@ class EditProfileProvider with ChangeNotifier {
       print('validate was true');
       _authProvider.startLoading();
       try {
-        await _authService.firebaseAuth.currentUser?.verifyBeforeUpdateEmail(email);
+        await _authService.firebaseAuth.currentUser
+            ?.verifyBeforeUpdateEmail(email);
         PopUpDialog.showAcknowledgePopUpDialog(
             title: "Email Sent!",
-            message:
-                "Please check your inbox for new email to confirm it.",
+            message: "Please check your inbox for new email to confirm it.",
             onOkClick: () {
               Get.close(1);
             });
@@ -160,5 +160,41 @@ class EditProfileProvider with ChangeNotifier {
       }
       _authProvider.stopLoading();
     }
+  }
+
+  ///this function shows an error dialog
+  void showErrorDialog(String message) {
+    PopUpDialog.showAcknowledgePopUpDialog(
+        title: "Error!",
+        message: message,
+        onOkClick: () {
+          Get.close(1);
+        });
+  }
+
+  Future<void> update(UserModel temp) async {
+    _authProvider.startLoading();
+    formKey.currentState!.save();
+    try {
+      if (currentUserModel!.username.compareTo(temp!.username) != 0) {
+        await _firestoreService.doesUsernameAlreadyExist(
+            username: temp!.username);
+      }
+      if (formKey.currentState!.validate()) {
+        print('passes first if');
+        swapEditingMode();
+        if (currentUserModel!.email.compareTo(temp!.email) != 0) {
+          print('passes if');
+          validateNewEmail(temp!.email);
+        }
+        print(temp?.email);
+        if (!isEditing) {
+          setUserInfo(UserModel.fromJson(temp!.toJson()));
+        }
+      }
+    } on FirestoreException catch (e) {
+      showErrorDialog(e.cause);
+    }
+    _authProvider.stopLoading();
   }
 }
