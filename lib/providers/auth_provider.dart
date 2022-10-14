@@ -155,6 +155,7 @@ class AuthProvider with ChangeNotifier {
               firstName: signUpFirstNameTextEditingController!.text,
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text,
+              friends: [],
               password: signUpPasswordTextEditingController!.text);
           var userDocData =
               await _firestoreService.retrieveUserFromFirestore(uid: uid);
@@ -231,5 +232,12 @@ class AuthProvider with ChangeNotifier {
   ///this function pops all the AuthScreens and navigates user to the HomeScreen
   void goToHomeScreen() async {
     Get.offAll(() => HomeScreen());
+  }
+  Future<void> updateCurrentUser() async {
+    String uid = _authService.firebaseAuth.currentUser?.uid ?? "";
+    var userDocData =
+    await _firestoreService.retrieveUserFromFirestore(uid: uid);
+    currentUserModel =  UserModel.fromJson(userDocData!);
+    notifyListeners ();
   }
 }
