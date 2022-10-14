@@ -124,12 +124,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   ),
                                 ),
                               )
-                            : SizedBox.shrink(),
+                            :
                             Text(title,
                                 overflow: TextOverflow.clip,
                                 maxLines: 1,
                                 style: AppTextStyles.largeTitle().copyWith(
                                     fontSize: 30.sp, color: AppColors.white)),
+                        if (needBackArrow) Text(title,
+                            overflow: TextOverflow.clip,
+                            maxLines: 1,
+                            style: AppTextStyles.largeTitle().copyWith(
+                                fontSize: 30.sp, color: AppColors.white)),
                         Row(
                           children: [
                             if (needAvatar)
