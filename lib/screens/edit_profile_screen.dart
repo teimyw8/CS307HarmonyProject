@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
@@ -5,6 +6,8 @@ import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
+
+
 
 import '../helpers/colors.dart';
 import '../models/user_model.dart';
@@ -35,7 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         _errorMessage = '';
       });
 
-
+      await FirebaseFirestore.instance.collection('users').doc(_editProfileProvider.currentUserModel!.uid).update({'spotifyToken' : connected});
 
     } else {
       setState(() {
@@ -49,7 +52,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if(disconnected) {
       setState(() {
         _syncState = "Sync with Spotify";
+        _errorMessage = '';
       });
+      FirebaseFirestore.instance.collection('users').doc(_editProfileProvider.currentUserModel!.uid).update({'spotifyToken' : ''});
     }
   }
 
@@ -172,17 +177,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor : Color.fromRGBO(29,185,84,1.0)),
+
                       onPressed: () {
+
                         if(_syncState == "Sync with Spotify"){
                           _sync();
+
                         } else {
-                          _desync();
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>  AlertDialog(
+                              title:  const Text('Confirm desyncing your Spotify account'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                                  child:  const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _desync();
+                                    Navigator.pop(context, 'Confirm');
+                                  },
+                                  child: const Text('Confirm'),
+                                ),
+                              ],
+                            ),
+                          );
+
                         }
                       },
-
                       child: Text(_syncState),
                     ),
                     Text(_errorMessage),
+
+
                   ]),
             ),
           ),
