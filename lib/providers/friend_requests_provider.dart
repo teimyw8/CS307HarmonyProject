@@ -22,7 +22,9 @@ class FriendRequestsProvider with ChangeNotifier {
   void initializeVariables() async {
     isLoading = false;
     friendRequestsReceived = [];
+    startLoading();
     await getFriendRequestsReceived();
+    stopLoading();
     notifyListeners();
   }
 
@@ -34,7 +36,6 @@ class FriendRequestsProvider with ChangeNotifier {
 
   ///this function retrieves every user that sent a friend request to the current user
   Future<void> getFriendRequestsReceived() async {
-    startLoading();
     try {
       List<dynamic> friendRequestsReceivedFirestore =
           await _firestoreService.getFriendRequestsReceived(
@@ -45,6 +46,41 @@ class FriendRequestsProvider with ChangeNotifier {
         UserModel userModel = UserModel.fromJson(userDoc);
         friendRequestsReceived.add(userModel);
       }
+      notifyListeners();
+    } on FirestoreException catch (e) {
+      PopUpDialog.showAcknowledgePopUpDialog(
+          title: "Error!",
+          message: e.cause,
+          onOkClick: () {
+            Get.close(1);
+          });
+    }
+  }
+
+  ///this function is triggered when the user clicks accept on a FriendRequest widget
+  void onAcceptFriendRequest({required UserModel userModel}) async {
+    startLoading();
+    try {
+      await _firestoreService.acceptFriendRequest(currentUserUID: _authProvider.currentUserModel!.uid, otherUserUID: userModel.uid);
+      friendRequestsReceived.remove(userModel);
+      notifyListeners();
+    } on FirestoreException catch (e) {
+      PopUpDialog.showAcknowledgePopUpDialog(
+          title: "Error!",
+          message: e.cause,
+          onOkClick: () {
+            Get.close(1);
+          });
+    }
+    stopLoading();
+  }
+
+  ///this function is triggered when the user clicks deny on a FriendRequest widget
+  void onDenyFriendRequest({required UserModel userModel}) async {
+    startLoading();
+    try {
+      await _firestoreService.denyFriendRequest(currentUserUID: _authProvider.currentUserModel!.uid, otherUserUID: userModel.uid);
+      friendRequestsReceived.remove(userModel);
       notifyListeners();
     } on FirestoreException catch (e) {
       PopUpDialog.showAcknowledgePopUpDialog(

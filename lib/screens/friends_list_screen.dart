@@ -160,6 +160,10 @@ class _friendsListViewState extends State<friendsListView> {
                                         {
                                           'friends':FieldValue.arrayRemove([e.get('uid')]),
                                         });
+                                    collection.doc(e.get('uid')).update(
+                                        {
+                                          'friends':FieldValue.arrayRemove([currUser]),
+                                        });
                                     friendsList.remove(e['uid']);
                                     setState(() {});
                                   },
