@@ -58,7 +58,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
               AddFriendsProvider myAddFriendsProvider,
               AuthProvider myAuthProvider,
               Widget? child) {
-            return Padding(
+            return (myAddFriendsProvider.areVariablesInitialized) ? Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(children: [
                 SizedBox(height: 10.h),
@@ -91,7 +91,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                         controller:
                             myAddFriendsProvider.searchBarEditingController,
                         onChanged: (value) {
-                          setState(() {});
+                          //setState(() {});
                         },
                       ),
                     ),
@@ -134,10 +134,10 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                       if (snapshot.hasError) // TODO: show alert
                         return Text('Something went wrong');
 
-                      if (snapshot.connectionState == ConnectionState.waiting)
-                        return Expanded(child: CustomAppLoader());
+                      // if (snapshot.connectionState == ConnectionState.waiting)
+                      //   return Expanded(child: CustomAppLoader());
 
-                      var len = snapshot.data!.docs.length;
+                      var len = snapshot.data?.docs.length ?? 0;
                       if (len == 0) {
                         return Expanded(
                           child: Column(
@@ -182,7 +182,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                     },
                   ),
               ]),
-            );
+            ) : Container();
           },
         ),
       ),

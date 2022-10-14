@@ -17,10 +17,14 @@ class AddFriendsProvider with ChangeNotifier {
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
 
   bool isLoading = false;
-
+  bool areVariablesInitialized = false;
   void initializeVariables() {
+    areVariablesInitialized = false;
+
     searchBarEditingController = TextEditingController();
     isLoading = false;
+
+    areVariablesInitialized = true;
     notifyListeners();
   }
 
@@ -28,6 +32,7 @@ class AddFriendsProvider with ChangeNotifier {
     searchBarEditingController!.dispose();
     searchBarEditingController = null;
     isLoading = false;
+    areVariablesInitialized = false;
     notifyListeners();
   }
 
