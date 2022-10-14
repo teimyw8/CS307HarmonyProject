@@ -38,8 +38,8 @@ class EditProfileProvider with ChangeNotifier {
   ///this function modifies user profile data in database
   Future<void> setUserInfo(UserModel temp) async {
     try {
-      var usersDocRef = _firestoreService.firebaseFirestore.collection('users')
-          .doc(temp.uid);
+      var usersDocRef =
+          _firestoreService.firebaseFirestore.collection('users').doc(temp.uid);
       await usersDocRef.set(temp.toJson());
       currentUserModel = temp;
       _authProvider.currentUserModel = temp;
@@ -89,7 +89,6 @@ class EditProfileProvider with ChangeNotifier {
 
   String getUserFirst() {
     return currentUserModel!.firstName;
-
   }
 
   String getUserLast() {
@@ -102,7 +101,29 @@ class EditProfileProvider with ChangeNotifier {
     return username;
   }
 
-  Future<String> validateNewEmail(String email) async {
+  ///This function is triggered to send a confirmation email to a new email a user is trying to switch to.
+  Future<void> validateNewEmail(String email) async {
+    if (formKey.currentState!.validate()) {
+      print('validate was true');
+      _authProvider.startLoading();
+      try {
+        await _authService.firebaseAuth.currentUser?.verifyBeforeUpdateEmail(email);
+        PopUpDialog.showAcknowledgePopUpDialog(
+            title: "Email Sent!",
+            message:
+                "Please check your inbox for new email to confirm it.",
+            onOkClick: () {
+              Get.close(1);
+            });
+      } on AuthException catch (e) {
+        _authProvider.showErrorDialog(e.cause);
+      } catch (e) {
+        print(e.toString());
+        _authProvider.showErrorDialog(e.toString());
+      }
+      _authProvider.stopLoading();
+    }
+    /*
     User firebaseUser = await _authService.firebaseAuth.currentUser!;
     String message = "";
     await firebaseUser.verifyBeforeUpdateEmail(email);
@@ -115,20 +136,20 @@ class EditProfileProvider with ChangeNotifier {
           .catchError((onError) => message = onError.toString());
     }
     return message;
+
+     */
   }
 
   ///this function is triggered when the user clicks on Reset button on ForgotPasswordScreen
   Future<void> onResetPassword() async {
     if (formKey.currentState!.validate()) {
-      print('validate was true');
       _authProvider.startLoading();
       try {
-        await _authService.forgotPassword(
-            email: currentUserModel!.email);
+        await _authService.forgotPassword(email: currentUserModel!.email);
         PopUpDialog.showAcknowledgePopUpDialog(
             title: "Email Sent!",
             message:
-            "Please check your inbox for instructions on how to reset your password",
+                "Please check your inbox for instructions on how to reset your password",
             onOkClick: () {
               Get.close(1);
             });

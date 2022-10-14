@@ -22,7 +22,6 @@ class EditProfileScreen extends StatefulWidget {
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
-
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
@@ -36,11 +35,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   _sync() async {
     String connected = await SpotifyService.syncSpotify();
 
-    if(connected != '') {
+    if (connected != '') {
       bool paused = await SpotifyService.getPlayerState();
       setState(() {
         _syncState = "Desync";
-        if(paused) {
+        if (paused) {
           _errorMessage = 'Paused';
         } else {
           _errorMessage = 'Playing';
@@ -72,12 +71,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .update({'spotifyToken': ''});
     }
   }
+
   _pressedInEdit() {
     setState(() {
-      _errorMessage = 'Please exit editing mode before attempting\n to sync/desync with Spotify';
+      _errorMessage =
+          'Please exit editing mode before attempting\n to sync/desync with Spotify';
     });
   }
-
 
   _test() {
     print("");
@@ -88,10 +88,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // TODO: implement initState
     super.initState();
 
-    AuthProvider _authProvider = Provider.of<AuthProvider>(Get.context!, listen: false);
+    AuthProvider _authProvider =
+        Provider.of<AuthProvider>(Get.context!, listen: false);
     String token = _authProvider.currentUserModel!.spotifyToken;
     setState(() {
-      if(token == ''){
+      if (token == '') {
         _syncState = 'Sync with Spotify';
       } else {
         _syncState = 'Desync';
@@ -131,14 +132,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: AppColors.white,
                 floatingActionButton: FloatingActionButton(
                   onPressed: () {
-                    temp = _editProfileProvider.currentUserModel;
+                    temp = UserModel.fromJson(_editProfileProvider.currentUserModel!.toJson());
                     _editProfileProvider.formKey.currentState!.save();
                     if (!_editProfileProvider.isEditing ||
                         _editProfileProvider.formKey.currentState!.validate()) {
+                      print('passes first if');
                       _editProfileProvider.swapEditingMode();
                       if (_editProfileProvider.currentUserModel!.email
                               .compareTo(temp!.email) !=
-                          0) {}
+                          0) {
+                        print('passes if');
+                        _editProfileProvider.validateNewEmail(temp!.email);
+                      }
+                      print(_editProfileProvider.currentUserModel?.email);
+                      print(temp?.email);
                       if (!_editProfileProvider.isEditing) {
                         _editProfileProvider
                             .setUserInfo(UserModel.fromJson(temp!.toJson()));
@@ -241,7 +248,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  SizedBox(width: 10.w,),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
                                   GestureDetector(
                                     onTap: () {
                                       myAuthProvider
@@ -258,12 +267,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 height: 20.h,
                               ),
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(primary : Color.fromRGBO(29,185,84,1.0)),
-
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromRGBO(29, 185, 84, 1.0)),
                                 onPressed: () {
-
-
-                                  if(!_editProfileProvider.isEditing) {
+                                  if (!_editProfileProvider.isEditing) {
                                     if (_syncState == "Sync with Spotify") {
                                       _sync();
                                     } else {
@@ -271,23 +279,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         context: context,
                                         builder: (BuildContext context) =>
                                             AlertDialog(
-                                              title: const Text(
-                                                  'Confirm desyncing your Spotify account'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context, 'Cancel'),
-                                                  child: const Text('Cancel'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    _desync();
-                                                    Navigator.pop(context, 'Confirm');
-                                                  },
-                                                  child: const Text('Confirm'),
-                                                ),
-                                              ],
+                                          title: const Text(
+                                              'Confirm desyncing your Spotify account'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  context, 'Cancel'),
+                                              child: const Text('Cancel'),
                                             ),
+                                            TextButton(
+                                              onPressed: () {
+                                                _desync();
+                                                Navigator.pop(
+                                                    context, 'Confirm');
+                                              },
+                                              child: const Text('Confirm'),
+                                            ),
+                                          ],
+                                        ),
                                       );
                                     }
                                   } else {

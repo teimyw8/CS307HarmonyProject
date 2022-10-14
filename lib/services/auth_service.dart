@@ -39,6 +39,7 @@ class AuthService {
       }
       throw AuthException(ServiceConstants.SOMETHINGWENTWRONG);
     } catch (e) {
+      print('threw from something else');
       throw AuthException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
