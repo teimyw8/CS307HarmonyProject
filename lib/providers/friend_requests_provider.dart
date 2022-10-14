@@ -10,20 +10,19 @@ import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
 
 class FriendRequestsProvider with ChangeNotifier {
-
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   AuthProvider _authProvider =
-  Provider.of<AuthProvider>(Get.context!, listen: false);
+      Provider.of<AuthProvider>(Get.context!, listen: false);
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
 
   List<UserModel> friendRequestsReceived = [];
 
   bool isLoading = false;
 
-  void initializeVariables() {
+  void initializeVariables() async {
     isLoading = false;
     friendRequestsReceived = [];
-    getFriendRequestsReceived();
+    await getFriendRequestsReceived();
     notifyListeners();
   }
 
@@ -34,13 +33,15 @@ class FriendRequestsProvider with ChangeNotifier {
   }
 
   ///this function retrieves every user that sent a friend request to the current user
-  void getFriendRequestsReceived() async {
+  Future<void> getFriendRequestsReceived() async {
     startLoading();
     try {
-      List<dynamic> friendRequestsReceived = await _firestoreService.getFriendRequestsReceived(
-          currentUserModelUID: _authProvider.currentUserModel!.uid);
-      for (String uid in friendRequestsReceived) {
-        var userDoc = await _firestoreService.retrieveUserFromFirestore(uid: uid);
+      List<dynamic> friendRequestsReceivedFirestore =
+          await _firestoreService.getFriendRequestsReceived(
+              currentUserModelUID: _authProvider.currentUserModel!.uid);
+      for (String uid in friendRequestsReceivedFirestore) {
+        var userDoc =
+            await _firestoreService.retrieveUserFromFirestore(uid: uid);
         UserModel userModel = UserModel.fromJson(userDoc);
         friendRequestsReceived.add(userModel);
       }
@@ -60,10 +61,9 @@ class FriendRequestsProvider with ChangeNotifier {
     isLoading = true;
     notifyListeners();
   }
+
   void stopLoading() {
     isLoading = false;
     notifyListeners();
   }
-
-
 }

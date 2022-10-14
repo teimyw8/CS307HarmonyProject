@@ -240,4 +240,5 @@ class AuthProvider with ChangeNotifier {
     currentUserModel =  UserModel.fromJson(userDocData!);
     notifyListeners ();
   }
+
 }

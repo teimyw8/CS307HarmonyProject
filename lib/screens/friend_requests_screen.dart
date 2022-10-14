@@ -9,6 +9,7 @@ import 'package:harmony_app/providers/friend_requests_provider.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/add_friends_widgets/user_tile_widget.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+import 'package:harmony_app/widgets/friend_requests_widgets/friend_request_tile_widget.dart';
 import 'package:provider/provider.dart';
 
 class FriendRequestsScreen extends StatefulWidget {
@@ -20,18 +21,22 @@ class FriendRequestsScreen extends StatefulWidget {
 
 class _FriendRequestsScreenState extends State<FriendRequestsScreen> {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
-  AddFriendsProvider _addFriendsProvider =
-      Provider.of<AddFriendsProvider>(Get.context!, listen: false);
+  FriendRequestsProvider _friendRequestsProvider =
+      Provider.of<FriendRequestsProvider>(Get.context!, listen: false);
 
   @override
   void initState() {
-    _addFriendsProvider.initializeVariables();
+    Future.delayed(Duration(seconds: 0), () {
+      _friendRequestsProvider.initializeVariables();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
-    _addFriendsProvider.disposeVariables();
+    Future.delayed(Duration(seconds: 0), () {
+      _friendRequestsProvider.disposeVariables();
+    });
     super.dispose();
   }
 
@@ -78,11 +83,7 @@ class _FriendRequestsScreenState extends State<FriendRequestsScreen> {
                       shrinkWrap: true,
                       itemCount: myFriendRequestsProvider.friendRequestsReceived.length,
                       itemBuilder: (context, index) {
-                        return SearchUserTileWidget(
-                          userModel: myFriendRequestsProvider.friendRequestsReceived[index],
-                          onSendFriendRequest: () {},
-                          isFriendRequestSent: false,
-                        );
+                        return FriendRequestTileWidget(userModel: myFriendRequestsProvider.friendRequestsReceived[index], onDeny: () {  }, onAccept: () {  },);
                         // return Text(users[index].toString());
                       }),
                 )

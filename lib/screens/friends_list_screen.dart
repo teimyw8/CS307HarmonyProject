@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/screens/add_friends_screen.dart';
+import 'package:harmony_app/screens/friend_requests_screen.dart';
 import 'package:harmony_app/screens/profile_friends_screens.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -34,14 +35,18 @@ class _FriendsListPageState extends State<FriendsListPage> {
         actions: [
           IconButton(
               onPressed: () {
-                debugPrint('search for other users');
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => FriendRequestsScreen()));
+              },
+              icon: Icon(Icons.person_add)),
+          IconButton(
+              onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => AddFriendsScreen()));
               },
               icon: Icon(Icons.search)),
           IconButton(
               onPressed: () {
-                debugPrint('refresh button - friends list');
                 setState(() {}); //refresh this page to show any changes
               },
               icon: Icon(Icons.refresh))
@@ -52,9 +57,8 @@ class _FriendsListPageState extends State<FriendsListPage> {
           Consumer<AuthProvider> (
             builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
               myAuthProvider.updateCurrentUser();
-              debugPrint(myAuthProvider.currentUserModel.toString());
               currUser = (myAuthProvider.currentUserModel?.uid);
-              friendsList = (myAuthProvider.currentUserModel?.friends);
+              friendsList = (myAuthProvider.currentUserModel?.friends)!;
               return const Text("");
             }
           ),
@@ -76,7 +80,7 @@ void refresh() {
         Widget? child) {
       myAuthProvider.updateCurrentUser();
       currUser = (myAuthProvider.currentUserModel?.uid);
-      friendsList = (myAuthProvider.currentUserModel?.friends);
+      friendsList = (myAuthProvider.currentUserModel?.friends)!;
       return const SizedBox.shrink();
     },
   );
@@ -97,7 +101,6 @@ class _friendsListViewState extends State<friendsListView> {
   @override
   Widget build(BuildContext context) {
     if (friendsList.isEmpty) {
-      debugPrint('no friends');
       refresh();
       return Text(
         'No friends',
@@ -126,7 +129,6 @@ class _friendsListViewState extends State<friendsListView> {
                         children: <Widget>[
                           TextButton(
                               onPressed: (){
-                                debugPrint('take to friends profile');
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) => friends_profile_screen(name: e['firstName'],)));
                               },
@@ -153,16 +155,13 @@ class _friendsListViewState extends State<friendsListView> {
                                   color: Colors.red,
                                   onPressed: () {
                                     //debugPrint(e['uid']);
-                                    debugPrint(e.get('uid'));
                                     var collection = FirebaseFirestore.instance.collection('users');
                                     collection.doc(currUser).update(
                                         {
                                           'friends':FieldValue.arrayRemove([e.get('uid')]),
                                         });
-                                    debugPrint(friendsList.toString());
                                     friendsList.remove(e['uid']);
                                     setState(() {});
-                                    debugPrint(friendsList.toString());
                                   },
                                 ),
                               ],

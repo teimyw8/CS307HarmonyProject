@@ -99,15 +99,14 @@ class FirestoreService {
 
 
   ///this function retrieves FriendRequestsReceived for a user from Firestore
-  Future<dynamic> getFriendRequestsReceived({required String currentUserModelUID}) async {
+  Future<List<dynamic>> getFriendRequestsReceived({required String currentUserModelUID}) async {
     try {
       var currentUserDoc = await firebaseFirestore.collection('users').doc(currentUserModelUID).get();
-      var currentUserDocData = currentUserDoc.data();
+      var currentUserDocData =  currentUserDoc.data();
       List<dynamic> friendRequestsReceived = currentUserDocData!.containsKey('friendRequestsReceived') ? currentUserDocData['friendRequestsReceived'] : [];
       return friendRequestsReceived;
     } catch (e) {
-      print(e);
-      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+      return [];
     }
   }
 
