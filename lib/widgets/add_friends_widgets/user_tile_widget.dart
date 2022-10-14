@@ -7,10 +7,15 @@ import 'package:harmony_app/models/user_model.dart';
 
 class SearchUserTileWidget extends StatefulWidget {
   UserModel userModel;
+  bool isFriendRequestSent;
+  VoidCallback onSendFriendRequest;
 
 
   SearchUserTileWidget(
-      {required this.userModel});
+      {required this.userModel,
+        required this.onSendFriendRequest,
+        required this.isFriendRequestSent
+      });
 
   @override
   State<SearchUserTileWidget> createState() => _SearchUserTileWidgetState();
@@ -52,7 +57,13 @@ class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
               )
             ],
           ),
-          Icon(Icons.add, size: 30.h,)
+          GestureDetector(
+            onTap: () {
+              if (!widget.isFriendRequestSent) {
+                widget.onSendFriendRequest();
+              }
+            },
+              child: Icon(widget.isFriendRequestSent ? Icons.check : Icons.add, size: 30.h,))
         ],
       ),
     );

@@ -72,7 +72,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                         hintText: "Search...",
                         controller: myAddFriendsProvider.searchBarEditingController,
                         onChanged: (value) {
-                          myAddFriendsProvider.onSearchQueryChanged();
                           setState(() {});
                         },
                       ),
@@ -143,7 +142,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                             shrinkWrap: true,
                             itemCount: users.length,
                             itemBuilder: (context, index) {
-                              return SearchUserTileWidget(userModel: users[index],);
+                              return SearchUserTileWidget(userModel: users[index], onSendFriendRequest: () => myAddFriendsProvider.sendFriendRequest(sendToUID: users[index].uid), isFriendRequestSent: false, );
                               // return Text(users[index].toString());
                             }),
                       );

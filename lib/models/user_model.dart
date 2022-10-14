@@ -23,8 +23,8 @@ class UserModel {
     lastName: json["lastName"],
     friends: json["friends"],
     uid: json["uid"],
-    username: json["username"],
-    spotifyToken: json["spotifyToken"],
+    username: json["username"] ?? "",
+    spotifyToken: json["spotifyToken"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {

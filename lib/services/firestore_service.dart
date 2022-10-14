@@ -67,21 +67,20 @@ class FirestoreService {
   }
 
 
-  Future<dynamic> getUsersSnapshotByUsernameQuery({required String usernameQuery}) async {
+  ///this function updates the friendRequestsReceived for the user to whom the current user just sent the request
+  Future<dynamic> sendFriendRequestToUser({required String sendToUID, required String sendFromUID}) async {
     try {
-      var snapshot = await firebaseFirestore
-          .collection('users')
-          .where(
-        'username',
-        isGreaterThanOrEqualTo: usernameQuery,
-        isLessThan: usernameQuery.substring(0, usernameQuery.length - 1) +
-            String.fromCharCode(usernameQuery.codeUnitAt(usernameQuery.length - 1) + 1),
-      )
-          .snapshots();
-      print(snapshot);
-      return snapshot;
+      var userDoc = await firebaseFirestore.collection('users').doc(sendToUID).get();
+      var userDocData = userDoc.data();
+      List<String> friendRequestsReceived = userDocData!.containsKey('friendRequestsReceived') ? userDocData['friendRequestsReceived'] : [];
+      if (friendRequestsReceived.contains(sendFromUID)) {
+        friendRequestsReceived.add(sendFromUID);
+      }
+      firebaseFirestore.collection("users").doc(sendToUID).update({
+        'friendRequestsReceived': friendRequestsReceived
+      });
     } catch (e) {
-      return null;
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
 
