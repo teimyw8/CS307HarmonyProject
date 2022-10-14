@@ -20,18 +20,22 @@ class FriendRequestsScreen extends StatefulWidget {
 
 class _FriendRequestsScreenState extends State<FriendRequestsScreen> {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
-  AddFriendsProvider _addFriendsProvider =
-      Provider.of<AddFriendsProvider>(Get.context!, listen: false);
+  FriendRequestsProvider _friendRequestsProvider =
+      Provider.of<FriendRequestsProvider>(Get.context!, listen: false);
 
   @override
   void initState() {
-    _addFriendsProvider.initializeVariables();
+    Future.delayed(Duration(seconds: 0), () {
+      _friendRequestsProvider.initializeVariables();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
-    _addFriendsProvider.disposeVariables();
+    Future.delayed(Duration(seconds: 0), () {
+      _friendRequestsProvider.disposeVariables();
+    });
     super.dispose();
   }
 

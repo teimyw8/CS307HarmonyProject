@@ -20,10 +20,10 @@ class FriendRequestsProvider with ChangeNotifier {
 
   bool isLoading = false;
 
-  void initializeVariables() {
+  void initializeVariables() async {
     isLoading = false;
     friendRequestsReceived = [];
-    getFriendRequestsReceived();
+    await getFriendRequestsReceived();
     notifyListeners();
   }
 
@@ -34,12 +34,13 @@ class FriendRequestsProvider with ChangeNotifier {
   }
 
   ///this function retrieves every user that sent a friend request to the current user
-  void getFriendRequestsReceived() async {
+  Future<void> getFriendRequestsReceived() async {
     startLoading();
     try {
-      List<dynamic> friendRequestsReceived = await _firestoreService.getFriendRequestsReceived(
+      List<dynamic> friendRequestsReceivedFirestore = await _firestoreService.getFriendRequestsReceived(
           currentUserModelUID: _authProvider.currentUserModel!.uid);
-      for (String uid in friendRequestsReceived) {
+      print("friendRequestsReceived: ${friendRequestsReceived}");
+      for (String uid in friendRequestsReceivedFirestore) {
         var userDoc = await _firestoreService.retrieveUserFromFirestore(uid: uid);
         UserModel userModel = UserModel.fromJson(userDoc);
         friendRequestsReceived.add(userModel);

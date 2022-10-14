@@ -5,7 +5,7 @@ class UserModel {
   String uid;
   String username;
   String spotifyToken;
-  var friends;
+  List<dynamic> friends;
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
 
@@ -25,7 +25,7 @@ class UserModel {
     email: json["email"],
     firstName: json["firstName"],
     lastName: json["lastName"],
-    friends: json["friends"],
+    friends: json["friends"] ?? [],
     uid: json["uid"],
     username: json["username"] ?? "",
     spotifyToken: json["spotifyToken"] ?? "",

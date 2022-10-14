@@ -28,13 +28,17 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
 
   @override
   void initState() {
-    _addFriendsProvider.initializeVariables();
+    Future.delayed(Duration(seconds: 0), () {
+      _addFriendsProvider.initializeVariables();
+    });
     super.initState();
   }
 
   @override
   void dispose() {
-    _addFriendsProvider.disposeVariables();
+    Future.delayed(Duration(seconds: 0), () {
+      _addFriendsProvider.disposeVariables();
+    });
     super.dispose();
   }
 
