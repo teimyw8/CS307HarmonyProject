@@ -6,7 +6,6 @@ import 'home_screen.dart';
 
 class add_friends extends StatefulWidget {
   const add_friends({Key? key}) : super(key: key);
-
   @override
   _add_friendsState createState() => _add_friendsState();
 }

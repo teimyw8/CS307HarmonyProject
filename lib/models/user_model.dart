@@ -12,6 +12,7 @@ class UserModel {
       required this.lastName,
       required this.uid,
       required this.userName,
+      //required this.friendRequests,
       required this.friends}
       );
 
@@ -20,8 +21,9 @@ class UserModel {
     firstName: json["firstName"],
     lastName: json["lastName"],
     friends: json["friends"],
+    //friendRequests: json["friendRequests"],
     uid: json["uid"],
-    userName: json["userName"],
+    userName: json["username"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -29,12 +31,13 @@ class UserModel {
     "firstName": firstName,
     "lastName": lastName,
     "friends": friends,
+    //"friendRequests": friendRequests,
     "uid": uid,
-    "userName": userName,
+    "username": userName,
   };
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, userName: $userName}';
+    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $userName}';
   }
 }

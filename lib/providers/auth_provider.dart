@@ -42,6 +42,9 @@ class AuthProvider with ChangeNotifier {
   TextEditingController();
   TextEditingController? signUpUsernameTextEditingController =
   TextEditingController();
+  TextEditingController? signUpFriendsTextEditingController =
+  TextEditingController();
+
 
   //this is a key used for Form inside LoginScreen()
   final loginKey = GlobalKey<FormState>();
@@ -147,6 +150,7 @@ class AuthProvider with ChangeNotifier {
               uid: uid,
               email: signUpEmailTextEditingController!.text,
               firstName: signUpFirstNameTextEditingController!.text,
+              friends: [],
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text);
           var userDocData =
@@ -219,4 +223,13 @@ class AuthProvider with ChangeNotifier {
   void goToHomeScreen() async {
     Get.offAll(() => HomeScreen());
   }
+
+  ///update currentUserModel
+  Future<void> updateCurrentUser() async {
+    String uid = _authService.firebaseAuth.currentUser?.uid ?? "";
+    var userDocData =
+        await _firestoreService.retrieveUserFromFirestore(uid: uid);
+    currentUserModel =  UserModel.fromJson(userDocData!);
+    notifyListeners ();
+}
 }
