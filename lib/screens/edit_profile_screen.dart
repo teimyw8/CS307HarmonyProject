@@ -58,6 +58,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       FirebaseFirestore.instance.collection('users').doc(_editProfileProvider.currentUserModel!.uid).update({'spotifyToken' : ''});
     }
   }
+  _pressedInEdit() {
+    setState(() {
+      _errorMessage = 'Please exit editing mode before attempting\n to sync/desync with Spotify';
+    });
+  }
 
 
   _test() {
@@ -187,31 +192,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       onPressed: () {
 
 
-                        if(_syncState == "Sync with Spotify"){
-                          _sync();
-
+                        if(!_editProfileProvider.isEditing) {
+                          if (_syncState == "Sync with Spotify") {
+                            _sync();
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  AlertDialog(
+                                    title: const Text(
+                                        'Confirm desyncing your Spotify account'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'Cancel'),
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          _desync();
+                                          Navigator.pop(context, 'Confirm');
+                                        },
+                                        child: const Text('Confirm'),
+                                      ),
+                                    ],
+                                  ),
+                            );
+                          }
                         } else {
-
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>  AlertDialog(
-                              title:  const Text('Confirm desyncing your Spotify account'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context, 'Cancel'),
-                                  child:  const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    _desync();
-                                    Navigator.pop(context, 'Confirm');
-                                  },
-                                  child: const Text('Confirm'),
-                                ),
-                              ],
-                            ),
-                          );
-
+                          _pressedInEdit();
                         }
                       },
                       child: Text(_syncState),
