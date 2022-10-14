@@ -65,4 +65,24 @@ class FirestoreService {
     //   throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     // }
   }
+
+
+  Future<dynamic> getUsersSnapshotByUsernameQuery({required String usernameQuery}) async {
+    try {
+      var snapshot = await firebaseFirestore
+          .collection('users')
+          .where(
+        'username',
+        isGreaterThanOrEqualTo: usernameQuery,
+        isLessThan: usernameQuery.substring(0, usernameQuery.length - 1) +
+            String.fromCharCode(usernameQuery.codeUnitAt(usernameQuery.length - 1) + 1),
+      )
+          .snapshots();
+      print(snapshot);
+      return snapshot;
+    } catch (e) {
+      return null;
+    }
+  }
+
 }
