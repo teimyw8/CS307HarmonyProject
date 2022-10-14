@@ -38,7 +38,7 @@ class FirestoreService {
         "firstName": firstName,
         "friends": friends,
         "lastName": lastName,
-        "userName": userName,
+        "username": userName,
         "uid": uid,
       });
     } catch (e) {

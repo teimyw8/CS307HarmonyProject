@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Scaffold(
             appBar: CustomAppBar(title: "Harmony", needBackArrow: false, needAvatar: true, needSettings: true, needHome: true, onHomeClicked: () {
-                debugPrint('Temporary, must be deleted when we finalize the home page');
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => (FriendsListPage())));
             },),

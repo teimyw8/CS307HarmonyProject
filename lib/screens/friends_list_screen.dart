@@ -49,23 +49,21 @@ class _FriendsListPageState extends State<FriendsListPage> {
       ),
       body: Column(
         children: <Widget>[
+          Consumer<AuthProvider> (
+            builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+              myAuthProvider.updateCurrentUser();
+              //debugPrint(myAuthProvider.currentUserModel.toString());
+              //currUser = (myAuthProvider.currentUserModel?.uid);
+              friendsList = (myAuthProvider.currentUserModel?.friends);
+              //setState(() {});
+              return const SizedBox.shrink();
+            },
+          ),
           Expanded(
             child: Container(
                 height: double.infinity,
                 width: double.infinity,
                 child: friendsListView()),
-          ),
-          Consumer<AuthProvider> (
-
-            builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
-              myAuthProvider.updateCurrentUser();
-            debugPrint(myAuthProvider.currentUserModel.toString());
-            currUser = (myAuthProvider.currentUserModel?.uid);
-            friendsList = (myAuthProvider.currentUserModel?.friends);
-            debugPrint('friends:');
-            debugPrint(myAuthProvider.currentUserModel?.friends.toString());
-          return const Text("");
-          },
           ),
         ],
       ),
@@ -88,6 +86,7 @@ class _friendsListViewState extends State<friendsListView> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
+
       stream: FirebaseFirestore.instance.collection('users').where("uid", whereIn: friendsList).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
