@@ -59,6 +59,14 @@ class AppTextStyles {
         fontSize: 28.sp);
   }
 
+  static TextStyle tileText() {
+    return TextStyle(
+        color: AppColors.black,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'Inter',
+        fontSize: 15.sp);
+  }
+
   static TextStyle button() {
     return TextStyle(color: AppColors.white, fontWeight: FontWeight.w800, fontFamily: 'Inter', fontSize: 15.sp);
   }
