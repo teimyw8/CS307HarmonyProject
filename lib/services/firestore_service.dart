@@ -30,6 +30,7 @@ class FirestoreService {
       required String firstName,
       required String lastName,
       required String userName,
+        required List<String> friends,
       required String password}) async {
     try {
       var usersDocRef =  firebaseFirestore.collection('users').doc(uid);
@@ -38,6 +39,7 @@ class FirestoreService {
         "firstName": firstName,
         "lastName": lastName,
         "username": userName,
+        "friends": [],
         "uid": uid,
         "password": password,
       });
