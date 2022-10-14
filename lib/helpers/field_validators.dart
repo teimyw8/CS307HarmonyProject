@@ -14,13 +14,13 @@ class FieldValidator {
 
   static String? validatePassword(String? value) {
     if (value!.isEmpty) return "Enter password";
-    if (value.contains("!") ||
-        value.contains("@") ||
-        value.contains("%") ||
-        value.contains("*") ||
-        value.contains("-") ||
-        value.contains("+") ||
-        value.contains("=")) {
+    if (!value.contains("!") &&
+        !value.contains("@") &&
+        !value.contains("%") &&
+        !value.contains("*") &&
+        !value.contains("-") &&
+        !value.contains("+") &&
+        !value.contains("=")) {
       return "Make sure to include a special character";
     }
     if (!RegExp(r"\d").hasMatch(value)) {

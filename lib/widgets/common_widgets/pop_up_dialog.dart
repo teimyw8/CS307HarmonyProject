@@ -264,7 +264,6 @@ class PopUpDialog {
   static void showErrorPopUpDialog(
       {required String title,
         required String message,
-        required String confirmLabel,
         required VoidCallback onCloseClick}) {
     showDialog(
         barrierDismissible: true,
