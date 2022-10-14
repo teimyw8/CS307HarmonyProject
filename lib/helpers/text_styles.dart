@@ -37,7 +37,7 @@ class AppTextStyles {
 
   static TextStyle appBar() {
     return TextStyle(
-        color: AppColors.white,
+        color: AppColors.green,
         fontWeight: FontWeight.w500,
         fontFamily: 'Pacifico',
         fontSize: 26.sp);
@@ -57,6 +57,14 @@ class AppTextStyles {
         fontWeight: FontWeight.w500,
         fontFamily: 'Inter',
         fontSize: 28.sp);
+  }
+
+  static TextStyle tileText() {
+    return TextStyle(
+        color: AppColors.black,
+        fontWeight: FontWeight.w500,
+        fontFamily: 'Inter',
+        fontSize: 15.sp);
   }
 
   static TextStyle button() {

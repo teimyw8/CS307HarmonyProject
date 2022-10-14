@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:harmony_app/providers/add_friends_provider.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/screens/login_screen.dart';
@@ -23,6 +24,8 @@ void main() async {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AuthProvider()),
       ChangeNotifierProvider(create: (_) => EditProfileProvider()),
+      ChangeNotifierProvider(create: (_) => AddFriendsProvider()),
+
     ], child: const MyApp()),
   );
 }

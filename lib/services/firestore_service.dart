@@ -30,7 +30,8 @@ class FirestoreService {
       required String firstName,
       required List<String> friends,
       required String lastName,
-      required String userName,}) async {
+      required String userName,
+      required String password}) async {
     try {
       var usersDocRef =  firebaseFirestore.collection('users').doc(uid);
       await usersDocRef.set({
@@ -40,9 +41,50 @@ class FirestoreService {
         "lastName": lastName,
         "username": userName,
         "uid": uid,
+        "password": password,
       });
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
+
+  ///this function checks if a user with this username already exists
+  Future<void> doesUsernameAlreadyExist(
+      {required String username,}) async {
+    //try {
+      print("username: $username");
+      final QuerySnapshot result = await firebaseFirestore
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .limit(1).get();
+      final List<DocumentSnapshot> documents = result.docs;
+      print("documents: $documents");
+      if (documents.isNotEmpty) {
+        print("THROWING USERNAMEALREADYTAKEN");
+        throw FirestoreException(ServiceConstants.USERNAMEALREADYTAKEN);
+      }
+    // } catch (e) {
+    //   throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    // }
+  }
+
+
+  Future<dynamic> getUsersSnapshotByUsernameQuery({required String usernameQuery}) async {
+    try {
+      var snapshot = await firebaseFirestore
+          .collection('users')
+          .where(
+        'username',
+        isGreaterThanOrEqualTo: usernameQuery,
+        isLessThan: usernameQuery.substring(0, usernameQuery.length - 1) +
+            String.fromCharCode(usernameQuery.codeUnitAt(usernameQuery.length - 1) + 1),
+      )
+          .snapshots();
+      print(snapshot);
+      return snapshot;
+    } catch (e) {
+      return null;
+    }
+  }
+
 }

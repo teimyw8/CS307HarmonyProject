@@ -3,7 +3,8 @@ class UserModel {
   String firstName;
   String lastName;
   String uid;
-  String userName;
+  String username;
+  String spotifyToken;
   var friends;
 
   UserModel(
@@ -11,33 +12,33 @@ class UserModel {
       required this.firstName,
       required this.lastName,
       required this.uid,
-      required this.userName,
-      //required this.friendRequests,
-      required this.friends}
-      );
+      required this.username,
+      required this.friends,
+      required this.spotifyToken});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    email: json["email"],
-    firstName: json["firstName"],
-    lastName: json["lastName"],
-    friends: json["friends"],
-    //friendRequests: json["friendRequests"],
-    uid: json["uid"],
-    userName: json["username"],
-  );
+        email: json["email"],
+        firstName: json["firstName"],
+        lastName: json["lastName"],
+        friends: json["friends"],
+        //friendRequests: json["friendRequests"],
+        uid: json["uid"],
+        username: json["username"],
+        spotifyToken: json["spotifyToken"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "email": email,
-    "firstName": firstName,
-    "lastName": lastName,
-    "friends": friends,
-    //"friendRequests": friendRequests,
-    "uid": uid,
-    "username": userName,
-  };
+        "email": email,
+        "firstName": firstName,
+        "lastName": lastName,
+        "friends": friends,
+        //"friendRequests": friendRequests,
+        "uid": uid,
+        "username": username,
+      };
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $userName}';
+    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username}';
   }
 }

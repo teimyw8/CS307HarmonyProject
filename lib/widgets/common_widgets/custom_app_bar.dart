@@ -63,9 +63,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                           MainAxisAlignment.start,
                                       children: [
                                         Icon(
-                                          Icons.arrow_back,
+                                          Icons.arrow_back_ios,
                                           color: AppColors.green,
-                                        ),
+                                        )
                                       ],
                                     ),
                                   )
@@ -80,17 +80,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   style: AppTextStyles.appBar()),
                             ),
                           ),
-                        (needAvatar)
-                            ? Container(
-                                width: 40.w,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [],
-                                ),
-                              )
-                            : SizedBox(
-                                width: 40.w,
-                              )
+                        SizedBox(
+                          width: 40.w,
+                        )
                       ],
                     ),
                   ),
@@ -127,7 +119,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 child: Container(
                                   width: 40.w,
                                   child: Icon(
-                                    Icons.arrow_back,
+                                    Icons.arrow_back_ios,
                                     color: AppColors.white,
                                   ),
                                 ),

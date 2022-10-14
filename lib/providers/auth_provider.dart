@@ -12,7 +12,6 @@ import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import '../screens/forgot_password_screen.dart';
 
 class AuthProvider with ChangeNotifier {
-
   UserModel? currentUserModel;
 
   AuthService get _authService => GetIt.instance<AuthService>();
@@ -21,30 +20,27 @@ class AuthProvider with ChangeNotifier {
 
   //LoginScreen text editing controllers
   TextEditingController? loginEmailTextEditingController =
-  TextEditingController();
+      TextEditingController();
   TextEditingController? loginPasswordTextEditingController =
-  TextEditingController();
+      TextEditingController();
 
   //ForgotPasswordScreen text editing controllers
   TextEditingController? forgotPasswordEmailTextEditingController =
-  TextEditingController();
+      TextEditingController();
 
   //SignUpScreen text editing controllers
   TextEditingController? signUpEmailTextEditingController =
-  TextEditingController();
+      TextEditingController();
   TextEditingController? signUpPasswordTextEditingController =
-  TextEditingController();
+      TextEditingController();
   TextEditingController? signUpReEnterPasswordTextEditingController =
-  TextEditingController();
+      TextEditingController();
   TextEditingController? signUpFirstNameTextEditingController =
-  TextEditingController();
+      TextEditingController();
   TextEditingController? signUpLastNameTextEditingController =
-  TextEditingController();
+      TextEditingController();
   TextEditingController? signUpUsernameTextEditingController =
-  TextEditingController();
-  TextEditingController? signUpFriendsTextEditingController =
-  TextEditingController();
-
+      TextEditingController();
 
   //this is a key used for Form inside LoginScreen()
   final loginKey = GlobalKey<FormState>();
@@ -81,6 +77,7 @@ class AuthProvider with ChangeNotifier {
     signUpReEnterPasswordTextEditingController = TextEditingController();
     signUpFirstNameTextEditingController = TextEditingController();
     signUpLastNameTextEditingController = TextEditingController();
+    signUpUsernameTextEditingController = TextEditingController();
     notifyListeners();
   }
 
@@ -96,6 +93,8 @@ class AuthProvider with ChangeNotifier {
     signUpFirstNameTextEditingController = null;
     signUpLastNameTextEditingController!.dispose();
     signUpLastNameTextEditingController = null;
+    signUpUsernameTextEditingController!.dispose();
+    signUpUsernameTextEditingController = null;
     notifyListeners();
   }
 
@@ -141,6 +140,10 @@ class AuthProvider with ChangeNotifier {
     if (signUpKey.currentState!.validate()) {
       startLoading();
       try {
+        //first need to check if this username already exists
+        await _firestoreService.doesUsernameAlreadyExist(
+          username: signUpUsernameTextEditingController!.text,
+        );
         await _authService.signUpUser(
             email: signUpEmailTextEditingController!.text,
             password: signUpPasswordTextEditingController!.text);
@@ -152,7 +155,8 @@ class AuthProvider with ChangeNotifier {
               firstName: signUpFirstNameTextEditingController!.text,
               friends: [],
               lastName: signUpLastNameTextEditingController!.text,
-              userName: signUpUsernameTextEditingController!.text);
+              userName: signUpUsernameTextEditingController!.text,
+              password: signUpPasswordTextEditingController!.text);
           var userDocData =
               await _firestoreService.retrieveUserFromFirestore(uid: uid);
           currentUserModel = UserModel.fromJson(userDocData!);
@@ -178,7 +182,13 @@ class AuthProvider with ChangeNotifier {
         await _authService.forgotPassword(
             email: forgotPasswordEmailTextEditingController!.text);
         forgotPasswordEmailTextEditingController!.clear();
-        PopUpDialog.showAcknowledgePopUpDialog(title: "Email Sent!", message: "Please check your inbox for instructions on how to reset your password", onOkClick: (){Get.close(1);});
+        PopUpDialog.showAcknowledgePopUpDialog(
+            title: "Email Sent!",
+            message:
+                "Please check your inbox for instructions on how to reset your password",
+            onOkClick: () {
+              Get.close(1);
+            });
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
       } catch (e) {
@@ -229,7 +239,7 @@ class AuthProvider with ChangeNotifier {
     String uid = _authService.firebaseAuth.currentUser?.uid ?? "";
     var userDocData =
         await _firestoreService.retrieveUserFromFirestore(uid: uid);
-    currentUserModel =  UserModel.fromJson(userDocData!);
-    notifyListeners ();
-}
+    currentUserModel = UserModel.fromJson(userDocData!);
+    notifyListeners();
+  }
 }
