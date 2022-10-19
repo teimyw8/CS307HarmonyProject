@@ -14,20 +14,8 @@ class FieldValidator {
 
   static String? validatePassword(String? value) {
     if (value!.isEmpty) return "Enter password";
-    if (!value.contains("!") &&
-        !value.contains("@") &&
-        !value.contains("%") &&
-        !value.contains("*") &&
-        !value.contains("-") &&
-        !value.contains("+") &&
-        !value.contains("=")) {
-      return "Make sure to include a special character";
-    }
-    if (!RegExp(r"\d").hasMatch(value)) {
-      return "Make sure to include at least one digit.";
-    }
-    if (value.length < 8 || value.length > 26) {
-      return "Must be between 8-26 characters long.";
+    if (value.length < 6) {
+      return "Must be at least 6 characters long.";
     }
     return null;
   }
