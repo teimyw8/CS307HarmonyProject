@@ -40,6 +40,7 @@ class FirestoreService {
         "firstName": firstName,
         "lastName": lastName,
         "username": userName,
+        "bio": bio,
         "friends": [],
         "uid": uid,
         "password": password,

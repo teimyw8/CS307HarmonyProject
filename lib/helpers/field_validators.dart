@@ -61,4 +61,9 @@ class FieldValidator {
     }
     return null;
   }
+
+  static String? validateBio(String? value) {
+    if (value!.length > 140) return "Can't be more than 140 characters";
+    return null;
+  }
 }

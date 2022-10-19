@@ -101,6 +101,12 @@ class EditProfileProvider with ChangeNotifier {
     return username;
   }
 
+  String getBio() {
+    String? bio = currentUserModel?.bio;
+    bio ??= "";
+    return bio;
+  }
+
   ///This function is triggered to send a confirmation email to a new email a user is trying to switch to.
   Future<void> validateNewEmail(String email) async {
     if (formKey.currentState!.validate()) {

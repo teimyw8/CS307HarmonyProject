@@ -227,6 +227,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   enabled: _editProfileProvider.isEditing,
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 16),
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    hintText: '(Optional)',
+                                    labelText: 'Bio',
+                                  ),
+                                  initialValue:
+                                  _editProfileProvider.getBio(),
+                                  autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
+                                  validator: FieldValidator.validateBio,
+                                  onSaved: (String? value) {
+                                    value ??= "";
+                                    temp!.bio = value;
+                                  },
+                                  enabled: _editProfileProvider.isEditing,
+                                ),
+                              ),
                               SizedBox(
                                 height: 10.h,
                               ),
