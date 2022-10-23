@@ -6,6 +6,8 @@ class UserModel {
   String username;
   String bio;
   String spotifyToken;
+  int displayProfileTo;
+  bool displayName;
   List<dynamic> friends;
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
@@ -18,6 +20,8 @@ class UserModel {
       required this.username,
       required this.bio,
       required this.friends,
+      required this.displayProfileTo,
+      required this.displayName,
       required this.spotifyToken,
       required this.friendRequestsReceived,
       required this.friendRequestsSent});
@@ -30,6 +34,8 @@ class UserModel {
         friends: json["friends"] ?? [],
         uid: json["uid"],
         username: json["username"] ?? "",
+        displayProfileTo: json["displayProfileTo"] ?? [],
+        displayName: json["displayName"] ?? [],
         spotifyToken: json["spotifyToken"] ?? "",
         friendRequestsReceived: json["friendRequestsReceived"] ?? [],
         friendRequestsSent: json["friendRequestsSent"] ?? [],
@@ -43,6 +49,8 @@ class UserModel {
         "friends": friends,
         "uid": uid,
         "username": username,
+        "displayProfileTo": displayProfileTo,
+        "displayName": displayName,
         "spotifyToken": spotifyToken,
         "friendRequestsReceived": friendRequestsReceived,
         "friendRequestsSent": friendRequestsSent,
@@ -50,6 +58,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, bio: $bio, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
+    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, bio: $bio, displayProfileTo: $displayProfileTo, displayName: $displayName, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
   }
 }
