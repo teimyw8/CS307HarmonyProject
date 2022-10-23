@@ -155,6 +155,7 @@ class AuthProvider with ChangeNotifier {
               firstName: signUpFirstNameTextEditingController!.text,
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text,
+              bio: "",
               friends: [],
               password: signUpPasswordTextEditingController!.text);
           var userDocData =

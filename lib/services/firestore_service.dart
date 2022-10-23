@@ -30,6 +30,7 @@ class FirestoreService {
       required String firstName,
       required String lastName,
       required String userName,
+      required String bio,
       required List<String> friends,
       required String password}) async {
     try {
@@ -39,6 +40,7 @@ class FirestoreService {
         "firstName": firstName,
         "lastName": lastName,
         "username": userName,
+        "bio": bio,
         "friends": [],
         "uid": uid,
         "password": password,
@@ -171,10 +173,14 @@ class FirestoreService {
 
       currentUserFriends.add(otherUserUID);
       otherUserFriends.add(currentUserUID);
-      await firebaseFirestore.collection("users").doc(currentUserUID).update(
-          {'friends': currentUserFriends});
-      await firebaseFirestore.collection("users").doc(otherUserUID).update(
-          {'friends': otherUserFriends});
+      await firebaseFirestore
+          .collection("users")
+          .doc(currentUserUID)
+          .update({'friends': currentUserFriends});
+      await firebaseFirestore
+          .collection("users")
+          .doc(otherUserUID)
+          .update({'friends': otherUserFriends});
 
       return;
     } catch (e) {
@@ -187,22 +193,22 @@ class FirestoreService {
       {required String currentUserUID, required String otherUserUID}) async {
     try {
       var currentUserDoc =
-      await firebaseFirestore.collection('users').doc(currentUserUID).get();
+          await firebaseFirestore.collection('users').doc(currentUserUID).get();
       var otherUserDoc =
-      await firebaseFirestore.collection('users').doc(otherUserUID).get();
+          await firebaseFirestore.collection('users').doc(otherUserUID).get();
 
       var currentUserDocData = currentUserDoc.data();
       var otherUserDocData = otherUserDoc.data();
 
       //updating requests sent and requests received for both users
       List<dynamic> currentUserFriendRequestsReceived =
-      currentUserDocData!.containsKey('friendRequestsReceived')
-          ? currentUserDocData['friendRequestsReceived']
-          : [];
+          currentUserDocData!.containsKey('friendRequestsReceived')
+              ? currentUserDocData['friendRequestsReceived']
+              : [];
       List<dynamic> otherUserFriendRequestsSent =
-      otherUserDocData!.containsKey('friendRequestsSent')
-          ? otherUserDocData['friendRequestsSent']
-          : [];
+          otherUserDocData!.containsKey('friendRequestsSent')
+              ? otherUserDocData['friendRequestsSent']
+              : [];
 
       currentUserFriendRequestsReceived.remove(otherUserUID);
       await firebaseFirestore.collection("users").doc(currentUserUID).update(
@@ -218,7 +224,4 @@ class FirestoreService {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
-
-
-
 }
