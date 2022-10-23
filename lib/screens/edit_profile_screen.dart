@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/field_validators.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
+import 'package:harmony_app/screens/security_page.dart';
 import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -14,7 +15,6 @@ import '../helpers/colors.dart';
 import '../helpers/text_styles.dart';
 import '../models/user_model.dart';
 import '../widgets/common_widgets/custom_app_loader.dart';
-import '../providers/auth_provider.dart';
 import 'friends_list_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -132,7 +132,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 backgroundColor: AppColors.white,
                 floatingActionButton: FloatingActionButton(
                   onPressed: () {
-                    temp = UserModel.fromJson(_editProfileProvider.currentUserModel!.toJson());
+                    temp = UserModel.fromJson(
+                        _editProfileProvider.currentUserModel!.toJson());
                     _editProfileProvider.update(temp!);
                     if (!_editProfileProvider.isEditing) {
                       setState(() {});
@@ -237,10 +238,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     labelText: 'Bio',
                                   ),
                                   maxLines: 4,
-                                  initialValue:
-                                  _editProfileProvider.getBio(),
+                                  initialValue: _editProfileProvider.getBio(),
                                   autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                                      AutovalidateMode.onUserInteraction,
                                   validator: FieldValidator.validateBio,
                                   onSaved: (String? value) {
                                     value ??= "";
@@ -313,6 +313,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: Text(_syncState),
                               ),
                               Text(_errorMessage),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color.fromRGBO(
+                                          29, 185, 84, 1.0)),
+                                  onPressed: () {
+                                    if (!_editProfileProvider.isEditing) {
+                                      Get.to(() => const SecurityPage());
+                                    }
+                                  },
+                                  child: const Text('Go to Security Settings')),
                             ]),
                       ),
                     ],
