@@ -236,6 +236,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     hintText: '(Optional)',
                                     labelText: 'Bio',
                                   ),
+                                  maxLines: 4,
                                   initialValue:
                                   _editProfileProvider.getBio(),
                                   autovalidateMode:
