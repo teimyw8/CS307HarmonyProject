@@ -72,7 +72,7 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
             child: Stack(alignment: AlignmentDirectional.topStart, children: [
               Scaffold(
                 appBar: CustomAppBar(
-                  title: "Profile",
+                  title: "Analytics",
                   needBackArrow: true,
                   needAvatar: true,
                   needSettings: false,
@@ -98,8 +98,159 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              const Text("Top Artists"),
-                              const Text("artist")
+                              /* Title */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                child:  const Text("Top Songs",
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 20.0,
+
+                                    ),
+                                ),
+
+                              ),
+                              /* Song 1 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+
+                                child:  const Text("Dummy Song 1",
+                                  style: TextStyle(
+                                  ),
+                                ),
+
+                              ),
+                              /* Song 2 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+                                child:  const Text("Dummy Song 2",
+                                  style: TextStyle(
+
+
+                                  ),
+                                ),
+
+                              ),
+                              /* Song 3 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+                                child:  const Text("Dummy Song 3",
+                                  style: TextStyle(
+
+
+                                  ),
+                                ),
+
+                              ),
+                              /* Title */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                child:  const Text("Top Artists",
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 20.0,
+
+                                  ),
+                                ),
+
+                              ),
+                              /* Song 1 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+
+                                child:  const Text("Dummy Artist 1",
+                                  style: TextStyle(
+                                  ),
+                                ),
+
+                              ),
+                              /* Song 2 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+                                child:  const Text("Dummy Artist 2",
+                                  style: TextStyle(
+
+
+                                  ),
+                                ),
+
+                              ),
+                              /* Song 3 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+                                child:  const Text("Dummy Artist 3",
+                                  style: TextStyle(
+
+
+                                  ),
+                                ),
+
+                              ),
+                              Container(
+                                height: 40,
+                                width: 300,
+                                child:  const Text("Top Genres",
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 20.0,
+
+                                  ),
+                                ),
+
+
+                              ),
+                              /* Song 1 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+
+                                child:  const Text("Dummy Genre 1",
+                                  style: TextStyle(
+                                  ),
+                                ),
+
+                              ),
+                              /* Song 2 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+                                child:  const Text("Dummy Genre 2",
+                                  style: TextStyle(
+
+
+                                  ),
+                                ),
+
+                              ),
+                              /* Song 3 */
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xFFb5b5b5),
+                                child:  const Text("Dummy Genre 3",
+                                  style: TextStyle(
+
+
+                                  ),
+                                ),
+
+                              ),
                             ]),
                       ),
                     ],
