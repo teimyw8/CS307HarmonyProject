@@ -107,6 +107,21 @@ class EditProfileProvider with ChangeNotifier {
     return bio;
   }
 
+  String getDisplayProfileTo() {
+    int? val = currentUserModel?.displayProfileTo;
+    val ??= 1;
+    if (val == 0) {
+      return 'no one';
+    }
+    if (val == 1) {
+      return 'only my friends';
+    }
+    if (val == 2) {
+      return 'everyone';
+    }
+    return '';
+  }
+
   ///This function is triggered to send a confirmation email to a new email a user is trying to switch to.
   Future<void> validateNewEmail(String email) async {
     if (formKey.currentState!.validate()) {
@@ -178,6 +193,27 @@ class EditProfileProvider with ChangeNotifier {
         });
   }
 
+  void updateDisplayProfileTo(String? value) {
+    value ??= "";
+    UserModel temp = currentUserModel!;
+    int val = -1;
+    if (value == 'no one') {
+      val = 0;
+    }
+    if (value == 'only my friends') {
+      val = 1;
+    }
+    if (value == 'everyone') {
+      val = 2;
+    }
+    temp.displayProfileTo = val;
+    try {
+      setUserInfo(UserModel.fromJson(temp!.toJson()));
+    } on FirestoreException catch (e) {
+      showErrorDialog(e.cause);
+    }
+  }
+
   Future<void> update(UserModel temp) async {
     _authProvider.startLoading();
     formKey.currentState!.save();
@@ -187,13 +223,10 @@ class EditProfileProvider with ChangeNotifier {
             username: temp!.username);
       }
       if (formKey.currentState!.validate()) {
-        print('passes first if');
         swapEditingMode();
         if (currentUserModel!.email.compareTo(temp!.email) != 0) {
-          print('passes if');
           validateNewEmail(temp!.email);
         }
-        print(temp?.email);
         if (!isEditing) {
           setUserInfo(UserModel.fromJson(temp!.toJson()));
         }
