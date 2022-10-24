@@ -19,8 +19,21 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final AuthProvider _authProvider =
-      Provider.of<AuthProvider>(Get.context!, listen: false);
+  Provider.of<AuthProvider>(Get.context!, listen: false);
 
+  feed() {
+    Container(
+      child: Text('data'),
+    );
+  }
+
+  Future<Null> refresh() async {
+    await getFeed();
+
+    setState(() {});
+
+    return;
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -47,30 +60,18 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             backgroundColor: AppColors.white,
-            body: Align(
-              alignment: Alignment.center,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 60.w, vertical: 20.h),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Consumer<AuthProvider>(
-                      builder: (BuildContext context,
-                          AuthProvider myAuthProvider, Widget? child) {
-                        myAuthProvider.updateCurrentUser();
-                        return Text(
-                          myAuthProvider.currentUserModel.toString(),
-                          style: AppTextStyles.footNote(),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+            body: RefreshIndicator(
+              child: feed(),
+              onRefresh: refresh,
             ),
           ),
         ],
       ),
     );
+  }
+
+  getFeed() async {
+
+
   }
 }

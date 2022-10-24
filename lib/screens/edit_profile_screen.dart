@@ -275,7 +275,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor:
+                                    primary:
                                         const Color.fromRGBO(29, 185, 84, 1.0)),
                                 onPressed: () {
                                   if (!_editProfileProvider.isEditing) {
