@@ -21,15 +21,21 @@ class _SecurityPageState extends State<SecurityPage> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
   String? dropdownvalue;
+  String? dropdownvalue1;
   var items = [
     'no one',
     'only my friends',
     'everyone',
   ];
+  var items1 = [
+    'my real name',
+    'my username',
+  ];
 
   @override
   Widget build(BuildContext context) {
     dropdownvalue = _editProfileProvider.getDisplayProfileTo();
+    dropdownvalue1 = _editProfileProvider.getDisplayName();
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -57,34 +63,70 @@ class _SecurityPageState extends State<SecurityPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 30.h,
+                height: 60.h,
               ),
-              Wrap(
-                children: [
-                  Text('The people who can see my profile are:',
-                      //softWrap: false,
-                      //maxLines: 1,
-                      //overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.textField()
-                          .copyWith(fontSize: 18.sp, color: AppColors.black)),
-                  DropdownButton(
-                      value: _editProfileProvider.getDisplayProfileTo(),
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      items: items.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(items,
-                              style: AppTextStyles.textField().copyWith(
-                                  fontSize: 18.sp, color: AppColors.black)),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        setState(() {
-                          dropdownvalue = value!;
-                        });
-                        _editProfileProvider.updateDisplayProfileTo(value);
-                      })
-                ],
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  children: [
+                    Text('The people who can see my profile are:',
+                        //softWrap: false,
+                        //maxLines: 1,
+                        //overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.textField()
+                            .copyWith(fontSize: 18.sp, color: AppColors.black)),
+                    DropdownButton(
+                        value: dropdownvalue,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: items.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(items,
+                                style: AppTextStyles.textField().copyWith(
+                                    fontSize: 18.sp, color: AppColors.black)),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            dropdownvalue = value!;
+                          });
+                          _editProfileProvider.updateDisplayProfileTo(value);
+                        })
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 100.h,
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Wrap(
+                  children: [
+                    Text('People will see my profile with:',
+                        //softWrap: false,
+                        //maxLines: 1,
+                        //overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.textField()
+                            .copyWith(fontSize: 18.sp, color: AppColors.black)),
+                    DropdownButton(
+                        value: dropdownvalue1,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: items1.map((String items) {
+                          return DropdownMenuItem(
+                            value: items,
+                            child: Text(items,
+                                style: AppTextStyles.textField().copyWith(
+                                    fontSize: 18.sp, color: AppColors.black)),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            dropdownvalue1 = value!;
+                          });
+                          _editProfileProvider.updateDisplayName(value);
+                        })
+                  ],
+                ),
               )
             ],
           ),

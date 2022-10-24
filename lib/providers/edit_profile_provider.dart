@@ -122,6 +122,16 @@ class EditProfileProvider with ChangeNotifier {
     return '';
   }
 
+  String getDisplayName() {
+    bool? val = currentUserModel?.displayName;
+    val ??= false;
+    if (val) {
+      return 'my real name';
+    } else {
+      return 'my username';
+    }
+  }
+
   ///This function is triggered to send a confirmation email to a new email a user is trying to switch to.
   Future<void> validateNewEmail(String email) async {
     if (formKey.currentState!.validate()) {
@@ -191,6 +201,23 @@ class EditProfileProvider with ChangeNotifier {
         onOkClick: () {
           Get.close(1);
         });
+  }
+
+  void updateDisplayName(String? value) {
+    value ??= "";
+    UserModel temp = currentUserModel!;
+    bool val = false;
+    if (value == 'my real name') {
+      val = true;
+    } else if (value == 'my username') {
+      val = false;
+    }
+    temp.displayName = val;
+    try {
+      setUserInfo(UserModel.fromJson(temp!.toJson()));
+    } on FirestoreException catch (e) {
+      showErrorDialog(e.cause);
+    }
   }
 
   void updateDisplayProfileTo(String? value) {
