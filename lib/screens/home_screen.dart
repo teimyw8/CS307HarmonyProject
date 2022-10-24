@@ -68,6 +68,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                if (checkDailyActivity()) {
+                  //be able to add a post
+                }
+                else {
+
+                }
+              },
+              backgroundColor: Colors.green,
+              child: const Icon(Icons.add),
+            ),
           ),
         ],
       ),
