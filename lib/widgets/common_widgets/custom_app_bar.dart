@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/screens/edit_profile_screen.dart';
+import 'package:harmony_app/screens/user_analytics_screen.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 
@@ -161,7 +162,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             if (needSettings)
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(() => EditProfileScreen());
+                                  Get.to(() => UserAnalyticsScreen());
                                 },
                                 child: Container(
                                     width: 40.w,
