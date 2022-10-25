@@ -31,6 +31,8 @@ class FirestoreService {
       required String lastName,
       required String userName,
       required String bio,
+        required int displayProfileTo,
+        required bool displayName,
       required List<String> friends,
       required String password}) async {
     try {
@@ -41,6 +43,8 @@ class FirestoreService {
         "lastName": lastName,
         "username": userName,
         "bio": bio,
+        "displayProfileTo": displayProfileTo,
+        "displayName": displayName,
         "friends": [],
         "uid": uid,
         "password": password,
