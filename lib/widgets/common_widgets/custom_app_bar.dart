@@ -6,6 +6,7 @@ import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 
 import '../../models/user_model.dart';
+import '../../screens/profile_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -13,6 +14,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool needBackArrow;
   final bool needSettings;
   final bool needAvatar;
+  final UserModel? currentUserModel;
   final bool needHome;
   final String backArrowLabel;
   final bool isAuthAppBar;
@@ -25,6 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.needBackArrow = true,
       this.needSettings = false,
       this.needAvatar = false,
+      this.currentUserModel = null,
       this.needHome = false,
       this.onHomeClicked = null,
       this.backArrowLabel = ""})
@@ -124,26 +127,34 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   ),
                                 ),
                               )
-                            :
-                            Text(title,
+                            : Text(title,
                                 overflow: TextOverflow.clip,
                                 maxLines: 1,
                                 style: AppTextStyles.largeTitle().copyWith(
                                     fontSize: 30.sp, color: AppColors.white)),
-                        if (needBackArrow) Text(title,
-                            overflow: TextOverflow.clip,
-                            maxLines: 1,
-                            style: AppTextStyles.largeTitle().copyWith(
-                                fontSize: 30.sp, color: AppColors.white)),
+                        if (needBackArrow)
+                          Text(title,
+                              overflow: TextOverflow.clip,
+                              maxLines: 1,
+                              style: AppTextStyles.largeTitle().copyWith(
+                                  fontSize: 30.sp, color: AppColors.white)),
                         Row(
                           children: [
                             if (needAvatar)
-                              Container(
-                                  width: 40.w,
-                                  child: Icon(
-                                    Icons.person,
-                                    color: AppColors.white,
-                                  )),
+                              GestureDetector(
+                                onTap: () {
+                                  if (currentUserModel != null) {
+                                    Get.to(() => ProfilePage(
+                                        userModel: currentUserModel!));
+                                  }
+                                },
+                                child: Container(
+                                    width: 40.w,
+                                    child: Icon(
+                                      Icons.person,
+                                      color: AppColors.white,
+                                    )),
+                              ),
                             if (needHome)
                               GestureDetector(
                                 onTap: () {
