@@ -48,13 +48,6 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
     AuthProvider _authProvider =
     Provider.of<AuthProvider>(Get.context!, listen: false);
     String token = _authProvider.currentUserModel!.spotifyToken;
-    setState(() {
-      if (token == '') {
-        _syncState = 'Sync with Spotify';
-      } else {
-        _syncState = 'Desync';
-      }
-    });
   }
 
   @override

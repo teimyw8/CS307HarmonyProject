@@ -28,6 +28,11 @@ class SpotifyService {
 
   }
 
+  static Future<List<String>> getTop() async {
+
+
+  }
+
   static desyncSpotify () async {
     return await SpotifySdk.disconnect();
   }
