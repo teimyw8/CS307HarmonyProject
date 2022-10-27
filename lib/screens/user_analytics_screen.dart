@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/field_validators.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
+import 'package:harmony_app/services/path_service.dart';
 import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -48,6 +49,7 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
     AuthProvider _authProvider =
     Provider.of<AuthProvider>(Get.context!, listen: false);
     String token = _authProvider.currentUserModel!.spotifyToken;
+    SpotifyService.getTop();
   }
 
   @override

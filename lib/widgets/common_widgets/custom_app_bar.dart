@@ -148,9 +148,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             if (needHome)
                               GestureDetector(
                                 onTap: () {
-                                  if (onHomeClicked != null) {
-                                    onHomeClicked!();
-                                  }
+                                  Get.to(() => UserAnalyticsScreen());
                                 },
                                 child: Container(
                                     width: 40.w,
@@ -162,7 +160,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             if (needSettings)
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(() => UserAnalyticsScreen());
+                                  Get.to(() => EditProfileScreen());
                                 },
                                 child: Container(
                                     width: 40.w,

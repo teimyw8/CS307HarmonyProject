@@ -1,5 +1,5 @@
-class TopModel {
-  String email;
+class TopArtistModel {
+  String link;
   String firstName;
   String lastName;
   String uid;
@@ -9,8 +9,8 @@ class TopModel {
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
 
-  TopModel(
-      {required this.email,
+  TopArtistModel(
+      {required this.link,
         required this.firstName,
         required this.lastName,
         required this.uid,
@@ -21,8 +21,8 @@ class TopModel {
         required this.friendRequestsSent}
       );
 
-  factory TopModel.fromJson(Map<String, dynamic> json) => TopModel(
-    email: json["email"],
+  factory TopArtistModel.fromJson(Map<String, dynamic> json) => TopArtistModel(
+    link: json["href"],
     firstName: json["firstName"],
     lastName: json["lastName"],
     friends: json["friends"] ?? [],
@@ -34,7 +34,7 @@ class TopModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "email": email,
+    "email": link,
     "firstName": firstName,
     "lastName": lastName,
     "friends": friends,
@@ -47,6 +47,6 @@ class TopModel {
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
+    return 'UserModel{email: $link, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
   }
 }
