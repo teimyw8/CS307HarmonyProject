@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:harmony_app/screens/edit_profile_screen.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/user_model.dart';
-import '../../screens/profile_page.dart';
+import '../../providers/auth_provider.dart';
+import '../../screens/profile_screen.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -14,7 +16,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool needBackArrow;
   final bool needSettings;
   final bool needAvatar;
-  final UserModel? currentUserModel;
   final bool needHome;
   final String backArrowLabel;
   final bool isAuthAppBar;
@@ -27,7 +28,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.needBackArrow = true,
       this.needSettings = false,
       this.needAvatar = false,
-      this.currentUserModel = null,
       this.needHome = false,
       this.onHomeClicked = null,
       this.backArrowLabel = ""})
@@ -35,6 +35,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(Get.context!, listen: false);
     if (isAuthAppBar) {
       return SizedBox.fromSize(
         size: preferredSize,
@@ -143,10 +145,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             if (needAvatar)
                               GestureDetector(
                                 onTap: () {
-                                  if (currentUserModel != null) {
-                                    Get.to(() => ProfilePage(
-                                        userModel: currentUserModel!));
-                                  }
+                                  Get.to(() => ProfileScreen(
+                                      userModel:
+                                          authProvider.currentUserModel!));
                                 },
                                 child: Container(
                                     width: 40.w,

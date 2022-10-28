@@ -132,6 +132,14 @@ class EditProfileProvider with ChangeNotifier {
     }
   }
 
+  ///this function returns name or username of user depending on their security settings
+  String getPrimaryName(UserModel temp) {
+    if (temp.displayName) {
+      return '${temp.firstName} ${temp.lastName}';
+    }
+    return '@${temp.username}';
+  }
+
   ///This function is triggered to send a confirmation email to a new email a user is trying to switch to.
   Future<void> validateNewEmail(String email) async {
     if (formKey.currentState!.validate()) {

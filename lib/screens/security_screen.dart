@@ -10,14 +10,14 @@ import '../providers/edit_profile_provider.dart';
 import 'friends_list_screen.dart';
 import 'package:get/get.dart';
 
-class SecurityPage extends StatefulWidget {
-  const SecurityPage({Key? key}) : super(key: key);
+class SecurityScreen extends StatefulWidget {
+  const SecurityScreen({Key? key}) : super(key: key);
 
   @override
-  State<SecurityPage> createState() => _SecurityPageState();
+  State<SecurityScreen> createState() => _SecurityScreenState();
 }
 
-class _SecurityPageState extends State<SecurityPage> {
+class _SecurityScreenState extends State<SecurityScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
   String? dropdownvalue;

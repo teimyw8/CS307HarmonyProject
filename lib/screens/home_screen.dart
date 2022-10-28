@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
               title: "Harmony",
               needBackArrow: false,
               needAvatar: true,
-              currentUserModel: _authProvider.currentUserModel,
               needSettings: true,
               needHome: true,
               onHomeClicked: () {
