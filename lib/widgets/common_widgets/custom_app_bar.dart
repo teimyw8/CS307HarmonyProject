@@ -6,7 +6,6 @@ import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/user_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../screens/profile_screen.dart';
 

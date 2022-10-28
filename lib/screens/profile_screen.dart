@@ -26,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Profile",
+        title: "My Profile",
         needBackArrow: true,
         needSettings: true,
       ),
@@ -42,9 +42,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CircleAvatar(
                   radius: 50,
                 ),
-                Text(
-                  _editProfileProvider.getPrimaryName(widget.userModel),
-                  style: AppTextStyles.profileNames(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _editProfileProvider.getPrimaryName(widget.userModel),
+                      style: AppTextStyles.profileNames(),
+                    ),
+                    (widget.userModel.displayName
+                        ? Text(
+                            "@${widget.userModel.username}",
+                            style: AppTextStyles.subNote()
+                                .apply(color: AppColors.white),
+                          )
+                        : SizedBox()),
+                  ],
                 ),
               ],
             ),

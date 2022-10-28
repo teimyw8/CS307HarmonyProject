@@ -115,7 +115,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Stack(alignment: AlignmentDirectional.topStart, children: [
               Scaffold(
                 appBar: CustomAppBar(
-                  title: "Profile",
+                  title: "Profile Settings",
                   needBackArrow: true,
                   needAvatar: true,
                   needSettings: false,
