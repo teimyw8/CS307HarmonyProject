@@ -32,18 +32,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       backgroundColor: AppColors.green,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
             color: AppColors.green,
-            padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 70.h),
+            padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 15.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CircleAvatar(
-                  radius: 50,
+                  radius: 65,
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -60,6 +60,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 17, vertical: 0),
+            child: Text(
+              widget.userModel.bio,
+              style: AppTextStyles.tileText().apply(color: AppColors.white),
             ),
           ),
         ],

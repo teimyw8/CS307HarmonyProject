@@ -135,7 +135,11 @@ class EditProfileProvider with ChangeNotifier {
   ///this function returns name or username of user depending on their security settings
   String getPrimaryName(UserModel temp) {
     if (temp.displayName) {
-      return '${temp.firstName} ${temp.lastName}';
+      String fullName = '${temp.firstName} ${temp.lastName}';
+      if (fullName.length > 18) {
+        fullName = '${fullName.substring(0, 15)}...';
+      }
+      return fullName;
     }
     return '@${temp.username}';
   }
