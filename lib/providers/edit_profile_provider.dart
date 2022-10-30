@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
@@ -6,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../helpers/custom_exceptions.dart';
 import '../helpers/service_constants.dart';
+import '../helpers/security_constants.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
@@ -237,13 +237,13 @@ class EditProfileProvider with ChangeNotifier {
     UserModel temp = currentUserModel!;
     int val = -1;
     if (value == 'no one') {
-      val = 0;
+      val = SecurityConstants.NOONE;
     }
     if (value == 'only my friends') {
-      val = 1;
+      val = SecurityConstants.ONLYFRIENDS;
     }
     if (value == 'everyone') {
-      val = 2;
+      val = SecurityConstants.EVERYONE;
     }
     temp.displayProfileTo = val;
     try {
