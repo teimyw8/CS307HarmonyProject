@@ -26,9 +26,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "My Profile",
+        title: "Harmony",
         needBackArrow: true,
         needSettings: true,
+        needFriendsList: true,
       ),
       backgroundColor: AppColors.green,
       body: Column(

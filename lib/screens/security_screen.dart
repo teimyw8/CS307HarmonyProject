@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:harmony_app/helpers/security_constants.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
@@ -20,22 +21,13 @@ class SecurityScreen extends StatefulWidget {
 class _SecurityScreenState extends State<SecurityScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
-  String? dropdownvalue;
-  String? dropdownvalue1;
-  var items = [
-    'no one',
-    'only my friends',
-    'everyone',
-  ];
-  var items1 = [
-    'my real name',
-    'my username',
-  ];
+  String? dropDownValProfilePage;
+  String? dropDownValName;
 
   @override
   Widget build(BuildContext context) {
-    dropdownvalue = _editProfileProvider.getDisplayProfileTo();
-    dropdownvalue1 = _editProfileProvider.getDisplayName();
+    dropDownValProfilePage = _editProfileProvider.getDisplayProfileTo();
+    dropDownValName = _editProfileProvider.getDisplayName();
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -53,7 +45,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => (const FriendsListPage())));
+                    builder: (context) => (const FriendsListScreen())));
           },
         ),
         backgroundColor: AppColors.white,
@@ -76,9 +68,9 @@ class _SecurityScreenState extends State<SecurityScreen> {
                         style: AppTextStyles.textField()
                             .copyWith(fontSize: 18.sp, color: AppColors.black)),
                     DropdownButton(
-                        value: dropdownvalue,
+                        value: dropDownValProfilePage,
                         icon: const Icon(Icons.keyboard_arrow_down),
-                        items: items.map((String items) {
+                        items: SecurityConstants.PROFILEPAGESETTINGS.map((String items) {
                           return DropdownMenuItem(
                             value: items,
                             child: Text(items,
@@ -88,7 +80,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
                         }).toList(),
                         onChanged: (String? value) {
                           setState(() {
-                            dropdownvalue = value!;
+                            dropDownValProfilePage = value!;
                           });
                           _editProfileProvider.updateDisplayProfileTo(value);
                         })
@@ -109,9 +101,9 @@ class _SecurityScreenState extends State<SecurityScreen> {
                         style: AppTextStyles.textField()
                             .copyWith(fontSize: 18.sp, color: AppColors.black)),
                     DropdownButton(
-                        value: dropdownvalue1,
+                        value: dropDownValName,
                         icon: const Icon(Icons.keyboard_arrow_down),
-                        items: items1.map((String items) {
+                        items: SecurityConstants.NAMESETTINGS.map((String items) {
                           return DropdownMenuItem(
                             value: items,
                             child: Text(items,
@@ -121,7 +113,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
                         }).toList(),
                         onChanged: (String? value) {
                           setState(() {
-                            dropdownvalue1 = value!;
+                            dropDownValName = value!;
                           });
                           _editProfileProvider.updateDisplayName(value);
                         })
