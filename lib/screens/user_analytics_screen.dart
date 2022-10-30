@@ -30,11 +30,8 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
   Provider.of<EditProfileProvider>(Get.context!, listen: false);
   UserModel? temp;
 
-  String _syncState = '';
+  int _syncState = 0;
   String _errorMessage = '';
-
-
-
 
 
   _test() {
@@ -49,18 +46,31 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
     AuthProvider _authProvider =
     Provider.of<AuthProvider>(Get.context!, listen: false);
     String token = _authProvider.currentUserModel!.spotifyToken;
+    print("TEST$token\n");
+
+    if (token == '') {
+      setState(() {
+        _syncState = 0;
+      });
+    } else {
+      setState(() {
+        _syncState = 1;
+      });
+    }
     SpotifyService.getTop();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_syncState == 1) {
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       child: Consumer<AuthProvider>(
         builder:
-            (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+            (BuildContext context, AuthProvider myAuthProvider,
+            Widget? child) {
           return LoadingOverlay(
             isLoading: myAuthProvider.isLoading,
             progressIndicator: const CustomAppLoader(),
@@ -97,12 +107,12 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                child:  const Text("Top Songs",
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 20.0,
+                                child: const Text("Top Songs",
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 20.0,
 
-                                    ),
+                                  ),
                                 ),
 
                               ),
@@ -110,9 +120,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
+                                color: const Color(0xDCDCDCCD),
 
-                                child:  const Text("Dummy Song 1",
+                                child: const Text("Dummy Song 1",
                                   style: TextStyle(
                                   ),
                                 ),
@@ -122,8 +132,8 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
-                                child:  const Text("Dummy Song 2",
+                                color: const Color(0xDCDCDCCD),
+                                child: const Text("Dummy Song 2",
                                   style: TextStyle(
 
 
@@ -135,8 +145,8 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
-                                child:  const Text("Dummy Song 3",
+                                color: const Color(0xDCDCDCCD),
+                                child: const Text("Dummy Song 3",
                                   style: TextStyle(
 
 
@@ -148,7 +158,7 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                child:  const Text("Top Artists",
+                                child: const Text("Top Artists",
                                   style: TextStyle(
                                     color: Colors.green,
                                     fontSize: 20.0,
@@ -161,9 +171,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
+                                color: const Color(0xDCDCDCCD),
 
-                                child:  const Text("Dummy Artist 1",
+                                child: const Text("Dummy Artist 1",
                                   style: TextStyle(
                                   ),
                                 ),
@@ -173,8 +183,8 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
-                                child:  const Text("Dummy Artist 2",
+                                color: const Color(0xDCDCDCCD),
+                                child: const Text("Dummy Artist 2",
                                   style: TextStyle(
 
 
@@ -186,8 +196,8 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
-                                child:  const Text("Dummy Artist 3",
+                                color: const Color(0xDCDCDCCD),
+                                child: const Text("Dummy Artist 3",
                                   style: TextStyle(
 
 
@@ -198,7 +208,7 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                child:  const Text("Top Genres",
+                                child: const Text("Top Genres",
                                   style: TextStyle(
                                     color: Colors.green,
                                     fontSize: 20.0,
@@ -212,9 +222,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
+                                color: const Color(0xDCDCDCCD),
 
-                                child:  const Text("Dummy Genre 1",
+                                child: const Text("Dummy Genre 1",
                                   style: TextStyle(
                                   ),
                                 ),
@@ -224,8 +234,8 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
-                                child:  const Text("Dummy Genre 2",
+                                color: const Color(0xDCDCDCCD),
+                                child: const Text("Dummy Genre 2",
                                   style: TextStyle(
 
 
@@ -237,8 +247,8 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                               Container(
                                 height: 40,
                                 width: 300,
-                                color: const Color(0xFFb5b5b5),
-                                child:  const Text("Dummy Genre 3",
+                                color: const Color(0xDCDCDCCD),
+                                child: const Text("Dummy Genre 3",
                                   style: TextStyle(
 
 
@@ -257,5 +267,67 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
         },
       ),
     );
+  }  else {
+      return GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Consumer<AuthProvider>(
+          builder:
+              (BuildContext context, AuthProvider myAuthProvider,
+              Widget? child) {
+            return LoadingOverlay(
+              isLoading: myAuthProvider.isLoading,
+              progressIndicator: const CustomAppLoader(),
+              child: Stack(alignment: AlignmentDirectional.topStart, children: [
+                Scaffold(
+                  appBar: CustomAppBar(
+                    title: "Analytics",
+                    needBackArrow: true,
+                    needAvatar: true,
+                    needSettings: false,
+                    needHome: true,
+                    onHomeClicked: () {
+                      debugPrint(
+                          'Temporary, must be deleted when we finalize the home page');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => (FriendsListPage())));
+                    },
+                  ),
+                  backgroundColor: AppColors.white,
+                  body: SingleChildScrollView(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.h),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Form(
+                          key: _editProfileProvider.formKey,
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                /* Title */
+                                 Container(
+                                   width: 400,
+                                   height: 100,
+                                   child:  const Text("You must sync with spotify to see your analytics",
+                                   style: const TextStyle(fontSize: 20),
+                                   ),
+                                 ),
+                              ]),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ]),
+            );
+          },
+        ),
+      );
+    }
   }
+ // }
 }
