@@ -275,8 +275,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromRGBO(29, 185, 84, 1.0)),
+                                    // backgroundColor:
+                                    //     const Color.fromRGBO(29, 185, 84, 1.0)
+                                ),
                                 onPressed: () {
                                   if (!_editProfileProvider.isEditing) {
                                     if (_syncState == "Sync with Spotify") {
@@ -315,8 +316,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               Text(_errorMessage),
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color.fromRGBO(
-                                          29, 185, 84, 1.0)),
+                                      // backgroundColor: const Color.fromRGBO(
+                                      //     29, 185, 84, 1.0)
+                                  ),
                                   onPressed: () {
                                     if (!_editProfileProvider.isEditing) {
                                       Get.to(() => const SecurityScreen());
