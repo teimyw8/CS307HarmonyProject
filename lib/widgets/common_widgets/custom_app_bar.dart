@@ -29,7 +29,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.needBackArrow = true,
       this.needSettings = false,
       this.needAvatar = false,
-        this.needFriendsList = false,
+      this.needFriendsList = false,
       this.needHome = false,
       this.onHomeClicked = null,
       this.backArrowLabel = ""})
@@ -160,8 +160,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               GestureDetector(
                                 onTap: () {
                                   Get.to(() => ProfileScreen(
-                                      userModel:
-                                          authProvider.currentUserModel!));
+                                      userModel: authProvider.currentUserModel!,
+                                      isPrivate: false));
                                 },
                                 child: Container(
                                     width: 40.w,

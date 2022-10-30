@@ -63,7 +63,7 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          ProfileScreen(userModel: temp!)));
+                                          ProfileScreen(userModel: temp!, isPrivate: _friendsListProvider.isPrivateUser(temp!))));
                             },
                             style: ElevatedButton.styleFrom(
                               shape: StadiumBorder(),

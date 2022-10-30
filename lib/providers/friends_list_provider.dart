@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:harmony_app/helpers/security_constants.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user_model.dart';
@@ -29,6 +31,17 @@ class FriendsListProvider with ChangeNotifier {
     var userDocData = await _firestoreService.retrieveUserFromFirestore(
         uid: uid);
     temp = UserModel.fromJson(userDocData!);
+  }
+
+  ///this function returns true if currUser can't see temp's full profile, false otherwise
+  bool isPrivateUser(UserModel temp) {
+    if (temp.displayProfileTo == SecurityConstants.NOONE) {
+      return true;
+    }
+    if (temp.displayProfileTo == SecurityConstants.ONLYFRIENDS && !temp.friends.contains(currUser)) {
+      return true;
+    }
+    return false;
   }
 
 }
