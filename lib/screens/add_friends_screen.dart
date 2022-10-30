@@ -10,7 +10,6 @@ import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/add_friends_widgets/user_tile_widget.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
-import 'package:harmony_app/widgets/common_widgets/custom_app_loader.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 

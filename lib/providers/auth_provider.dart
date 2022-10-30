@@ -9,6 +9,7 @@ import 'package:harmony_app/screens/sign_up_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
+import '../helpers/security_constants.dart';
 import '../screens/forgot_password_screen.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -156,7 +157,7 @@ class AuthProvider with ChangeNotifier {
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text,
               bio: "",
-              displayProfileTo: 1,
+              displayProfileTo: SecurityConstants.ONLYFRIENDS,
               displayName: false,
               friends: [],
               password: signUpPasswordTextEditingController!.text);

@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:harmony_app/screens/edit_profile_screen.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+import 'package:provider/provider.dart';
 
-import '../../models/user_model.dart';
+import '../../providers/auth_provider.dart';
+import '../../screens/profile_screen.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -32,6 +34,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(Get.context!, listen: false);
     if (isAuthAppBar) {
       return SizedBox.fromSize(
         size: preferredSize,
@@ -124,26 +128,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   ),
                                 ),
                               )
-                            :
-                            Text(title,
+                            : Text(title,
                                 overflow: TextOverflow.clip,
                                 maxLines: 1,
                                 style: AppTextStyles.largeTitle().copyWith(
                                     fontSize: 30.sp, color: AppColors.white)),
-                        if (needBackArrow) Text(title,
-                            overflow: TextOverflow.clip,
-                            maxLines: 1,
-                            style: AppTextStyles.largeTitle().copyWith(
-                                fontSize: 30.sp, color: AppColors.white)),
+                        if (needBackArrow)
+                          Text(title,
+                              overflow: TextOverflow.clip,
+                              maxLines: 1,
+                              style: AppTextStyles.largeTitle().copyWith(
+                                  fontSize: 30.sp, color: AppColors.white)),
                         Row(
                           children: [
                             if (needAvatar)
-                              Container(
-                                  width: 40.w,
-                                  child: Icon(
-                                    Icons.person,
-                                    color: AppColors.white,
-                                  )),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(() => ProfileScreen(
+                                      userModel:
+                                          authProvider.currentUserModel!));
+                                },
+                                child: Container(
+                                    width: 40.w,
+                                    child: Icon(
+                                      Icons.person,
+                                      color: AppColors.white,
+                                    )),
+                              ),
                             if (needHome)
                               GestureDetector(
                                 onTap: () {

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/field_validators.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
-import 'package:harmony_app/screens/security_page.dart';
+import 'package:harmony_app/screens/security_screen.dart';
 import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -115,7 +115,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Stack(alignment: AlignmentDirectional.topStart, children: [
               Scaffold(
                 appBar: CustomAppBar(
-                  title: "Profile",
+                  title: "Profile Settings",
                   needBackArrow: true,
                   needAvatar: true,
                   needSettings: false,
@@ -319,7 +319,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           29, 185, 84, 1.0)),
                                   onPressed: () {
                                     if (!_editProfileProvider.isEditing) {
-                                      Get.to(() => const SecurityPage());
+                                      Get.to(() => const SecurityScreen());
                                     }
                                   },
                                   child: const Text('Go to Security Settings')),
