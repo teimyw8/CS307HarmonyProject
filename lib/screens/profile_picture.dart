@@ -2,22 +2,30 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:path/path.dart' as Path;
 import 'package:image_picker/image_picker.dart';
+import 'package:harmony_app/providers/edit_profile_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
-void main() => runApp(MaterialApp(
-  home: Home(),
-  debugShowCheckedModeBanner: false,
-));
+import '../models/user_model.dart';
 
-class Home extends StatefulWidget {
+
+
+class ProfilePictureScreen extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _ProfilePictureScreenState createState() => _ProfilePictureScreenState();
 }
 
-class _HomeState extends State<Home> {
+class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
+
+  final EditProfileProvider _editProfileProvider =
+  Provider.of<EditProfileProvider>(Get.context!, listen: false);
 
   XFile? image;
+
+  UserModel? temp;
 
   final ImagePicker picker = ImagePicker();
 
@@ -36,9 +44,14 @@ class _HomeState extends State<Home> {
     await uploadTask.whenComplete(() async {
       var url = await ref.getDownloadURL();
       String image_url = url.toString();
+      temp = _editProfileProvider.currentUserModel;
+      _editProfileProvider.setProfilePic(temp!, image_url);
     }).catchError((onError) {
       print(onError);
     });
+
+
+
   }
 
   //show popup dialog

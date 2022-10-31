@@ -49,6 +49,20 @@ class EditProfileProvider with ChangeNotifier {
     }
   }
 
+  Future<void> setProfilePic(UserModel temp, String url) async {
+    try {
+      var udc =  _firestoreService.firebaseFirestore.collection('users').doc(temp.uid);
+      udc.update({"profilepic": "aef"});
+      print(udc);
+      currentUserModel = temp;
+      _authProvider.currentUserModel = temp;
+      notifyListeners();
+    } catch (e) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+    print(temp);
+  }
+
   bool meetsUsernameReqs(String username) {
     if (username.length < 5 || username.length > 15) {
       return false;

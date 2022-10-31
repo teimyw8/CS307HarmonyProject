@@ -5,6 +5,7 @@ class UserModel {
   String uid;
   String username;
   String spotifyToken;
+  String profilepic;
   List<dynamic> friends;
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
@@ -17,6 +18,7 @@ class UserModel {
       required this.username,
       required this.friends,
       required this.spotifyToken,
+      required this.profilepic,
       required this.friendRequestsReceived,
       required this.friendRequestsSent}
       );
@@ -27,6 +29,7 @@ class UserModel {
     lastName: json["lastName"],
     friends: json["friends"] ?? [],
     uid: json["uid"],
+    profilepic: json["profilepic"],
     username: json["username"] ?? "",
     spotifyToken: json["spotifyToken"] ?? "",
     friendRequestsReceived: json["friendRequestsReceived"] ?? [],

@@ -5,6 +5,7 @@ import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/screens/home_screen.dart';
+import 'package:harmony_app/screens/profile_picture.dart';
 import 'package:harmony_app/screens/sign_up_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
@@ -156,7 +157,9 @@ class AuthProvider with ChangeNotifier {
               lastName: signUpLastNameTextEditingController!.text,
               userName: signUpUsernameTextEditingController!.text,
               friends: [],
-              password: signUpPasswordTextEditingController!.text);
+              password: signUpPasswordTextEditingController!.text,
+              profilepic: ""
+          );
           var userDocData =
               await _firestoreService.retrieveUserFromFirestore(uid: uid);
           currentUserModel = UserModel.fromJson(userDocData!);
@@ -201,6 +204,10 @@ class AuthProvider with ChangeNotifier {
   ///this function is triggered when the user clicks on ForgotPassword text
   Future<void> onForgotPasswordTextClicked() async {
     Get.to(() => ForgotPasswordScreen());
+  }
+
+  Future<void> onProfilePic() async {
+    Get.to(() => ProfilePictureScreen());
   }
 
   ///this function is triggered when the user clicks on SignUp text

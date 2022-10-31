@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/helpers/field_validators.dart';
+import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
@@ -24,6 +25,8 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
+  final AuthProvider _authProvider =
+  Provider.of<AuthProvider>(Get.context!, listen: false);
   final formKey = GlobalKey<FormState>();
   UserModel? temp;
 
@@ -224,6 +227,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         }
                       },
                       child: Text(_syncState),
+                    ),
+                    FloatingActionButton(
+                      onPressed: () {
+                        _authProvider.onProfilePic();
+                      },
                     ),
                     Text(_errorMessage),
 
