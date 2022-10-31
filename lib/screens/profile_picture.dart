@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       Navigator.pop(context);
                       getImage(ImageSource.gallery);
-                    },
+                    },s
                     child: Row(
                       children: [
                         Icon(Icons.image),
