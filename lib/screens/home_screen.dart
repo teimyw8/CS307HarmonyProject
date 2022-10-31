@@ -1,14 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+import 'package:harmony_app/models/post_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,23 +23,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final FeedProvider _feedProvider = Provider.of<FeedProvider>(Get.context!, listen: false);
-  final AuthProvider _authProvider =
-  Provider.of<AuthProvider>(Get.context!, listen: false);
+  FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
+  final FeedProvider _feedProvider =
+  Provider.of<FeedProvider>(Get.context!, listen: false);
 
-  feed() {
-    Container(
-      child: Text('data'),
-    );
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 0), () {
+      _feedProvider.initializeVariables();
+    });
+    super.initState();
   }
 
-  Future<Null> refresh() async {
+  Future<Null> _refresh() async {
     await getFeed();
 
     setState(() {});
 
     return;
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -62,10 +69,63 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             backgroundColor: AppColors.white,
-            body: RefreshIndicator(
-              child: feed(),
-              onRefresh: refresh,
-            ),
+            body: Consumer2<FeedProvider, AuthProvider>(
+              builder: (BuildContext context,
+              FeedProvider myFeedProvider,
+              AuthProvider myAuthProvider,
+              Widget? child) {
+                //late List<dynamic> friendsList = (myAuthProvider.currentUserModel?.friends)!;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 40.h),
+                    StreamBuilder(
+                        stream: _firestoreService.firebaseFirestore
+                          .collection('posts')
+                          .where('uid', isEqualTo: myAuthProvider.currentUserModel?.uid).snapshots(),
+
+                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) { // TODO: show alert
+                            return Text('Something went wrong');
+                          }
+
+                          List<PostModel> posts = snapshot.data!.docs
+                              .map((doc) => PostModel.fromJson(
+                              doc.data() as Map<String, dynamic>))
+                              .toList();
+
+                          return Expanded(
+                              child: ListView(
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+
+                                children: posts
+                                  .map((e) => Card(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Text(
+                                          e.username,
+                                          style: AppTextStyles.headline(),
+                                        ),
+                                        Spacer(),
+                                        Text(
+                                          e.text,
+                                          style: AppTextStyles.tileText()
+                                        )
+                                      ],
+                                    ),
+                                )).toList()
+                              ),
+                          );
+                          }
+                    ),
+                  ],
+                );
+              },
+          ),
           ),
         ],
       ),

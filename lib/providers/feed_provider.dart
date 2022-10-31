@@ -14,6 +14,18 @@ class FeedProvider with ChangeNotifier {
   Provider.of<AuthProvider>(Get.context!, listen: false);
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
 
+  bool isLoading = false;
+  bool areVariablesInitialized = false;
+
+  void initializeVariables() {
+    areVariablesInitialized = false;
+    isLoading = false;
+
+    areVariablesInitialized = true;
+    notifyListeners();
+  }
+
+
 
 
 }
