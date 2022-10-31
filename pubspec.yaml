@@ -27,6 +27,7 @@ dependencies:
   firestore_search: ^0.1.9
   flutter_spinkit: ^5.1.0
   cached_network_image: ^3.2.1
+  flutter_chat_ui: ^1.6.4
 
 
 dev_dependencies:

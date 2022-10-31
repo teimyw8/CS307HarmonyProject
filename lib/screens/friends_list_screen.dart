@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/screens/add_friends_screen.dart';
+import 'package:harmony_app/screens/chat_screen.dart';
 import 'package:harmony_app/screens/friend_requests_screen.dart';
 import 'package:harmony_app/screens/profile_friends_screens.dart';
 import 'package:provider/provider.dart';
@@ -148,7 +150,9 @@ class _friendsListViewState extends State<friendsListView> {
                                 IconButton(
                                   icon: const Icon(Icons.message),
                                   color: Colors.green,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.to(ChatScreen());
+                                  },
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.remove_circle_outline),
