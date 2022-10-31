@@ -133,6 +133,10 @@ class EditProfileProvider with ChangeNotifier {
     Reference ref = storage.ref().child(fileName);
   }
 
+  String getUserProfilePic() {
+    return currentUserModel!.profilepic;
+  }
+
   /*
   Future<void> syncProfile() {
 

@@ -135,10 +135,7 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
                 ),
               ),
             )
-                : Text(
-              "No Image",
-              style: TextStyle(fontSize: 20),
-            )
+                : Image.network(_editProfileProvider.getUserProfilePic())
           ],
         ),
       ),
