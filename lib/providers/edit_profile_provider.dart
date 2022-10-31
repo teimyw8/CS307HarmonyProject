@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
@@ -111,6 +112,11 @@ class EditProfileProvider with ChangeNotifier {
     )
         .catchError((onError) => message = onError.toString());
     return message;
+  }
+
+  void uploadImage(String fileName) {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child(fileName);
   }
 
   /*

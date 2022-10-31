@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:path/path.dart' as Path;
 import 'package:image_picker/image_picker.dart';
-import 'package:harmony_app/providers/edit_profile_provider.dart';
-import 'package:provider/provider.dart';
-
 
 void main() => runApp(MaterialApp(
   home: Home(),
@@ -23,16 +21,23 @@ class _HomeState extends State<Home> {
 
   final ImagePicker picker = ImagePicker();
 
-  final EditProfileProvider _editProfileProvider =
-  Provider.of<EditProfileProvider>(Get.context!, listen: false);
-
   //we can upload image from camera or from gallery based on parameter
   Future getImage(ImageSource media) async {
+    await Firebase.initializeApp(); //delete later
     var img = await picker.pickImage(source: media);
-    var imageFile = File(img!.path);
-    _editProfileProvider.uploadImage(imageFile);
     setState(() {
       image = img;
+    });
+    var imageFile = File(image!.path);
+    String fileName = Path.basename(imageFile.path);
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child(fileName);
+    UploadTask uploadTask = ref.putFile(imageFile);
+    await uploadTask.whenComplete(() async {
+      var url = await ref.getDownloadURL();
+      String image_url = url.toString();
+    }).catchError((onError) {
+      print(onError);
     });
   }
 
@@ -44,7 +49,7 @@ class _HomeState extends State<Home> {
           return AlertDialog(
             shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            title: Text('Upload Image'),
+            title: Text('Please choose media to select'),
             content: Container(
               height: MediaQuery.of(context).size.height / 6,
               child: Column(
@@ -54,7 +59,7 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       Navigator.pop(context);
                       getImage(ImageSource.gallery);
-                    },s
+                    },
                     child: Row(
                       children: [
                         Icon(Icons.image),
