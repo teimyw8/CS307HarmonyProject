@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_bar.dart';
+import 'create_post.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final FeedProvider _feedProvider =
-  Provider.of<FeedProvider>(Get.context!, listen: false);
+      Provider.of<FeedProvider>(Get.context!, listen: false);
 
   @override
   void initState() {
@@ -33,14 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _feedProvider.initializeVariables();
     });
     super.initState();
-  }
-
-  Future<Null> _refresh() async {
-    await getFeed();
-
-    setState(() {});
-
-    return;
   }
 
   @override
@@ -69,71 +62,85 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             backgroundColor: AppColors.white,
-            body: Consumer2<FeedProvider, AuthProvider>(
-              builder: (BuildContext context,
-              FeedProvider myFeedProvider,
-              AuthProvider myAuthProvider,
-              Widget? child) {
-                //late List<dynamic> friendsList = (myAuthProvider.currentUserModel?.friends)!;
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 40.h),
-                    StreamBuilder(
-                        stream: _firestoreService.firebaseFirestore
-                          .collection('posts')
-                          .where('uid', isEqualTo: myAuthProvider.currentUserModel?.uid).snapshots(),
+            body: Column(
+              children: [
+                Container(
+                    height: 600.h,
+                    width: double.infinity,
+                    child: getFeed()
+                ),
+              ],
+            ),
 
-                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasError) { // TODO: show alert
-                            return Text('Something went wrong');
-                          }
-
-                          List<PostModel> posts = snapshot.data!.docs
-                              .map((doc) => PostModel.fromJson(
-                              doc.data() as Map<String, dynamic>))
-                              .toList();
-
-                          return Expanded(
-                              child: ListView(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-
-                                children: posts
-                                  .map((e) => Card(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          e.username,
-                                          style: AppTextStyles.headline(),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          e.text,
-                                          style: AppTextStyles.tileText()
-                                        )
-                                      ],
-                                    ),
-                                )).toList()
-                              ),
-                          );
-                          }
-                    ),
-                  ],
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreatePost())
                 );
               },
-          ),
+              backgroundColor: AppColors.green,
+              child: const Icon(Icons.add),
+            ),
           ),
         ],
       ),
     );
   }
 
-  getFeed() async {
+  getFeed() {
+    return Consumer2<FeedProvider, AuthProvider>(
+      builder: (BuildContext context, FeedProvider myFeedProvider,
+          AuthProvider myAuthProvider, Widget? child) {
+        //late List<dynamic> friendsList = (myAuthProvider.currentUserModel?.friends)!;
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //SizedBox(height: 40.h),
+            StreamBuilder(
+                stream: _firestoreService.firebaseFirestore
+                    .collection('posts')
+                    .where('uid',
+                        isEqualTo: myAuthProvider.currentUserModel?.uid)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
 
+                  List<PostModel> posts = snapshot.data!.docs
+                      .map((doc) => PostModel.fromJson(
+                          doc.data() as Map<String, dynamic>))
+                      .toList();
 
+                  return Expanded(
+                    child: ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: posts
+                            .map((e) => Card(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Text(
+                                        e.username,
+                                        style: AppTextStyles.headline(),
+                                      ),
+                                      Spacer(),
+                                      Text(e.text,
+                                          style: AppTextStyles.tileText())
+                                    ],
+                                  ),
+                                ))
+                            .toList()),
+                  );
+                }),
+          ],
+        );
+      },
+    );
   }
 }

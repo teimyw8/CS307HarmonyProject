@@ -9,6 +9,7 @@ import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
+import 'package:harmony_app/services/feed_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ import 'providers/friend_requests_provider.dart';
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => AuthService());
   GetIt.instance.registerLazySingleton(() => FirestoreService());
+  GetIt.instance.registerLazySingleton(() => FeedService());
 }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
