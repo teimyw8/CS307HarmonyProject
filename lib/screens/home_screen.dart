@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -110,21 +108,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (snapshot.hasError) {
                     return Text('Something went wrong');
                   }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
 
                   List<PostModel> posts = snapshot.data!.docs
                       .map((doc) => PostModel.fromJson(
-                          doc.data() as Map<String, dynamic>))
-                      .toList();
+                          doc.data() as Map<String, dynamic>)).toList();
                   //sort the List in order to get chronological order
-                  posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+                  //posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
                   //we want to remove all posts not from today
+                  List postsFiltered = _feedProvider.lastDayOnly(posts);
 
                   return Expanded(
                     child: ListView(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        children: posts
+                        children: postsFiltered
                             .map((e) => Card(
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(
