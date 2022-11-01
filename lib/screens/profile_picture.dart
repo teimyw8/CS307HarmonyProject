@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:path/path.dart' as Path;
 import 'package:image_picker/image_picker.dart';
@@ -104,7 +105,8 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Image'),
+        title: Text('Edit Profile Picture'),
+        backgroundColor: Colors.green,
       ),
       body: Center(
         child: Column(
@@ -126,16 +128,21 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.file(
-                  //to show image, you type like this.
-                  File(image!.path),
-                  fit: BoxFit.cover,
-                  width: MediaQuery.of(context).size.width,
-                  height: 300,
+                child: CircleAvatar(
+                  backgroundImage: Image.file(
+                    File(image!.path),
+                  ).image,
+                  radius: 150,
                 ),
               ),
             )
-                : Image.network(_editProfileProvider.getUserProfilePic())
+                : ProfilePicture(
+              name: '',
+              radius: 150,
+              fontsize: 21,
+              img: _editProfileProvider.getUserProfilePic(),
+            ),
+
           ],
         ),
       ),

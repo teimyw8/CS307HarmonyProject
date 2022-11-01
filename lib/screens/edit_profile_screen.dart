@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/helpers/field_validators.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
@@ -120,6 +121,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+              ProfilePicture(
+                  name: 'apple',
+                  radius: 60,
+                  fontsize: 21,
+                  img: _editProfileProvider.getUserProfilePic(),
+              ),
+                    TextButton(
+                      onPressed: () {
+                        _authProvider.onProfilePic();
+                      },
+                      child: const Text('Edit Profile Picture'),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 16),
@@ -227,11 +240,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         }
                       },
                       child: Text(_syncState),
-                    ),
-                    FloatingActionButton(
-                      onPressed: () {
-                        _authProvider.onProfilePic();
-                      },
                     ),
                     Text(_errorMessage),
 

@@ -30,6 +30,7 @@ dependencies:
   cached_network_image: ^3.2.1
   image_picker: ^0.8.6
   firebase_storage: ^10.3.11
+  flutter_profile_picture: ^2.0.0
 
 
 dev_dependencies:

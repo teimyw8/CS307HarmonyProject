@@ -164,7 +164,6 @@ class AuthProvider with ChangeNotifier {
           var userDocData =
               await _firestoreService.retrieveUserFromFirestore(uid: uid);
           currentUserModel = UserModel.fromJson(userDocData!);
-          print(currentUserModel);
         }
         //we signed up user successfully and added the user to Firestore
         goToHomeScreen();
