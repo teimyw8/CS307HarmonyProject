@@ -6,15 +6,16 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/post_model.dart';
+import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
-import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_bar.dart';
 import 'create_post.dart';
+import 'friends_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -65,20 +66,13 @@ class _HomeScreenState extends State<HomeScreen> {
             body: Column(
               children: [
                 Container(
-                    height: 600.h,
-                    width: double.infinity,
-                    child: getFeed()
-                ),
+                    height: 837.h, width: double.infinity, child: getFeed()),
               ],
             ),
-
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CreatePost())
-                );
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CreatePost()));
               },
               backgroundColor: AppColors.green,
               child: const Icon(Icons.add),
@@ -93,7 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer2<FeedProvider, AuthProvider>(
       builder: (BuildContext context, FeedProvider myFeedProvider,
           AuthProvider myAuthProvider, Widget? child) {
-        //late List<dynamic> friendsList = (myAuthProvider.currentUserModel?.friends)!;
+
+        //add your UID to friends list locally for the querry
+        //limitation of firestore querying, this is a work around
+        List uidList = (myAuthProvider.currentUserModel?.friends)!;
+        uidList.add(myAuthProvider.currentUserModel!.uid);
+
+        //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,8 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
             StreamBuilder(
                 stream: _firestoreService.firebaseFirestore
                     .collection('posts')
-                    .where('uid',
-                        isEqualTo: myAuthProvider.currentUserModel?.uid)
+                    .where('uid', whereIn: uidList)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -115,6 +115,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       .map((doc) => PostModel.fromJson(
                           doc.data() as Map<String, dynamic>))
                       .toList();
+                  //sort the List in order to get chronological order
+                  posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+
+                  //we want to remove all posts not from today
 
                   return Expanded(
                     child: ListView(
@@ -122,16 +126,53 @@ class _HomeScreenState extends State<HomeScreen> {
                         shrinkWrap: true,
                         children: posts
                             .map((e) => Card(
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color: AppColors.grey40,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Column(
                                     children: [
-                                      Text(
-                                        e.username,
-                                        style: AppTextStyles.headline(),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Text(
+                                            e.username,
+                                            style: AppTextStyles.headline(),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            DateTime.parse(e.dateTime
+                                                        .toDate()
+                                                        .toString())
+                                                    .year
+                                                    .toString() +
+                                                "-" +
+                                                DateTime.parse(e.dateTime
+                                                        .toDate()
+                                                        .toString())
+                                                    .month
+                                                    .toString() +
+                                                "-" +
+                                                DateTime.parse(e.dateTime
+                                                        .toDate()
+                                                        .toString())
+                                                    .day
+                                                    .toString() +
+                                                "  " +
+                                                DateTime.parse(e.dateTime
+                                                        .toDate()
+                                                        .toString())
+                                                    .hour
+                                                    .toString() +
+                                                "h",
+                                            style: AppTextStyles.footNote(),
+                                          ),
+                                        ],
                                       ),
-                                      Spacer(),
                                       Text(e.text,
-                                          style: AppTextStyles.tileText())
+                                          style: AppTextStyles.headline())
                                     ],
                                   ),
                                 ))

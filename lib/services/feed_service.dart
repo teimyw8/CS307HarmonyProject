@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../helpers/custom_exceptions.dart';
 import '../helpers/service_constants.dart';
@@ -9,14 +10,15 @@ class FeedService {
   Future<void> addPostToFirestore(
       {required String text,
       required String username,
-      required String uid}) async {
+      required String uid,
+      required Timestamp dateTime}) async {
     try {
-      var postsDocRef = firebaseFirestore.collection('posts').doc(uid);
-      await postsDocRef.set({
+      var postsDocRef = firebaseFirestore.collection('posts');
+      await postsDocRef.add({
         "username": username,
         "text": text,
-        "friends": [],
         "uid": uid,
+        "dateTime": dateTime,
       });
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);

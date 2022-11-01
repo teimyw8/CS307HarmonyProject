@@ -43,7 +43,9 @@ class FeedProvider with ChangeNotifier {
         await _feedService.addPostToFirestore(
             text: textEditingController!.text,
             username: _authProvider.currentUserModel!.username,
-            uid: _authProvider.currentUserModel!.uid);
+            uid: _authProvider.currentUserModel!.uid,
+            dateTime: Timestamp.now()
+        );
       }
     } on FirestoreException catch (e) {
       debugPrint('failed addPostoFirestore');
