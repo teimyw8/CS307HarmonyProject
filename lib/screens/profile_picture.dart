@@ -112,6 +112,9 @@ class _ProfilePictureScreenState extends State<ProfilePictureScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            TextButton(onPressed: () {
+              setState(() {});
+            }, child: const Text('Refresh')),
             ElevatedButton(
               onPressed: () {
                 myAlert();
