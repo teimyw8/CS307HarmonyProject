@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -91,7 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
         //add your UID to friends list locally for the querry
         //limitation of firestore querying, this is a work around
         List uidList = (myAuthProvider.currentUserModel?.friends)!;
-        uidList.add(myAuthProvider.currentUserModel!.uid);
+        if (!uidList.contains(myAuthProvider.currentUserModel!.uid)) {
+          uidList.add(myAuthProvider.currentUserModel!.uid);
+        }
 
         //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
 
@@ -137,39 +141,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
                                         children: [
+                                          SizedBox(
+                                            width: 8.w,
+                                          ),
                                           Text(
                                             e.username,
                                             style: AppTextStyles.headline(),
                                           ),
                                           Spacer(),
                                           Text(
-                                            DateTime.parse(e.dateTime
+                                            "${DateTime.parse(e.dateTime
                                                         .toDate()
                                                         .toString())
-                                                    .year
-                                                    .toString() +
-                                                "-" +
-                                                DateTime.parse(e.dateTime
+                                                    .year}-${DateTime.parse(e.dateTime
                                                         .toDate()
                                                         .toString())
-                                                    .month
-                                                    .toString() +
-                                                "-" +
-                                                DateTime.parse(e.dateTime
+                                                    .month}-${DateTime.parse(e.dateTime
                                                         .toDate()
                                                         .toString())
-                                                    .day
-                                                    .toString() +
-                                                "  " +
-                                                DateTime.parse(e.dateTime
+                                                    .day}  ${DateTime.parse(e.dateTime
                                                         .toDate()
                                                         .toString())
-                                                    .hour
-                                                    .toString() +
-                                                "h",
+                                                    .hour}h",
                                             style: AppTextStyles.footNote(),
                                           ),
+                                          SizedBox(
+                                            width: 4.w,
+                                          ),
                                         ],
+                                      ),
+                                      Container(
+                                          child: ListTile(
+                                            leading: Icon(Icons.album),
+                                            title: Text('Template song'),
+                                            subtitle: Text('Artist template'),
+                                          ),
                                       ),
                                       Text(e.text,
                                           style: AppTextStyles.headline())
