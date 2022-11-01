@@ -24,4 +24,6 @@ class FeedService {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
+
+  
 }

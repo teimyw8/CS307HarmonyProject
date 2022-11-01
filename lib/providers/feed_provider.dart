@@ -51,8 +51,40 @@ class FeedProvider with ChangeNotifier {
       debugPrint('failed addPostoFirestore');
       showErrorDialog(e.cause);
     }
-
   }
+
+  List listOfUsers() {
+    List uidList = (_authProvider.currentUserModel?.friends)!;
+    if (!uidList.contains(_authProvider.currentUserModel!.uid)) {
+      uidList.add(_authProvider.currentUserModel!.uid);
+    }
+    return uidList;
+  }
+
+  List<PostModel> lastDayOnly(List<PostModel> posts) {
+    //filter chronologically from newest to oldest
+    posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+
+    //remove all the old ones.
+    var it = posts.iterator;
+    var toRemove = [];
+
+    //you can't remove items directy when using an iterator
+    while (it.moveNext()) {
+      Duration difference = DateTime.now().difference(it.current.dateTime.toDate());
+      if (difference.inHours > 24) {
+        //add this elements for removal after this while.
+        toRemove.add(it.current);
+      }
+    }
+
+    //remove the elements marked
+    posts.removeWhere((e) => toRemove.contains(e));
+
+
+    return posts;
+  }
+
 
 }
 
