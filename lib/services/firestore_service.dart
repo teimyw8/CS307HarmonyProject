@@ -43,7 +43,7 @@ class FirestoreService {
         "friends": [],
         "uid": uid,
         "password": password,
-        "profilepic": ""
+        "profilepic": "https://firebasestorage.googleapis.com/v0/b/harmony-5a238.appspot.com/o/image_picker5045730262574777780.jpg?alt=media&token=86fc8768-63f9-4fb8-b98c-055e08fe5fd7"
       });
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
