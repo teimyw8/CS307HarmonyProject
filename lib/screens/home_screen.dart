@@ -4,8 +4,10 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/screens/all_chats_screen.dart';
 import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/common_widgets/custom_app_bar.dart';
@@ -58,9 +60,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       builder: (BuildContext context,
                           AuthProvider myAuthProvider, Widget? child) {
                         myAuthProvider.updateCurrentUser();
-                        return Text(
-                          myAuthProvider.currentUserModel.toString(),
-                          style: AppTextStyles.footNote(),
+                        return Column(
+                          children: [
+                            Text(
+                              myAuthProvider.currentUserModel.toString(),
+                              style: AppTextStyles.footNote(),
+                            ),
+                            CustomAppButton(
+                              onTap: () {
+                                Get.to(() => AllChatsScreen());
+                              }, widget: Text("Go to Messages"), buttonColor: AppColors.green,
+                            )
+                          ],
                         );
                       },
                     ),

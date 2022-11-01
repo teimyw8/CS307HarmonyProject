@@ -1,26 +1,37 @@
 import 'package:harmony_app/models/message_model.dart';
 
 class ChatModel {
-  List<MessageModel> messages;
-  String partnerUserId;
+  String uid1;
+  String uid2;
   String chatId;
+  String lastMessage;
+  DateTime lastEdited;
 
   ChatModel(
-      {required this.messages,
-      required this.partnerUserId,
-      required this.chatId});
+      {
+      required this.uid1,
+      required this.uid2,
+      required this.chatId,
+        required this.lastMessage,
+        required this.lastEdited
+      });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
-      messages: json["messages"] == null
-          ? []
-          : List<MessageModel>.from(
-              json["messages"].map((x) => MessageModel.fromJson(x))),
-      partnerUserId: json['partnerUserId'] ?? "",
-      chatId: json['chatId'] ?? '');
+      uid1: json['uid1'] ?? "",
+      uid2: json['uid2'] ?? "",
+      chatId: json['chatId'] ?? "",
+      lastMessage: json['lastMessage'] ?? '',
+      lastEdited: (json["lastEdited"] == null) ? DateTime.now() : json["lastEdited"].toDate(),);
 
   Map<String, dynamic> toJson() => {
-    "messages": List<dynamic>.from(messages.map((x) => x.toJson())),
-    "partnerUserId": partnerUserId,
-    "chatId": chatId,
-  };
+        "uid1": uid1,
+        "uid2": uid2,
+        "chatId": chatId,
+        "lastMessage": lastMessage
+      };
+
+  @override
+  String toString() {
+    return 'ChatModel{uid1: $uid1, uid2: $uid2, chatId: $chatId}';
+  }
 }

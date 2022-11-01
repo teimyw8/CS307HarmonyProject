@@ -30,21 +30,26 @@ class _FriendsListPageState extends State<FriendsListPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.green,
-        title: Text(''
-            'Harmony',
-            style: AppTextStyles.appBar(),
+        title: Text(
+          ''
+          'Harmony',
+          style: AppTextStyles.appBar(),
         ),
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => FriendRequestsScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FriendRequestsScreen()));
               },
               icon: Icon(Icons.person_add)),
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddFriendsScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddFriendsScreen()));
               },
               icon: Icon(Icons.search)),
           IconButton(
@@ -56,14 +61,13 @@ class _FriendsListPageState extends State<FriendsListPage> {
       ),
       body: Column(
         children: <Widget>[
-          Consumer<AuthProvider> (
-            builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
-              myAuthProvider.updateCurrentUser();
-              currUser = (myAuthProvider.currentUserModel?.uid);
-              friendsList = (myAuthProvider.currentUserModel?.friends)!;
-              return const Text("");
-            }
-          ),
+          Consumer<AuthProvider>(builder: (BuildContext context,
+              AuthProvider myAuthProvider, Widget? child) {
+            myAuthProvider.updateCurrentUser();
+            currUser = (myAuthProvider.currentUserModel?.uid);
+            friendsList = (myAuthProvider.currentUserModel?.friends)!;
+            return const Text("");
+          }),
           Expanded(
             child: Container(
                 height: double.infinity,
@@ -78,8 +82,8 @@ class _FriendsListPageState extends State<FriendsListPage> {
 
 void refresh() {
   Consumer<AuthProvider>(
-    builder: (BuildContext context, AuthProvider myAuthProvider,
-        Widget? child) {
+    builder:
+        (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
       myAuthProvider.updateCurrentUser();
       currUser = (myAuthProvider.currentUserModel?.uid);
       friendsList = (myAuthProvider.currentUserModel?.friends)!;
@@ -110,9 +114,11 @@ class _friendsListViewState extends State<friendsListView> {
       );
     }
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('users').where("uid", whereIn: friendsList).snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .where("uid", whereIn: friendsList)
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-
         if (snapshot.hasError) {
           return const Text('Error, reload');
         }
@@ -130,18 +136,23 @@ class _friendsListViewState extends State<friendsListView> {
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           TextButton(
-                              onPressed: (){
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => friends_profile_screen(name: e['firstName'],)));
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  shape: StadiumBorder(),
-                                  primary: AppColors.white,
-                              ),
-                              child: Text(
-                                  e['firstName'],
-                                  style: TextStyle(color: AppColors.green),
-                              ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          friends_profile_screen(
+                                            name: e['firstName'],
+                                          )));
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: StadiumBorder(),
+                              primary: AppColors.white,
+                            ),
+                            child: Text(
+                              e['firstName'],
+                              style: TextStyle(color: AppColors.green),
+                            ),
                           ),
                           Spacer(),
                           Container(
@@ -151,7 +162,7 @@ class _friendsListViewState extends State<friendsListView> {
                                   icon: const Icon(Icons.message),
                                   color: Colors.green,
                                   onPressed: () {
-                                    Get.to(ChatScreen());
+                                    // Get.to(ChatScreen(chatModel: null,));
                                   },
                                 ),
                                 IconButton(
@@ -159,15 +170,16 @@ class _friendsListViewState extends State<friendsListView> {
                                   color: Colors.red,
                                   onPressed: () {
                                     //debugPrint(e['uid']);
-                                    var collection = FirebaseFirestore.instance.collection('users');
-                                    collection.doc(currUser).update(
-                                        {
-                                          'friends':FieldValue.arrayRemove([e.get('uid')]),
-                                        });
-                                    collection.doc(e.get('uid')).update(
-                                        {
-                                          'friends':FieldValue.arrayRemove([currUser]),
-                                        });
+                                    var collection = FirebaseFirestore.instance
+                                        .collection('users');
+                                    collection.doc(currUser).update({
+                                      'friends': FieldValue.arrayRemove(
+                                          [e.get('uid')]),
+                                    });
+                                    collection.doc(e.get('uid')).update({
+                                      'friends':
+                                          FieldValue.arrayRemove([currUser]),
+                                    });
                                     friendsList.remove(e['uid']);
                                     setState(() {});
                                   },
