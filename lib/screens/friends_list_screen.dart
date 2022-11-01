@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/widgets/add_friends_widgets/friends_list_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +50,7 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
           }),
           Expanded(
             child: Container(
-                height: double.infinity,
+                height: 500.h,
                 width: double.infinity,
                 child: const FriendsListViewWidget()),
           ),

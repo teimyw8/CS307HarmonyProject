@@ -27,15 +27,15 @@ class UserModel {
       required this.friendRequestsSent});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        email: json["email"],
-        firstName: json["firstName"],
-        lastName: json["lastName"],
-        bio: json["bio"],
+        email: json["email"] ?? "",
+        firstName: json["firstName"] ?? "",
+        lastName: json["lastName"] ?? "",
+        bio: json["bio"] ?? "",
         friends: json["friends"] ?? [],
-        uid: json["uid"],
+        uid: json["uid"] ?? "",
         username: json["username"] ?? "",
-        displayProfileTo: json["displayProfileTo"] ?? [],
-        displayName: json["displayName"] ?? [],
+        displayProfileTo: json["displayProfileTo"] ?? 0,
+        displayName: json["displayName"] ?? true,
         spotifyToken: json["spotifyToken"] ?? "",
         friendRequestsReceived: json["friendRequestsReceived"] ?? [],
         friendRequestsSent: json["friendRequestsSent"] ?? [],

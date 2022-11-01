@@ -60,7 +60,6 @@ class EditProfileProvider with ChangeNotifier {
         return false;
       }
     }
-
     //TODO: check to see if username already exists
     return true;
   }
@@ -226,7 +225,7 @@ class EditProfileProvider with ChangeNotifier {
     }
     temp.displayName = val;
     try {
-      setUserInfo(UserModel.fromJson(temp!.toJson()));
+      setUserInfo(UserModel.fromJson(temp.toJson()));
     } on FirestoreException catch (e) {
       showErrorDialog(e.cause);
     }
@@ -245,7 +244,7 @@ class EditProfileProvider with ChangeNotifier {
     }
     temp.displayProfileTo = val;
     try {
-      setUserInfo(UserModel.fromJson(temp!.toJson()));
+      setUserInfo(UserModel.fromJson(temp.toJson()));
     } on FirestoreException catch (e) {
       showErrorDialog(e.cause);
     }
@@ -255,17 +254,17 @@ class EditProfileProvider with ChangeNotifier {
     _authProvider.startLoading();
     formKey.currentState!.save();
     try {
-      if (currentUserModel!.username.compareTo(temp!.username) != 0) {
+      if (currentUserModel!.username.compareTo(temp.username) != 0) {
         await _firestoreService.doesUsernameAlreadyExist(
-            username: temp!.username);
+            username: temp.username);
       }
       if (formKey.currentState!.validate()) {
         swapEditingMode();
-        if (currentUserModel!.email.compareTo(temp!.email) != 0) {
-          validateNewEmail(temp!.email);
+        if (currentUserModel!.email.compareTo(temp.email) != 0) {
+          validateNewEmail(temp.email);
         }
         if (!isEditing) {
-          setUserInfo(UserModel.fromJson(temp!.toJson()));
+          setUserInfo(UserModel.fromJson(temp.toJson()));
         }
       }
     } on FirestoreException catch (e) {

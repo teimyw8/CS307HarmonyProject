@@ -1,14 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+import 'package:harmony_app/models/post_model.dart';
+import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
-import 'package:harmony_app/screens/friends_list_screen.dart';
+import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
+import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_bar.dart';
+import 'create_post.dart';
+import 'friends_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,8 +25,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AuthProvider _authProvider =
-      Provider.of<AuthProvider>(Get.context!, listen: false);
+  FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
+  final FeedProvider _feedProvider =
+      Provider.of<FeedProvider>(Get.context!, listen: false);
+
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 0), () {
+      _feedProvider.initializeVariables();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,30 +63,125 @@ class _HomeScreenState extends State<HomeScreen> {
               },*/
             ),
             backgroundColor: AppColors.white,
-            body: Align(
-              alignment: Alignment.center,
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 60.w, vertical: 20.h),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Consumer<AuthProvider>(
-                      builder: (BuildContext context,
-                          AuthProvider myAuthProvider, Widget? child) {
-                        myAuthProvider.updateCurrentUser();
-                        return Text(
-                          myAuthProvider.currentUserModel.toString(),
-                          style: AppTextStyles.footNote(),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+            body: Column(
+              children: [
+                Container(
+                    height: 837.h, width: double.infinity, child: getFeed()),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CreatePost()));
+              },
+              backgroundColor: AppColors.green,
+              child: const Icon(Icons.add),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  getFeed() {
+    return Consumer2<FeedProvider, AuthProvider>(
+      builder: (BuildContext context, FeedProvider myFeedProvider,
+          AuthProvider myAuthProvider, Widget? child) {
+
+        //add your UID to friends list locally for the querry
+        //limitation of firestore querying, this is a work around
+        List uidList = (myAuthProvider.currentUserModel?.friends)!;
+        uidList.add(myAuthProvider.currentUserModel!.uid);
+
+        //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //SizedBox(height: 40.h),
+            StreamBuilder(
+                stream: _firestoreService.firebaseFirestore
+                    .collection('posts')
+                    .where('uid', whereIn: uidList)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
+
+                  List<PostModel> posts = snapshot.data!.docs
+                      .map((doc) => PostModel.fromJson(
+                          doc.data() as Map<String, dynamic>))
+                      .toList();
+                  //sort the List in order to get chronological order
+                  posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+
+                  //we want to remove all posts not from today
+
+                  return Expanded(
+                    child: ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: posts
+                            .map((e) => Card(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color: AppColors.grey40,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Text(
+                                            e.username,
+                                            style: AppTextStyles.headline(),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            DateTime.parse(e.dateTime
+                                                        .toDate()
+                                                        .toString())
+                                                    .year
+                                                    .toString() +
+                                                "-" +
+                                                DateTime.parse(e.dateTime
+                                                        .toDate()
+                                                        .toString())
+                                                    .month
+                                                    .toString() +
+                                                "-" +
+                                                DateTime.parse(e.dateTime
+                                                        .toDate()
+                                                        .toString())
+                                                    .day
+                                                    .toString() +
+                                                "  " +
+                                                DateTime.parse(e.dateTime
+                                                        .toDate()
+                                                        .toString())
+                                                    .hour
+                                                    .toString() +
+                                                "h",
+                                            style: AppTextStyles.footNote(),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(e.text,
+                                          style: AppTextStyles.headline())
+                                    ],
+                                  ),
+                                ))
+                            .toList()),
+                  );
+                }),
+          ],
+        );
+      },
     );
   }
 }
