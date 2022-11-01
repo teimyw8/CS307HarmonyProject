@@ -51,7 +51,14 @@ class FeedProvider with ChangeNotifier {
       debugPrint('failed addPostoFirestore');
       showErrorDialog(e.cause);
     }
+  }
 
+  List listOfUsers() {
+    List uidList = (_authProvider.currentUserModel?.friends)!;
+    if (!uidList.contains(_authProvider.currentUserModel!.uid)) {
+      uidList.add(_authProvider.currentUserModel!.uid);
+    }
+    return uidList;
   }
 
 }

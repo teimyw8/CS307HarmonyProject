@@ -8,7 +8,6 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/post_model.dart';
-import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
@@ -92,10 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         //add your UID to friends list locally for the querry
         //limitation of firestore querying, this is a work around
-        List uidList = (myAuthProvider.currentUserModel?.friends)!;
-        if (!uidList.contains(myAuthProvider.currentUserModel!.uid)) {
-          uidList.add(myAuthProvider.currentUserModel!.uid);
-        }
+        List<dynamic> uidList = myFeedProvider.listOfUsers();
 
         //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
 
@@ -162,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .day}  ${DateTime.parse(e.dateTime
                                                         .toDate()
                                                         .toString())
-                                                    .hour}h",
+                                                    .hour}:${DateTime.parse(e.dateTime.toDate().toString()).minute}",
                                             style: AppTextStyles.footNote(),
                                           ),
                                           SizedBox(
