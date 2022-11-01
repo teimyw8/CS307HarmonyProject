@@ -31,7 +31,8 @@ class FirestoreService {
       required String lastName,
       required String userName,
         required List<String> friends,
-      required String password, required String profilepic}) async {
+      required String password,
+        required String profilepic}) async {
     try {
       var usersDocRef =  firebaseFirestore.collection('users').doc(uid);
       await usersDocRef.set({
@@ -42,6 +43,7 @@ class FirestoreService {
         "friends": [],
         "uid": uid,
         "password": password,
+        "profilepic": ""
       });
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
