@@ -191,7 +191,7 @@ packages:
     source: hosted
     version: "1.24.0"
   firebase_core_platform_interface:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: firebase_core_platform_interface
       url: "https://pub.dartlang.org"
@@ -252,14 +252,14 @@ packages:
     source: hosted
     version: "3.3.0"
   flutter_launcher_icons:
-    dependency: "direct overridden"
+    dependency: "direct dev"
     description:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.0"
   flutter_lints:
-    dependency: "direct overridden"
+    dependency: "direct dev"
     description:
       name: flutter_lints
       url: "https://pub.dartlang.org"
