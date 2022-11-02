@@ -35,19 +35,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         backgroundColor: AppColors.green,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 70),
-              child: Text(
-                "@${widget.userModel.username}",
-                style: AppTextStyles.profileNames(),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 70),
+                  child: Text(
+                    "@${widget.userModel.username}",
+                    style: AppTextStyles.profileNames(),
+                  ),
+                ),
+              ],
             ),
             Text(
               "Private Page",
-              style: AppTextStyles.largeTitle().apply(color: AppColors.white),
+              style: AppTextStyles.tileText().apply(fontSizeDelta: 30, fontWeightDelta: 2),
             ),
           ],
         ),
