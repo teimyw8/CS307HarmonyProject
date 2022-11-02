@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 
 import '../../helpers/colors.dart';
 import '../../helpers/text_styles.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/friends_list_provider.dart';
+List<dynamic>? friendsList;
 
 class FriendsListViewWidget extends StatefulWidget {
   const FriendsListViewWidget({Key? key}) : super(key: key);
@@ -23,93 +25,120 @@ class FriendsListViewWidget extends StatefulWidget {
 class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
   final FriendsListProvider _friendsListProvider =
       Provider.of<FriendsListProvider>(Get.context!, listen: false);
+  final AuthProvider _authProvider =
+  Provider.of<AuthProvider>(Get.context!, listen: false);
 
   @override
   Widget build(BuildContext context) {
-    if (_friendsListProvider.friendsList.isEmpty) {
-      _friendsListProvider.refresh();
-      return Text(
-        'No friends',
-        style: AppTextStyles.headline(),
-      );
-    }
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('users')
-          .where("uid", whereIn: _friendsListProvider.friendsList)
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Error, reload');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("Loading");
-        }
+    return Consumer<AuthProvider>(
+        builder: (BuildContext context, AuthProvider myAuthProvider,
+        Widget? child) {
+          myAuthProvider.updateCurrentUser();
+          friendsList = (myAuthProvider.currentUserModel?.friends)!;
 
-        List<DocumentSnapshot> documents = snapshot.data!.docs;
-        UserModel? temp;
-        return ListView(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            children: documents
-                .map((e) => Card(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          TextButton(
-                            onPressed: () {
-                              _friendsListProvider.getUserModel(temp, e['uid']);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProfileScreen(userModel: temp!, isPrivate: _friendsListProvider.isPrivateUser(temp!))));
-                            },
-                            style: ElevatedButton.styleFrom(
-                              shape: StadiumBorder(),
-                              primary: AppColors.white,
+          if (friendsList!.isEmpty) {
+            return Text(
+              'No friends',
+              style: AppTextStyles.headline(),
+            );
+          }
+
+          if (friendsList?.last.toString() ==
+              myAuthProvider.currentUserModel?.uid.toString()) {
+            friendsList?.removeLast();
+          }
+          debugPrint("friends list screen " + friendsList.toString());
+
+          return StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .where("uid", whereIn: friendsList)
+                .snapshots(),
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Error, reload');
+              }
+
+              // if (snapshot.connectionState == ConnectionState.waiting) {
+              //   return Text("Loading");
+              // }
+
+              List<DocumentSnapshot> documents = snapshot.data!.docs;
+              UserModel? temp;
+              return ListView(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  children: documents
+                      .map((e) =>
+                      Card(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                _friendsListProvider.getUserModel(
+                                    temp, e['uid']);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfileScreen(userModel: temp!,
+                                                isPrivate: _friendsListProvider
+                                                    .isPrivateUser(temp!))));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                shape: StadiumBorder(),
+                                primary: AppColors.white,
+                              ),
+                              child: Text(
+                                e['firstName'],
+                                style: TextStyle(color: AppColors.green),
+                              ),
                             ),
-                            child: Text(
-                              e['firstName'],
-                              style: TextStyle(color: AppColors.green),
+                            Spacer(),
+                            Container(
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.message),
+                                    color: Colors.green,
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                        Icons.remove_circle_outline),
+                                    color: Colors.red,
+                                    onPressed: () {
+                                      //debugPrint(e['uid']);
+                                      var collection = FirebaseFirestore
+                                          .instance
+                                          .collection('users');
+                                      collection.doc(
+                                          _friendsListProvider.currUser).update(
+                                          {
+                                            'friends': FieldValue.arrayRemove(
+                                                [e.get('uid')]),
+                                          });
+                                      collection.doc(e.get('uid')).update({
+                                        'friends':
+                                        FieldValue.arrayRemove(
+                                            [_friendsListProvider.currUser]),
+                                      });
+                                      _friendsListProvider.currUser.remove(
+                                          e['uid']);
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Spacer(),
-                          Container(
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.message),
-                                  color: Colors.green,
-                                  onPressed: () {},
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline),
-                                  color: Colors.red,
-                                  onPressed: () {
-                                    //debugPrint(e['uid']);
-                                    var collection = FirebaseFirestore.instance
-                                        .collection('users');
-                                    collection.doc(_friendsListProvider.currUser).update({
-                                      'friends': FieldValue.arrayRemove(
-                                          [e.get('uid')]),
-                                    });
-                                    collection.doc(e.get('uid')).update({
-                                      'friends':
-                                          FieldValue.arrayRemove([_friendsListProvider.currUser]),
-                                    });
-                                    _friendsListProvider.currUser.remove(e['uid']);
-                                    setState(() {});
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ))
-                .toList());
-      },
-    );
+                          ],
+                        ),
+                      ))
+                      .toList());
+            },
+          );
+        } );
   }
 }

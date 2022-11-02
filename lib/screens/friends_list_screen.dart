@@ -39,15 +39,6 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
       appBar: friendsListAppBar,
       body: Column(
         children: <Widget>[
-          Consumer<AuthProvider>(builder: (BuildContext context,
-              AuthProvider myAuthProvider, Widget? child) {
-            myAuthProvider.updateCurrentUser();
-            _friendsListProvider.currUser =
-                (myAuthProvider.currentUserModel?.uid);
-            _friendsListProvider.friendsList =
-                (myAuthProvider.currentUserModel?.friends)!;
-            return const Text("");
-          }),
           Expanded(
             child: Container(
                 height: 500.h,
