@@ -65,7 +65,7 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
               // }
 
               List<DocumentSnapshot> documents = snapshot.data!.docs;
-              UserModel? temp;
+              //UserModel? temp;
               return ListView(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -76,16 +76,14 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             TextButton(
-                              onPressed: () {
-                                _friendsListProvider.getUserModel(
-                                    temp, e['uid']);
+                              onPressed: () async {
+                                await _friendsListProvider.setUserModel(e['uid']);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            ProfileScreen(userModel: temp!,
-                                                isPrivate: _friendsListProvider
-                                                    .isPrivateUser(temp!))));
+                                            ProfileScreen(userModel: _friendsListProvider.temp!,
+                                                isPrivate: _friendsListProvider.isPrivateUser(_friendsListProvider.temp!))));
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: StadiumBorder(),

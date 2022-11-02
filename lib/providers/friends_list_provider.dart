@@ -13,6 +13,7 @@ class FriendsListProvider with ChangeNotifier {
 
   var currUser;
   late List<dynamic> friendsList;
+  UserModel? temp;
 
   void refresh() {
     Consumer<AuthProvider>(
@@ -27,10 +28,10 @@ class FriendsListProvider with ChangeNotifier {
   }
 
   ///this function retrieves user information for requested uid
-  Future<void> getUserModel(UserModel? temp, String uid) async {
+  Future<void> setUserModel(String uid) async {
     var userDocData = await _firestoreService.retrieveUserFromFirestore(
         uid: uid);
-    temp = UserModel.fromJson(userDocData!);
+      temp = UserModel.fromJson(userDocData!);
   }
 
   ///this function returns true if currUser can't see temp's full profile, false otherwise
