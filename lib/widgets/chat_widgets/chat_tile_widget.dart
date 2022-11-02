@@ -42,8 +42,8 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
   @override
   Widget build(BuildContext context) {
     return (partnerUserModel == null) ? Container() : GestureDetector(
-      onTap: () {
-        Get.to(() => ChatScreen(chatModel: widget.chatModel, myUserModel: authProvider.currentUserModel!, partnerUserModel: partnerUserModel!,));
+      onTap: () async {
+        Get.to(() => ChatScreen(doesChatExistInFirestore: true, chatModel: widget.chatModel, myUserModel: authProvider.currentUserModel!, partnerUserModel: partnerUserModel!,));
       },
       child: Container(
         decoration: BoxDecoration(
@@ -60,15 +60,25 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
               children: [
                 Expanded(
                   child: Text(
-                    "${partnerUserModel!.firstName} ${partnerUserModel!.lastName}: ${widget.chatModel.lastMessage}",
-                    style: AppTextStyles.footNote().copyWith(color: AppColors.greyText),
+                    "${partnerUserModel!.firstName} ${partnerUserModel!.lastName}",
+                    style: AppTextStyles.footNote().copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
                   ),
+                ),
+                Text(
+                  "${DateFormat("dd MMM HH:mm").format(widget.chatModel.lastEdited)}",
+                  style: AppTextStyles.footNote(),
                 ),
               ],
             ),
-            Text(
-              "${DateFormat("dd MMM HH:mm").format(widget.chatModel.lastEdited)}",
-              style: AppTextStyles.footNote(),
+            SizedBox(height: 5.h,),
+            Padding(
+              padding: EdgeInsets.only(left: 8.w),
+              child: Text(
+                "${widget.chatModel.lastMessage}",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.footNote().copyWith(color: AppColors.greyText),
+              ),
             ),
           ],
         ),
@@ -76,22 +86,3 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
     );
   }
 }
-
-
-//return ListView.builder(
-//           reverse: true,
-//           padding: EdgeInsets.only(bottom: 150.h),
-//           itemBuilder: (BuildContext context, int index) {
-//             MessageModel messageModel =
-//             MessageModel.fromJson(snapshot.data.docs[index].data() as Map<String, dynamic>);
-//             UserModel userModel =
-//             (authProvider.currentUserModel!.uid == messageModel.fromUserId)
-//                 ? widget.myUserModel
-//                 : widget.partnerUserModel;
-//             return MessageWidget(
-//               messageModel: messageModel,
-//               sentByMe: widget.myUserModel.uid == messageModel.fromUserId,
-//               userModel: userModel,
-//             );
-//           },
-//         );

@@ -19,12 +19,14 @@ class ChatScreen extends StatefulWidget {
   final ChatModel chatModel;
   final UserModel partnerUserModel;
   final UserModel myUserModel;
+  final bool doesChatExistInFirestore;
 
   const ChatScreen(
       {Key? key,
       required this.chatModel,
       required this.partnerUserModel,
-      required this.myUserModel})
+      required this.myUserModel,
+      required this.doesChatExistInFirestore})
       : super(key: key);
 
   @override
@@ -46,7 +48,18 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
+    Future.delayed(Duration(seconds: 0), () {
+      chatProvider.initializeVariables(doesChatExist: widget.doesChatExistInFirestore);
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    Future.delayed(Duration(seconds: 0), () {
+      chatProvider.disposeVariables();
+    });
+    super.dispose();
   }
 
   @override
@@ -65,55 +78,60 @@ class _ChatScreenState extends State<ChatScreen> {
           needHome: false,
           onHomeClicked: () {},
         ),
-        body: Stack(
-          children: <Widget>[
-            // chat messages here
-            chatMessages(),
-            Container(
-              alignment: Alignment.bottomCenter,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                padding:
-                EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                width: MediaQuery.of(context).size.width,
-                color: AppColors.grey70.withOpacity(0.5),
-                child: Row(children: [
-                  Expanded(
-                      child: TextFormField(
-                    controller: messageController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: "Send a message...",
-                      hintStyle: TextStyle(color: Colors.white, fontSize: 16),
-                      border: InputBorder.none,
-                    ),
-                  )),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      sendMessage();
-                    },
-                    child: Container(
-                      height: 50.h,
-                      width: 50.h,
-                      padding: EdgeInsets.all(4.h),
-                      decoration: BoxDecoration(
-                        color: AppColors.green,
-                        borderRadius: BorderRadius.circular(30),
+        body: Consumer<ChatProvider>(
+          builder: (BuildContext context, ChatProvider myChatProvider, Widget? child) {
+            if (!myChatProvider.areVariablesInitialized) return Container();
+            return Stack(
+              children: <Widget>[
+                // chat messages here
+                chatMessages(),
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  width: MediaQuery.of(context).size.width,
+                  child: Container(
+                    padding:
+                    EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    width: MediaQuery.of(context).size.width,
+                    color: AppColors.grey70.withOpacity(0.5),
+                    child: Row(children: [
+                      Expanded(
+                          child: TextFormField(
+                            controller: messageController,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: "Send a message...",
+                              hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+                              border: InputBorder.none,
+                            ),
+                          )),
+                      const SizedBox(
+                        width: 12,
                       ),
-                      child: const Center(
-                          child: Icon(
-                        Icons.send,
-                        color: Colors.white,
-                      )),
-                    ),
-                  )
-                ]),
-              ),
-            )
-          ],
+                      GestureDetector(
+                        onTap: () {
+                          sendMessage();
+                        },
+                        child: Container(
+                          height: 50.h,
+                          width: 50.h,
+                          padding: EdgeInsets.all(4.h),
+                          decoration: BoxDecoration(
+                            color: AppColors.green,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: const Center(
+                              child: Icon(
+                                Icons.send,
+                                color: Colors.white,
+                              )),
+                        ),
+                      )
+                    ]),
+                  ),
+                )
+              ],
+            );
+          },
         ),
       ),
     );
@@ -154,7 +172,7 @@ class _ChatScreenState extends State<ChatScreen> {
   sendMessage() {
     if (messageController.text.isNotEmpty) {
       chatProvider.sendMessageToChat(
-          chatId: widget.chatModel.chatId, message: messageController.text);
+          chatModel: widget.chatModel, message: messageController.text);
       setState(() {
         messageController.clear();
         FocusManager.instance.primaryFocus?.unfocus();

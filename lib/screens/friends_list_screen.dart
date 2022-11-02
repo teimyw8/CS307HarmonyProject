@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+import 'package:harmony_app/providers/chat_provider.dart';
 import 'package:harmony_app/screens/add_friends_screen.dart';
 import 'package:harmony_app/screens/chat_screen.dart';
 import 'package:harmony_app/screens/friend_requests_screen.dart';
@@ -104,6 +105,9 @@ class friendsListView extends StatefulWidget {
 //
 
 class _friendsListViewState extends State<friendsListView> {
+  ChatProvider chatProvider = Provider.of<ChatProvider>(Get.context!, listen: false);
+  AuthProvider authProvider = Provider.of<AuthProvider>(Get.context!, listen: false);
+
   @override
   Widget build(BuildContext context) {
     if (friendsList.isEmpty) {
@@ -162,6 +166,7 @@ class _friendsListViewState extends State<friendsListView> {
                                   icon: const Icon(Icons.message),
                                   color: Colors.green,
                                   onPressed: () {
+                                    chatProvider.openChatScreenFromFriendListWidget(uid1: authProvider.currentUserModel!.uid, uid2: e['uid']);
                                     // Get.to(ChatScreen(chatModel: null,));
                                   },
                                 ),

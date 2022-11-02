@@ -78,7 +78,6 @@ class _MessageWidgetState extends State<MessageWidget> {
             ),
           ),
           Text("${DateFormat("dd MMM HH:mm").format(widget.messageModel.dateSent)}")
-
         ],
       ),
     );

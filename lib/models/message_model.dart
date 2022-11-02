@@ -1,3 +1,4 @@
+import 'package:harmony_app/helpers/helper_functions.dart';
 import 'package:harmony_app/models/user_model.dart';
 
 class MessageModel {
@@ -12,7 +13,7 @@ class MessageModel {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => MessageModel(
     message: json["message"] ?? "",
-      dateSent: (json["dateSent"] == null) ? DateTime.now() : json["dateSent"].toDate(),
+      dateSent: (json["dateSent"] == null) ? dateTimeToEST(DateTime.now()) : json["dateSent"].toDate(),
     messageId: json['messageId'] ?? "",
     isRead: json['isRead'] ?? false,
     fromUserId: json['fromUserId'] ?? ''

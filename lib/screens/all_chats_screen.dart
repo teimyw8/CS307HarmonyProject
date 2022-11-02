@@ -33,15 +33,15 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
 
   @override
   void initState() {
-    // getChatandAdmin();
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(
-          title: "Harmony 111  11",
+          title: "Harmony",
           needBackArrow: true,
           needAvatar: false,
           needSettings: false,
@@ -49,7 +49,7 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
           onHomeClicked: () {},
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('chats').snapshots(),
+          stream: FirebaseFirestore.instance.collection('chats').orderBy('lastEdited').snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
@@ -62,14 +62,15 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
             return ListView(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                children: documents
-                    .map((e) =>
-                    ChatTileWidget(
-                          chatModel: ChatModel.fromJson(
-                              e.data() as Map<String, dynamic>),
-                        )
-                )
-                    .toList());
+                children: documents.reversed.map((e) {
+                  ChatModel chatModel =
+                      ChatModel.fromJson(e.data() as Map<String, dynamic>);
+                   if (chatModel.uid1 == authProvider.currentUserModel!.uid ||
+                       chatModel.uid2 == authProvider.currentUserModel!.uid) {
+                    return ChatTileWidget(chatModel: chatModel);
+                  }
+                  return Container();
+                }).toList());
           },
         ));
   }

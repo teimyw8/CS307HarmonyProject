@@ -1,13 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
+import 'package:harmony_app/helpers/helper_functions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
 import 'package:harmony_app/models/chat_model.dart';
 import 'package:harmony_app/models/message_model.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/screens/chat_screen.dart';
 import 'package:harmony_app/services/chat_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
@@ -16,20 +17,27 @@ import 'package:provider/provider.dart';
 class ChatProvider with ChangeNotifier {
   ChatService get _chatService => GetIt.instance<ChatService>();
 
+  bool doesChatExistInFirestore = true;
+  bool areVariablesInitialized = false;
+
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   AuthProvider authProvider =
       Provider.of<AuthProvider>(Get.context!, listen: false);
 
-  ///this function adds a new chat in firestore
-  Future<void> createNewChat({required String partnerId}) async {
+  void initializeVariables({required bool doesChatExist}) {
+    doesChatExistInFirestore = doesChatExist;
+    areVariablesInitialized = true;
+    notifyListeners();
+  }
+  void disposeVariables() {
+    doesChatExistInFirestore = true;
+    areVariablesInitialized = false;
+    notifyListeners();
+  }
+
+  ///this function adds a new chat in Firestore
+  Future<void> createNewChat({required String message, required ChatModel chatModel}) async {
     try {
-      String chatId = "${DateTime.now().microsecondsSinceEpoch}";
-      ChatModel chatModel = ChatModel(
-          uid1: authProvider.currentUserModel!.uid,
-          uid2: partnerId,
-          chatId: chatId,
-          lastMessage: "",
-          lastEdited: DateTime.now());
       await _chatService.createNewChatInFirebaseFirestore(chatModel: chatModel);
     } on FirestoreException catch (e) {
       _showErrorDialog(e.cause);
@@ -40,18 +48,60 @@ class ChatProvider with ChangeNotifier {
 
   ///this function sends a new message to chat
   Future<void> sendMessageToChat(
-      {required String chatId, required String message}) async {
+      {required String message, required ChatModel chatModel}) async {
     try {
+      // first checking if the chat exists.
+      // If it doesn't, then we create it first and then send the message
+      if (!doesChatExistInFirestore) {
+        print("creaing a new chat");
+        await createNewChat(message: message, chatModel: chatModel);
+        doesChatExistInFirestore = true;
+        notifyListeners();
+      }
       MessageModel messageModel = MessageModel(
           message: message,
-          dateSent: DateTime.now(),
-          messageId: DateTime.now().toString(),
+          dateSent: dateTimeToEST(DateTime.now()),
+          messageId: dateTimeToEST(DateTime.now()).toString(),
           isRead: false,
           fromUserId: authProvider.currentUserModel!.uid);
       _chatService.sendMessageToChat(
-          messageModel: messageModel, chatId: chatId);
+          messageModel: messageModel, chatId: chatModel.chatId);
     } on FirestoreException catch (e) {
       _showErrorDialog(e.cause);
+    } catch (e) {
+      _showErrorDialog(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+  }
+
+  ///this function checks if the chat exists between two specified users and returns a boolean value
+  Future<dynamic> doesChatExist({required String uid1, required String uid2}) async {
+    try {
+      bool doesExist = await _chatService.doesChatExistInFirestore(uid1: uid1, uid2: uid2);
+      doesChatExistInFirestore = doesExist;
+      notifyListeners();
+      return doesExist;
+    } catch (e) {
+      _showErrorDialog(ServiceConstants.SOMETHINGWENTWRONG);
+      return false;
+    }
+  }
+
+  ///this function checks if the chat exists between two specified users and returns a boolean value
+  void openChatScreenFromFriendListWidget({required String uid1, required String uid2}) async {
+    try {
+      bool doesChatExist = await _chatService.doesChatExistInFirestore(uid1: uid1, uid2: uid2);
+      ChatModel chatModel;
+      if (doesChatExist) {
+        var chatDoc = await _chatService.fetchChatFromFirestore(uid1: uid1, uid2: uid2);
+        print("chatDoc: $chatDoc");
+        chatModel = ChatModel.fromJson(chatDoc);
+      } else {
+        chatModel = ChatModel(uid1: uid1, uid2: uid2, chatId: "${dateTimeToEST(DateTime.now()).microsecondsSinceEpoch}", lastMessage: "", lastEdited: dateTimeToEST(DateTime.now()), lastMessageSentFromUID: "");
+      }
+      print("doesChatExist: $doesChatExist");
+      var partnerUserModelDoc = await _firestoreService.retrieveUserFromFirestore(uid: (authProvider.currentUserModel!.uid == uid1) ? uid2 : uid1);
+      UserModel partnerUserModel = UserModel.fromJson(partnerUserModelDoc);
+      Get.to(() => ChatScreen(doesChatExistInFirestore: doesChatExist, chatModel: chatModel, partnerUserModel: partnerUserModel, myUserModel: authProvider.currentUserModel!));
     } catch (e) {
       _showErrorDialog(ServiceConstants.SOMETHINGWENTWRONG);
     }
@@ -61,14 +111,10 @@ class ChatProvider with ChangeNotifier {
   Future<dynamic> getPartnerUserModelFromFirestore(
       {required String uid}) async {
     try {
-      print("HELLo");
-
       var userDoc = await _firestoreService.retrieveUserFromFirestore(uid: uid);
-      print("userDoc: ${userDoc}");
       UserModel userModel = UserModel.fromJson(userDoc);
       return userModel;
     } on FirestoreException catch (e) {
-      print(e.cause);
       _showErrorDialog(e.cause);
     } catch (e) {
       print(e);
