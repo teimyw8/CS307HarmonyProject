@@ -235,13 +235,11 @@ class EditProfileProvider with ChangeNotifier {
     value ??= "";
     UserModel temp = currentUserModel!;
     int val = -1;
-    if (value == 'no one') {
+    if (value == SecurityConstants.PROFILEPAGESETTINGS[SecurityConstants.NOONE]) {
       val = SecurityConstants.NOONE;
-    }
-    if (value == 'only my friends') {
+    } else if (value == SecurityConstants.PROFILEPAGESETTINGS[SecurityConstants.ONLYFRIENDS]) {
       val = SecurityConstants.ONLYFRIENDS;
-    }
-    if (value == 'everyone') {
+    } else if (value == SecurityConstants.PROFILEPAGESETTINGS[SecurityConstants.EVERYONE]) {
       val = SecurityConstants.EVERYONE;
     }
     temp.displayProfileTo = val;

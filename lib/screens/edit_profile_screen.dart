@@ -79,10 +79,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  _test() {
-    print("");
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -126,7 +122,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => (FriendsListPage())));
+                            builder: (context) => (FriendsListScreen())));
                   },
                 ),
                 backgroundColor: AppColors.white,
