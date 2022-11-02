@@ -1,52 +1,41 @@
 class TopArtistModel {
-  String link;
-  String firstName;
-  String lastName;
-  String uid;
-  String username;
-  String spotifyToken;
-  List<dynamic> friends;
-  List<dynamic> friendRequestsSent;
-  List<dynamic> friendRequestsReceived;
+  String name;
+
 
   TopArtistModel(
-      {required this.link,
-        required this.firstName,
-        required this.lastName,
-        required this.uid,
-        required this.username,
-        required this.friends,
-        required this.spotifyToken,
-        required this.friendRequestsReceived,
-        required this.friendRequestsSent}
-      );
+      {required this.name});
 
   factory TopArtistModel.fromJson(Map<String, dynamic> json) => TopArtistModel(
-    link: json["href"],
-    firstName: json["firstName"],
-    lastName: json["lastName"],
-    friends: json["friends"] ?? [],
-    uid: json["uid"],
-    username: json["username"] ?? "",
-    spotifyToken: json["spotifyToken"] ?? "",
-    friendRequestsReceived: json["friendRequestsReceived"] ?? [],
-    friendRequestsSent: json["friendRequestsSent"] ?? [],
+    name: json["name"]
   );
 
   Map<String, dynamic> toJson() => {
-    "email": link,
-    "firstName": firstName,
-    "lastName": lastName,
-    "friends": friends,
-    "uid": uid,
-    "username": username,
-    "spotifyToken": spotifyToken,
-    "friendRequestsReceived": friendRequestsReceived,
-    "friendRequestsSent": friendRequestsSent,
+    "name": name
   };
 
   @override
   String toString() {
-    return 'UserModel{email: $link, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
+    return 'UserModel{name: $name';
+  }
+}
+
+class TopSongModel {
+  String name;
+
+
+  TopSongModel(
+      {required this.name});
+
+  factory TopSongModel.fromJson(Map<String, dynamic> json) => TopSongModel(
+      name: json["name"]
+  );
+
+  Map<String, dynamic> toJson() => {
+    "name": name
+  };
+
+  @override
+  String toString() {
+    return 'UserModel{name: $name';
   }
 }

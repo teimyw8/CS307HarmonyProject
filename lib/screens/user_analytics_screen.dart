@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/helpers/field_validators.dart';
+import 'package:harmony_app/models/top_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/services/path_service.dart';
@@ -33,6 +36,53 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
   int _syncState = 0;
   String _errorMessage = '';
 
+  List<String> songs = List.filled(5, 'N/A');
+
+  List<String> artists = List.filled(5, 'N/A');
+
+  List<String> genres = List.filled(5, 'N/A');
+
+
+  void setSongs() async{
+
+    List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
+
+    int length;
+
+    if(topSongs.length < 5){
+      length = topSongs.length;
+    } else {
+      length = 5;
+    }
+    setState(() {
+      for(int i = 0; i < length; i++){
+        songs[i] = topSongs[i].name;
+      }
+    });
+
+  }
+
+  void setArtists() async {
+    List<TopArtistModel> topArtists = await SpotifyService.getTopArtists();
+
+    int length;
+
+    if(topArtists.length < 5){
+      length = topArtists.length;
+    } else {
+      length = 5;
+    }
+    setState(() {
+      for(int i = 0; i < length; i++){
+        artists[i] = topArtists[i].name;
+      }
+    });
+
+  }
+
+  void setGenres(){
+
+  }
 
   _test() {
     print("");
@@ -57,7 +107,10 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
         _syncState = 1;
       });
     }
-    SpotifyService.getTop();
+    setArtists();
+    //sleep(Duration(milliseconds: 50));
+    setGenres();
+    setSongs();
   }
 
   @override
@@ -122,8 +175,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
 
-                                child: const Text("Dummy Song 1",
+                                child:  Text(songs[0],
                                   style: TextStyle(
+                                    fontSize: 15,
                                   ),
                                 ),
 
@@ -133,10 +187,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 height: 40,
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
-                                child: const Text("Dummy Song 2",
+                                child:  Text(songs[1],
                                   style: TextStyle(
-
-
+                                    fontSize: 15,
                                   ),
                                 ),
 
@@ -146,9 +199,33 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 height: 40,
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
-                                child: const Text("Dummy Song 3",
+                                child:  Text(songs[2],
                                   style: TextStyle(
+                                    fontSize: 15,
 
+                                  ),
+                                ),
+
+                              ),
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xDCDCDCCD),
+                                child:  Text(songs[3],
+                                  style: TextStyle(
+                                    fontSize: 15,
+
+                                  ),
+                                ),
+
+                              ),
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xDCDCDCCD),
+                                child:  Text(songs[4],
+                                  style: TextStyle(
+                                    fontSize: 15,
 
                                   ),
                                 ),
@@ -173,8 +250,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
 
-                                child: const Text("Dummy Artist 1",
+                                child:  Text(artists[0],
                                   style: TextStyle(
+                                    fontSize: 15,
                                   ),
                                 ),
 
@@ -184,9 +262,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 height: 40,
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
-                                child: const Text("Dummy Artist 2",
+                                child:  Text(artists[1],
                                   style: TextStyle(
-
+                                    fontSize: 15,
 
                                   ),
                                 ),
@@ -197,9 +275,33 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 height: 40,
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
-                                child: const Text("Dummy Artist 3",
+                                child:  Text(artists[2],
                                   style: TextStyle(
+                                    fontSize: 15,
 
+                                  ),
+                                ),
+
+                              ),
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xDCDCDCCD),
+                                child:  Text(artists[3],
+                                  style: TextStyle(
+                                    fontSize: 15,
+
+                                  ),
+                                ),
+
+                              ),
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xDCDCDCCD),
+                                child:  Text(artists[4],
+                                  style: TextStyle(
+                                    fontSize: 15,
 
                                   ),
                                 ),
@@ -224,8 +326,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
 
-                                child: const Text("Dummy Genre 1",
+                                child:  Text(genres[0],
                                   style: TextStyle(
+                                    fontSize: 15,
                                   ),
                                 ),
 
@@ -235,9 +338,9 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 height: 40,
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
-                                child: const Text("Dummy Genre 2",
+                                child:  Text(genres[1],
                                   style: TextStyle(
-
+                                    fontSize: 15,
 
                                   ),
                                 ),
@@ -248,10 +351,33 @@ class _UserAnalyticsScreenState extends State<UserAnalyticsScreen> {
                                 height: 40,
                                 width: 300,
                                 color: const Color(0xDCDCDCCD),
-                                child: const Text("Dummy Genre 3",
+                                child:  Text(genres[2],
                                   style: TextStyle(
+                                    fontSize: 15,
 
+                                  ),
+                                ),
 
+                              ),
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xDCDCDCCD),
+                                child:  Text(genres[3],
+                                  style: TextStyle(
+                                    fontSize: 15,
+
+                                  ),
+                                ),
+
+                              ),
+                              Container(
+                                height: 40,
+                                width: 300,
+                                color: const Color(0xDCDCDCCD),
+                                child:  Text(genres[4],
+                                  style: TextStyle(
+                                    fontSize: 15,
                                   ),
                                 ),
 
