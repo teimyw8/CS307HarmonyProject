@@ -14,7 +14,7 @@ class FeedService {
       required Timestamp dateTime,
       required String song,
       required String artist,
-      required bool post}) async {
+      required String isPost}) async {
     try {
       var postsDocRef = firebaseFirestore.collection('posts');
       await postsDocRef.add({
@@ -24,7 +24,7 @@ class FeedService {
         "dateTime": dateTime,
         "song": song,
         "artist": artist,
-        "post": post
+        "isPost": isPost
       });
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);

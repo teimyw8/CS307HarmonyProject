@@ -179,15 +179,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       ),
-                                      Container(
-                                          child: ListTile(
-                                            leading: Icon(Icons.album),
-                                            title: Text('Template song'),
-                                            subtitle: Text('Artist template'),
-                                          ),
-                                      ),
-                                      Text(e.text,
-                                          style: AppTextStyles.headline())
+
+                                      mainDisplay(e),
+                                      handleBottomText(e)
                                     ],
                                   ),
                                 ))
@@ -198,5 +192,35 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  mainDisplay(e) {
+    if (e.isPost == "false") {
+      return Container(
+        child: ListTile(
+          leading: Icon(Icons.album),
+          title: Text(e.song),
+          subtitle: Text(e.artist),
+        ),
+      );
+    }
+    else {
+      return Container(
+        child: ListTile(
+          title: Text(e.text),
+        ),
+      );
+    }
+  }
+
+  handleBottomText(e) {
+    if (e.isPost == 'false') {
+      return Text(e.text,
+          style: AppTextStyles.headline());
+    }
+    else {
+      return Text("",
+          style: AppTextStyles.headline());
+    }
   }
 }

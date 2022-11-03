@@ -53,7 +53,7 @@ class FeedProvider with ChangeNotifier {
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
-            post: true
+            isPost: "true"
         );
       }
     } on FirestoreException catch (e) {
@@ -76,7 +76,7 @@ class FeedProvider with ChangeNotifier {
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
-            post: false
+            isPost: "false"
         );
       }
     } on FirestoreException catch (e) {
