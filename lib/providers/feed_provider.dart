@@ -25,6 +25,12 @@ class FeedProvider with ChangeNotifier {
   TextEditingController? textEditingController =
   TextEditingController();
 
+  TextEditingController? songTextEditingController =
+  TextEditingController();
+
+  TextEditingController? artistTextEditingController =
+  TextEditingController();
+
   void initializeVariables() {
     areVariablesInitialized = false;
     isLoading = false;
@@ -41,10 +47,36 @@ class FeedProvider with ChangeNotifier {
       debugPrint(textEditingController!.text);
       if (formKey.currentState!.validate()) {
         await _feedService.addPostToFirestore(
+            song: "",
+            artist: "",
             text: textEditingController!.text,
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
-            dateTime: Timestamp.now()
+            dateTime: Timestamp.now(),
+            post: true
+        );
+      }
+    } on FirestoreException catch (e) {
+      debugPrint('failed addPostoFirestore');
+      showErrorDialog(e.cause);
+    }
+  }
+
+  Future<void> createDailyPost() async {
+    _authProvider.startLoading();
+    formKey.currentState!.save();
+
+    try {
+      print(textEditingController!.text);
+      if (formKey.currentState!.validate()) {
+        await _feedService.addPostToFirestore(
+            song: songTextEditingController!.text,
+            artist: artistTextEditingController!.text,
+            text: "Here is my song of the day!",
+            username: _authProvider.currentUserModel!.username,
+            uid: _authProvider.currentUserModel!.uid,
+            dateTime: Timestamp.now(),
+            post: false
         );
       }
     } on FirestoreException catch (e) {

@@ -51,7 +51,7 @@ class _CreatePostState extends State<DailyActivity> {
                       border: UnderlineInputBorder(),
                       labelText: 'Song',
                     ),
-                    controller: _feedProvider.textEditingController,
+                    controller: _feedProvider.songTextEditingController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a valid submission';
@@ -67,7 +67,7 @@ class _CreatePostState extends State<DailyActivity> {
                       border: UnderlineInputBorder(),
                       labelText: 'Artist',
                     ),
-                    controller: _feedProvider.textEditingController,
+                    controller: _feedProvider.artistTextEditingController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a valid submission';
@@ -89,7 +89,7 @@ class _CreatePostState extends State<DailyActivity> {
                           const SnackBar(content: Text('Processing Data')),
                         );
 
-                        _feedProvider.createPost();
+                        _feedProvider.createDailyPost();
                       }
                     },
                     child: Text(
