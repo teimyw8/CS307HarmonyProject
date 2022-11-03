@@ -10,6 +10,8 @@ import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/share_daily_activity_screen.dart';
+
 class FeedProvider with ChangeNotifier {
   AuthProvider _authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
@@ -23,6 +25,12 @@ class FeedProvider with ChangeNotifier {
   final formKey = GlobalKey<FormState>();
 
   TextEditingController? textEditingController =
+  TextEditingController();
+
+  TextEditingController? songTextEditingController =
+  TextEditingController();
+
+  TextEditingController? artistTextEditingController =
   TextEditingController();
 
   void initializeVariables() {
@@ -41,10 +49,36 @@ class FeedProvider with ChangeNotifier {
       debugPrint(textEditingController!.text);
       if (formKey.currentState!.validate()) {
         await _feedService.addPostToFirestore(
+            song: "",
+            artist: "",
             text: textEditingController!.text,
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
-            dateTime: Timestamp.now()
+            dateTime: Timestamp.now(),
+            isPost: "true"
+        );
+      }
+    } on FirestoreException catch (e) {
+      debugPrint('failed addPostoFirestore');
+      showErrorDialog(e.cause);
+    }
+  }
+
+  Future<void> createDailyPost() async {
+    _authProvider.startLoading();
+    formKey.currentState!.save();
+
+    try {
+      print(textEditingController!.text);
+      if (formKey.currentState!.validate()) {
+        await _feedService.addPostToFirestore(
+            song: songTextEditingController!.text,
+            artist: artistTextEditingController!.text,
+            text: "Here is my song of the day!",
+            username: _authProvider.currentUserModel!.username,
+            uid: _authProvider.currentUserModel!.uid,
+            dateTime: Timestamp.now(),
+            isPost: "false"
         );
       }
     } on FirestoreException catch (e) {
@@ -84,6 +118,16 @@ class FeedProvider with ChangeNotifier {
 
     return posts;
   }
+
+  activityTimeCheck(BuildContext context) async {
+    if (await _feedService.checkTime()) {
+      return Navigator.push(context, MaterialPageRoute(builder: (context) => DailyActivity()));
+    }
+    else {
+      showErrorDialog("It is not time for the daily activity yet! Check back again soon!");
+    }
+  }
+
 
 
 }
