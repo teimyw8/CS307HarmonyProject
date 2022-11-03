@@ -33,7 +33,7 @@ class _CreatePostState extends State<DailyActivity> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: "Create post",
+        title: "Create Daily Activity Post",
         needBackArrow: true,
       ),
       body: Column(
@@ -93,7 +93,7 @@ class _CreatePostState extends State<DailyActivity> {
                       }
                     },
                     child: Text(
-                      'Submit',
+                      'Share',
                       style: AppTextStyles.button(),
                     ),
                   ),

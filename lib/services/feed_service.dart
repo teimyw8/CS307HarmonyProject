@@ -32,6 +32,7 @@ class FeedService {
   }
 
   Future<bool> checkTime() async {
+    // return true;
     try {
       var userDoc = await firebaseFirestore.collection('activity_times').doc('Daily_Activity_Times').get();
       var userDocData = userDoc.data()!;
@@ -43,12 +44,17 @@ class FeedService {
       for(int i = 0; i < userDocData.length; i++) {
         p = i + 1;
         k = userDocData[p.toString()][0].toDate();
+        // if (k.month == DateTime.now().toUtc().month && k.day == DateTime.now().toUtc().day) {
+        //   break;
+        // }
         if (k.month == DateTime.now().month && k.day == DateTime.now().day) {
           break;
         }
       }
-      print(k);
-      print(p);
+      // if (DateTime.now().toUtc().compareTo(userDocData[p.toString()][1].toDate()) <= 0 &&
+      //     DateTime.now().toUtc().compareTo(userDocData[p.toString()][0].toDate()) >= 0) {
+      //   return true;
+      // }
       if (DateTime.now().compareTo(userDocData[p.toString()][1].toDate()) <= 0 &&
           DateTime.now().compareTo(userDocData[p.toString()][0].toDate()) >= 0) {
         return true;
