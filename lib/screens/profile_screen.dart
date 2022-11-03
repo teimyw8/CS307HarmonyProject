@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:harmony_app/screens/list_of_friends_simple.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -83,13 +84,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _editProfileProvider.getPrimaryName(widget.userModel),
                         style: AppTextStyles.profileNames(),
                       ),
-                      (widget.userModel.displayName
-                          ? Text(
-                        "@${widget.userModel.username}",
+                      (widget.userModel.displayName? Text("@${widget.userModel.username}",
                         style: AppTextStyles.subNote()
                             .apply(color: AppColors.white),
                       )
                           : SizedBox()),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: AppTextStyles.button(),
+                        ),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => ListOfFriends(userModel: widget.userModel,)));
+                        },
+                        child: const Text('Friends'),
+                      ),
                     ],
                   ),
                 ],

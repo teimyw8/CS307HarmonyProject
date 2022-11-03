@@ -7,7 +7,7 @@ class UserModel {
   String bio;
   String spotifyToken;
   int displayProfileTo;
-  bool displayName;
+  bool displayName; //whether or not we display the name is profile page
   List<dynamic> friends;
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
