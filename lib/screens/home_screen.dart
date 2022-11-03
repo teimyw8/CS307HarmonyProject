@@ -78,11 +78,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 SpeedDialChild(
                     child: Icon(Icons.add, color: Colors.green),
+                    label: "Create Post",
                     onTap: () => Navigator.push(context,
                         MaterialPageRoute(builder: (context) => CreatePost()))
                 ),
                 SpeedDialChild(
                     child: Icon(Icons.music_note, color: Colors.green),
+                    label: "Share Daily Song",
                     onTap: () => _feedProvider.activityTimeCheck(context)
                 )
               ],
