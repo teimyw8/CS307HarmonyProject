@@ -52,10 +52,11 @@ class EditProfileProvider with ChangeNotifier {
   Future<void> setProfilePic(UserModel temp, String url) async {
     try {
       var udc =  _firestoreService.firebaseFirestore.collection('users').doc(temp.uid);
-      udc.update({"profilepic": url});
+      await udc.update({"profilepic": url});
       print(udc);
       currentUserModel = temp;
       _authProvider.currentUserModel = temp;
+      _authProvider.updateProfilePic(url);
       notifyListeners();
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);

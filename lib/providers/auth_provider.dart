@@ -249,4 +249,15 @@ class AuthProvider with ChangeNotifier {
     notifyListeners ();
   }
 
+  ///this function updates the current profile pic of a user
+  void updateProfilePic(String newProfilePicURL) async {
+    currentUserModel!.profilepic = newProfilePicURL;
+    notifyListeners();
+  }
+
+  ///this function updates the current user model
+  void setCurrentUserModel(UserModel newUserModel) async {
+    currentUserModel = newUserModel;
+    notifyListeners();
+  }
 }

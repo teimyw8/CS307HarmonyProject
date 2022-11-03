@@ -121,11 +121,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-              ProfilePicture(
-                  name: 'apple',
-                  radius: 60,
-                  fontsize: 21,
-                  img: _editProfileProvider.getUserProfilePic(),
+              Consumer<AuthProvider>(
+                builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+                  return ProfilePicture(
+                    name: 'apple',
+                    radius: 60,
+                    fontsize: 21,
+                    img: myAuthProvider.currentUserModel?.profilepic ?? "",
+                  );
+                },
               ),
                     TextButton(
                       onPressed: () {
