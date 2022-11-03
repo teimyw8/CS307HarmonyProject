@@ -27,6 +27,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
+  final formKey = GlobalKey<FormState>();
   UserModel? temp;
 
   String _syncState = '';
@@ -150,6 +151,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Consumer<AuthProvider>(
+                                builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+                                  return ProfilePicture(
+                                    name: 'apple',
+                                    radius: 60,
+                                    fontsize: 21,
+                                    img: myAuthProvider.currentUserModel?.profilepic ?? "",
+                                  );
+                                },
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  _authProvider.onProfilePic();
+                                },
+                                child: const Text('Edit Profile Picture'),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 16),

@@ -5,6 +5,7 @@ import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/screens/home_screen.dart';
+import 'package:harmony_app/screens/profile_picture.dart';
 import 'package:harmony_app/screens/sign_up_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
@@ -160,7 +161,10 @@ class AuthProvider with ChangeNotifier {
               displayProfileTo: SecurityConstants.ONLYFRIENDS,
               displayName: false,
               friends: [],
-              password: signUpPasswordTextEditingController!.text);
+              password: signUpPasswordTextEditingController!.text,
+              profilepic: "hello"
+          );
+
           var userDocData =
               await _firestoreService.retrieveUserFromFirestore(uid: uid);
           currentUserModel = UserModel.fromJson(userDocData!);
@@ -207,6 +211,10 @@ class AuthProvider with ChangeNotifier {
     Get.to(() => ForgotPasswordScreen());
   }
 
+  Future<void> onProfilePic() async {
+    Get.to(() => ProfilePictureScreen());
+  }
+
   ///this function is triggered when the user clicks on SignUp text
   Future<void> onSignUpTextClicked() async {
     Get.to(() => SignUpScreen());
@@ -245,4 +253,15 @@ class AuthProvider with ChangeNotifier {
     notifyListeners ();
   }
 
+  ///this function updates the current profile pic of a user
+  void updateProfilePic(String newProfilePicURL) async {
+    currentUserModel!.profilepic = newProfilePicURL;
+    notifyListeners();
+  }
+
+  ///this function updates the current user model
+  void setCurrentUserModel(UserModel newUserModel) async {
+    currentUserModel = newUserModel;
+    notifyListeners();
+  }
 }
