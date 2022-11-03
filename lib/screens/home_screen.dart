@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/colors.dart';
@@ -8,6 +9,7 @@ import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/post_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
+import 'package:harmony_app/screens/share_daily_activity_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -68,13 +70,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 837.h, width: double.infinity, child: getFeed()),
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CreatePost()));
-              },
-              backgroundColor: AppColors.green,
-              child: const Icon(Icons.add),
+            floatingActionButton: SpeedDial(
+              buttonSize: Size(75.0,75.0),
+              childrenButtonSize: Size(75.0,75.0),
+              animatedIcon: AnimatedIcons.menu_close,
+              animatedIconTheme: IconThemeData(size: 25.0),
+              children: [
+                SpeedDialChild(
+                    child: Icon(Icons.add, color: Colors.green),
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CreatePost()))
+                ),
+                SpeedDialChild(
+                    child: Icon(Icons.music_note, color: Colors.green),
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => DailyActivity()))
+                )
+              ],
             ),
           ),
         ],
