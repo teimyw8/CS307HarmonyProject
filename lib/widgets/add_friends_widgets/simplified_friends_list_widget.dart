@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -71,43 +69,6 @@ class _simpFriendsListWidgetState extends State<simpFriendsListWidget> {
                               child: Text(
                                 e['firstName'],
                                 style: TextStyle(color: AppColors.green),
-                              ),
-                            ),
-                            Spacer(),
-                            Container(
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.message),
-                                    color: Colors.green,
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                        Icons.remove_circle_outline),
-                                    color: Colors.red,
-                                    onPressed: () {
-                                      //debugPrint(e['uid']);
-                                      var collection = FirebaseFirestore
-                                          .instance
-                                          .collection('users');
-                                      collection.doc(
-                                          _friendsListProvider.currUser).update(
-                                          {
-                                            'friends': FieldValue.arrayRemove(
-                                                [e.get('uid')]),
-                                          });
-                                      collection.doc(e.get('uid')).update({
-                                        'friends':
-                                        FieldValue.arrayRemove(
-                                            [_friendsListProvider.currUser]),
-                                      });
-                                      _friendsListProvider.currUser.remove(
-                                          e['uid']);
-                                      setState(() {});
-                                    },
-                                  ),
-                                ],
                               ),
                             ),
                           ],

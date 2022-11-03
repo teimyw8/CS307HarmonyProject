@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         onPressed: () {
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => ListOfFriends(userModel: widget.userModel,)));
+                              MaterialPageRoute(builder: (context) => ListOfFriends(userModel: widget.userModel)));
                         },
                         child: const Text('Friends'),
                       ),
