@@ -31,5 +31,19 @@ class FeedService {
     }
   }
 
+  Future<dynamic> checkTime() async {
+    try {
+      var userDoc = await firebaseFirestore.collection('activity_times').doc('Daily_Activity_Times').get();
+
+      var userDocData = userDoc.data()!;
+      print(userDocData["a"].toDate());
+      if (!userDoc.exists) {
+        throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+      }
+    } catch (e) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+  }
+
   
 }

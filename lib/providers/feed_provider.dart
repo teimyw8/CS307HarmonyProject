@@ -10,6 +10,8 @@ import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/share_daily_activity_screen.dart';
+
 class FeedProvider with ChangeNotifier {
   AuthProvider _authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
@@ -116,6 +118,17 @@ class FeedProvider with ChangeNotifier {
 
     return posts;
   }
+
+  activityTimeCheck(BuildContext context) async {
+    _feedService.checkTime();
+    // if (_feedService.checkTime()) {
+    //   return Navigator.push(context, MaterialPageRoute(builder: (context) => DailyActivity()));
+    // }
+    // else {
+      showErrorDialog("It is not time for the daily activity yet! Check back again soon!");
+    // }
+  }
+
 
 
 }
