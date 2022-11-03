@@ -35,7 +35,7 @@ class UserModel {
         bio: json["bio"] ?? "",
         friends: json["friends"] ?? [],
         uid: json["uid"] ?? "",
-        profilepic: json["profilepic"] ?? [],
+        profilepic: json["profilepic"] ?? "",
         username: json["username"] ?? "",
         displayProfileTo: json["displayProfileTo"] ?? 0,
         displayName: json["displayName"] ?? true,
