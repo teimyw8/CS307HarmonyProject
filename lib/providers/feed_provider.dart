@@ -120,13 +120,12 @@ class FeedProvider with ChangeNotifier {
   }
 
   activityTimeCheck(BuildContext context) async {
-    _feedService.checkTime();
-    // if (_feedService.checkTime()) {
-    //   return Navigator.push(context, MaterialPageRoute(builder: (context) => DailyActivity()));
-    // }
-    // else {
+    if (await _feedService.checkTime()) {
+      return Navigator.push(context, MaterialPageRoute(builder: (context) => DailyActivity()));
+    }
+    else {
       showErrorDialog("It is not time for the daily activity yet! Check back again soon!");
-    // }
+    }
   }
 
 

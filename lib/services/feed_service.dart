@@ -31,15 +31,29 @@ class FeedService {
     }
   }
 
-  Future<dynamic> checkTime() async {
+  Future<bool> checkTime() async {
     try {
       var userDoc = await firebaseFirestore.collection('activity_times').doc('Daily_Activity_Times').get();
-
       var userDocData = userDoc.data()!;
-      print(userDocData["a"].toDate());
       if (!userDoc.exists) {
         throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
       }
+      DateTime k = DateTime(9999);
+      int p = 0;
+      for(int i = 0; i < userDocData.length; i++) {
+        p = i + 1;
+        k = userDocData[p.toString()][0].toDate();
+        if (k.month == DateTime.now().month && k.day == DateTime.now().day) {
+          break;
+        }
+      }
+      print(k);
+      print(p);
+      if (DateTime.now().compareTo(userDocData[p.toString()][1].toDate()) <= 0 &&
+          DateTime.now().compareTo(userDocData[p.toString()][0].toDate()) >= 0) {
+        return true;
+      }
+      return false;
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
