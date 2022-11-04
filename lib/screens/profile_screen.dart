@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:harmony_app/screens/list_of_friends_simple.dart';
@@ -36,6 +37,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   List<String> titles = List.filled(3, '');
 
+  void setFriendsSongs() async {
+
+  }
+
+  void setFriendsArtists() async {
+
+  }
+
+
   void setSongs() async {
     List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
 
@@ -51,6 +61,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         songs[i] = topSongs[i].name;
       }
     });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'topSongs': songs});
   }
 
   void setArtists() async {
@@ -64,6 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     }
     List<String> genreList = genreSet.toList();
+
     int length;
 
     if (genreSet.length < 5) {
@@ -87,6 +103,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         artists[i] = topArtists[i].name;
       }
     });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'topGenres': genres});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'topArtists': artists});
   }
 
   void setGenres() {}
@@ -94,29 +120,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    print(widget.userModel.spotifyToken);
-    if(widget.userModel.spotifyToken == ""){
-      for(String s in songs){
-        s = "";
-      }
-      for(String s in artists){
-        s = "";
-      }
-      for(String s in genres){
-        s = "";
-      }
-      for(String s in titles){
-        s = "";
-      }
-      titles[0] = "You must have your spotify account synced to see your analytics";
+    print(widget.userModel.uid);
+    print('\n$_editProfileProvider.currentUserModel!.uid');
+    if(_editProfileProvider.currentUserModel!.uid != widget.userModel.uid){
+      if (widget.userModel.spotifyToken == "") {
+        for (String s in songs) {
+          s = "";
+        }
+        for (String s in artists) {
+          s = "";
+        }
+        for (String s in genres) {
+          s = "";
+        }
+        for (String s in titles) {
+          s = "";
+        }
 
+
+        titles[0] =
+        "Your friend must have their spotify account synced to see their analytics";
+      } else {
+        titles[0] = "Top Songs";
+        titles[1] = "Top Artists";
+        titles[2] = "Top Genres";
+        setFriendsArtists();
+        setFriendsSongs();
+      }
     } else {
-      titles[0] = "Top Songs";
-      titles[1] = "Top Artists";
-      titles[2] = "Top Genres";
-      setArtists();
-      setSongs();
-      setGenres();
+      if (_editProfileProvider.currentUserModel!.spotifyToken == "") {
+        for (String s in songs) {
+          s = "";
+        }
+        for (String s in artists) {
+          s = "";
+        }
+        for (String s in genres) {
+          s = "";
+        }
+        for (String s in titles) {
+          s = "";
+        }
+
+
+        titles[0] =
+        "You must have your spotify account synced to see your analytics";
+      } else {
+        titles[0] = "Top Songs";
+        titles[1] = "Top Artists";
+        titles[2] = "Top Genres";
+        setArtists();
+        setSongs();
+        setGenres();
+      }
     }
   }
 
