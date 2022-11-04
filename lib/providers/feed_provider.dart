@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
@@ -124,11 +127,45 @@ class FeedProvider with ChangeNotifier {
     return posts;
   }
 
-  notifTest() async {
-    await flutterLocalNotificationsPlugin.zonedSchedule(0,
-        'scheduled title',
-        'scheduled body',
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+  Future <void> scheduleNotification() async {
+    final StreamController<String?> selectNotificationStream =
+    StreamController<String?>.broadcast();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            selectNotificationStream.add(notificationResponse.payload);
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            if (notificationResponse.actionId == 'id_3') {
+              selectNotificationStream.add(notificationResponse.payload);
+            }
+            break;
+        }
+      },
+
+    );
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    Future<DateTime> notif = _feedService.getDailyActivityTime();
+    DateTime a = await notif;
+    print(a);
+    var scheduledDate = tz.TZDateTime.from(a, tz.getLocation(timeZoneName));
+    print(notif.toString() + 'notiftime');
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        'Time to share your daily song, head to the homepage!',
+        'Remember: You only have 5 minutes!',
+        scheduledDate,
         const NotificationDetails(
             android: AndroidNotificationDetails(
                 'full screen channel id', 'full screen channel name',
@@ -149,6 +186,7 @@ class FeedProvider with ChangeNotifier {
       showErrorDialog("It is not time for the daily activity yet! Check back again soon!");
     }
   }
+
 
 
 

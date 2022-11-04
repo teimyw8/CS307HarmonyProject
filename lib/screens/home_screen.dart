@@ -39,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _feedProvider.initializeVariables();
     });
     super.initState();
+    _feedProvider.scheduleNotification();
+
   }
 
   @override
@@ -96,11 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () => Navigator.push(context,
                         MaterialPageRoute(builder: (context) => AllChatsScreen()))
                 ),
-                SpeedDialChild(
-                    child: Icon(Icons.not_interested_rounded, color: Colors.green),
-                    label: "Test",
-                    onTap: () => _feedProvider.notifTest()
-                )
               ],
             ),
           ),
