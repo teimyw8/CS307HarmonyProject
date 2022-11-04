@@ -7,6 +7,7 @@ import 'package:harmony_app/providers/add_friends_provider.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/chat_provider.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
+import 'package:harmony_app/providers/friend_screen_provider.dart';
 import 'package:harmony_app/providers/friends_list_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/login_screen.dart';
@@ -38,6 +39,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => ChatProvider()),
       ChangeNotifierProvider(create: (_) => FriendsListProvider()),
       ChangeNotifierProvider(create: (_) => FeedProvider()),
+      ChangeNotifierProvider(create: (_) => FriendScreenProvider()),
     ], child: const MyApp()),
   );
 }

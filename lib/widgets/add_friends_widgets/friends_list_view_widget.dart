@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:harmony_app/models/user_model.dart';
+import 'package:harmony_app/providers/friend_screen_provider.dart';
 import 'package:harmony_app/screens/profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -30,6 +31,7 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
   Provider.of<ChatProvider>(Get.context!, listen: false);
   AuthProvider authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
+  FriendScreenProvider friendScreenProvider = Provider.of<FriendScreenProvider>(Get.context!, listen: false);
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
@@ -97,6 +99,11 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
                             Container(
                               child: Row(
                                 children: [
+                                  IconButton(onPressed: () {
+                                    friendScreenProvider.blockUser(uid: e['uid']);
+
+                                  },  icon: const Icon(Icons.block),
+                                    color: Colors.yellow,),
                                   IconButton(
                                     icon: const Icon(Icons.message),
                                     color: Colors.green,
