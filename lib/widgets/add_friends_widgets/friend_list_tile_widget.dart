@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
@@ -40,6 +41,12 @@ class _FriendListTileWidgetState extends State<FriendListTileWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
+            ProfilePicture(
+              name: '',
+              radius: 25,
+              fontsize: 21,
+              img: widget.friendModel.profilepic,
+            ),
             TextButton(
               onPressed: () async {
                 if (widget.friendModel.blockedUsers

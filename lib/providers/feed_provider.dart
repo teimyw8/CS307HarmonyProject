@@ -157,7 +157,9 @@ class FeedProvider with ChangeNotifier {
     tz.setLocalLocation(tz.getLocation(timeZoneName!));
     Future<DateTime> notif = _feedService.getDailyActivityTime();
     DateTime a = await notif;
-    print(a);
+    if (DateTime.now().compareTo(a) > 0) {
+      return;
+    }
     var scheduledDate = tz.TZDateTime.from(a, tz.getLocation(timeZoneName));
     print(notif.toString() + 'notiftime');
 
