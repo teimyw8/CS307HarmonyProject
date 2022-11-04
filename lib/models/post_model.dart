@@ -27,8 +27,8 @@ class PostModel {
     username: json["username"] ?? "",
     text: json["text"],
     dateTime: json["dateTime"],
-    song: json["song"],
-    artist: json["artist"],
+    song: json["song"] ?? "",
+    artist: json["artist"] ?? "",
     isPost: json["isPost"] ?? ""
   );
 

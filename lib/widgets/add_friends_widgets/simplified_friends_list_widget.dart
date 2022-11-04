@@ -31,15 +31,15 @@ class _simpFriendsListWidgetState extends State<simpFriendsListWidget> {
 
       friendsList = widget.userModel.friends;
 
+      if (friendsList!.contains(widget.userModel.uid.toString())) {
+        friendsList?.remove(widget.userModel.uid.toString());
+      }
+
       if (friendsList!.isEmpty) {
         return Text(
           'No friends',
           style: AppTextStyles.headline(),
         );
-      }
-
-      if (friendsList!.last.toString() == widget.userModel.uid.toString()) {
-        friendsList?.removeLast();
       }
 
           return StreamBuilder<QuerySnapshot>(

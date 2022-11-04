@@ -113,8 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
         //limitation of firestore querying, this is a work around
         List<dynamic> uidList = myFeedProvider.listOfUsers();
 
-        //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
 
+        //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
+        print(uidList.toString());
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
+
                   if (snapshot.hasError) {
                     return Text('Something went wrong');
                   }
