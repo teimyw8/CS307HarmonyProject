@@ -36,6 +36,7 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
   @override
   void initState() {
     getPartnerModel();
+
     setState(()=>{});
     super.initState();
   }
