@@ -6,6 +6,7 @@ import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/screens/list_of_friends_simple.dart';
+import 'package:harmony_app/screens/shared_songs_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -302,6 +303,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           child: const Text('Friends'),
                         ),
+                        if(widget.userModel.uid != _editProfileProvider.currentUserModel!.uid)
+                        ElevatedButton(
+                            onPressed: () {
+                              if(widget.userModel.spotifyToken == ""){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text(
+                                            'Your friend is not synced with spotify'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
+                                            child: const Text('Ok'),
+                                          ),
+
+                                        ],
+                                      ),
+                                );
+                              } else if (_editProfileProvider.currentUserModel!.spotifyToken == ""){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text(
+                                            'You are not synced with spotify'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
+                                            child: const Text('Ok'),
+                                          ),
+
+                                        ],
+                                      ),
+                                );
+                              } else {
+                                Get.to(() => SharedSongsScreen(userModel : widget.userModel));
+                              }
+                            },
+                            child: Text("Shared Songs"))
+
                       ],
                     ),
                   ],
