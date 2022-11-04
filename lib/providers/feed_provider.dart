@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
@@ -9,6 +10,8 @@ import 'package:harmony_app/services/feed_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import '../screens/share_daily_activity_screen.dart';
 
@@ -16,6 +19,8 @@ class FeedProvider with ChangeNotifier {
   AuthProvider _authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
   FeedService get _feedService => GetIt.instance<FeedService>();
 
@@ -117,6 +122,23 @@ class FeedProvider with ChangeNotifier {
 
 
     return posts;
+  }
+
+  notifTest() async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(0,
+        'scheduled title',
+        'scheduled body',
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+                'full screen channel id', 'full screen channel name',
+                channelDescription: 'full screen channel description',
+                priority: Priority.high,
+                importance: Importance.high,
+                fullScreenIntent: true)),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   activityTimeCheck(BuildContext context) async {
