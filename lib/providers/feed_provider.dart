@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
@@ -9,6 +13,8 @@ import 'package:harmony_app/services/feed_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import '../screens/share_daily_activity_screen.dart';
 
@@ -16,6 +22,8 @@ class FeedProvider with ChangeNotifier {
   AuthProvider _authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
 
   FeedService get _feedService => GetIt.instance<FeedService>();
 
@@ -119,6 +127,57 @@ class FeedProvider with ChangeNotifier {
     return posts;
   }
 
+  Future <void> scheduleNotification() async {
+    final StreamController<String?> selectNotificationStream =
+    StreamController<String?>.broadcast();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            selectNotificationStream.add(notificationResponse.payload);
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            if (notificationResponse.actionId == 'id_3') {
+              selectNotificationStream.add(notificationResponse.payload);
+            }
+            break;
+        }
+      },
+
+    );
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    Future<DateTime> notif = _feedService.getDailyActivityTime();
+    DateTime a = await notif;
+    print(a);
+    var scheduledDate = tz.TZDateTime.from(a, tz.getLocation(timeZoneName));
+    print(notif.toString() + 'notiftime');
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        'Time to share your daily song, head to the homepage!',
+        'Remember: You only have 5 minutes!',
+        scheduledDate,
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+                'full screen channel id', 'full screen channel name',
+                channelDescription: 'full screen channel description',
+                priority: Priority.high,
+                importance: Importance.high,
+                fullScreenIntent: true)),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
   activityTimeCheck(BuildContext context) async {
     if (await _feedService.checkTime()) {
       return Navigator.push(context, MaterialPageRoute(builder: (context) => DailyActivity()));
@@ -127,6 +186,7 @@ class FeedProvider with ChangeNotifier {
       showErrorDialog("It is not time for the daily activity yet! Check back again soon!");
     }
   }
+
 
 
 
