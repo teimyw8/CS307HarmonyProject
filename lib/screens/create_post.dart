@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_bar.dart';
 import 'create_post.dart';
-
+import 'home_screen.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class CreatePost extends StatefulWidget {
 class _CreatePostState extends State<CreatePost> {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final FeedProvider _feedProvider =
-  Provider.of<FeedProvider>(Get.context!, listen: false);
+      Provider.of<FeedProvider>(Get.context!, listen: false);
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +44,11 @@ class _CreatePostState extends State<CreatePost> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding:  const EdgeInsets.symmetric(
-                horizontal: 10, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
                   child: TextFormField(
                     decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
+                      border: UnderlineInputBorder(),
                       labelText: 'Text',
                     ),
                     controller: _feedProvider.textEditingController,
@@ -59,26 +59,28 @@ class _CreatePostState extends State<CreatePost> {
                     },
                   ),
                 ),
-
                 Padding(
-                  padding:  const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 16),
-                  child: ElevatedButton (
-                    style: ElevatedButton.styleFrom(
-                      primary: AppColors.green
-                    ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: AppColors.green),
                     onPressed: () {
-                      if(_feedProvider.formKey.currentState!.validate()) {
+                      if (_feedProvider.formKey.currentState!.validate()) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
 
                         _feedProvider.createPost();
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
                       }
                     },
                     child: Text(
-                        'Submit',
-                            style: AppTextStyles.button(),
+                      'Submit',
+                      style: AppTextStyles.button(),
                     ),
                   ),
                 ),
