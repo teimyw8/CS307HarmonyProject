@@ -39,19 +39,20 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(builder:
         (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+
       myAuthProvider.updateCurrentUser();
       friendsList = myAuthProvider.currentUserModel?.friends;
+      debugPrint("friendslist = " + friendsList.toString());
 
+      if (friendsList!.contains(myAuthProvider.currentUserModel?.uid.toString())) {
+        friendsList?.remove(myAuthProvider.currentUserModel?.uid.toString());
+      }
       if (friendsList!.isEmpty) {
+        debugPrint('here');
         return Text(
           'No friends',
           style: AppTextStyles.headline(),
         );
-      }
-
-      if (friendsList!.last.toString() ==
-          myAuthProvider.currentUserModel?.uid.toString()) {
-        friendsList?.removeLast();
       }
 
       return StreamBuilder<QuerySnapshot>(
