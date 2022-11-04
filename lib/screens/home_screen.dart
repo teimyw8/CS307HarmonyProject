@@ -39,6 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
       _feedProvider.initializeVariables();
     });
     super.initState();
+    _feedProvider.scheduleNotification();
+
   }
 
   @override
