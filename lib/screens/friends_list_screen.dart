@@ -11,6 +11,7 @@ import 'package:harmony_app/screens/profile_friends_screens.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/widgets/add_friends_widgets/friends_list_app_bar.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import '../models/user_model.dart';
 import '../providers/auth_provider.dart';
@@ -46,58 +47,66 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: AppColors.green,
-        //   title: Text(
-        //     ''
-        //     'Harmony',
-        //     style: AppTextStyles.appBar(),
-        //   ),
-        //   actions: [
-        //     IconButton(
-        //         onPressed: () {
-        //           Navigator.push(
-        //               context,
-        //               MaterialPageRoute(
-        //                   builder: (context) => FriendRequestsScreen()));
-        //         },
-        //         icon: Icon(Icons.person_add)),
-        //     IconButton(
-        //         onPressed: () {
-        //           Navigator.push(
-        //               context,
-        //               MaterialPageRoute(
-        //                   builder: (context) => AddFriendsScreen()));
-        //         },
-        //         icon: Icon(Icons.search)),
-        //     IconButton(
-        //         onPressed: () {
-        //           setState(() {}); //refresh this page to show any changes
-        //         },
-        //         icon: Icon(Icons.refresh))
-        //   ],
-        // ),
-        // body: Column(children: <Widget>[
-        //   Consumer<AuthProvider>(builder: (BuildContext context,
-        //       AuthProvider myAuthProvider, Widget? child) {
-        //     myAuthProvider.updateCurrentUser();
-        //     currUser = (myAuthProvider.currentUserModel!);
-        //     friendsList = (myAuthProvider.currentUserModel?.friends)!;
-        //     return const Text("");
-        //   }),
-          appBar: friendsListAppBar,
-          body: Column(
-           children: <Widget>[
-             Expanded(
-               child: Container(
-                   height: 500.h,
-                   width: double.infinity,
-                   child: const FriendsListViewWidget()),
-             ),
-           ],
+    return Consumer(
+      builder: (BuildContext context, FriendsListProvider myFriendsListProvider, Widget? child) {
+        return LoadingOverlay(
+          isLoading: myFriendsListProvider.isLoading,
+
+          child: Scaffold(
+            // appBar: AppBar(
+            //   backgroundColor: AppColors.green,
+            //   title: Text(
+            //     ''
+            //     'Harmony',
+            //     style: AppTextStyles.appBar(),
+            //   ),
+            //   actions: [
+            //     IconButton(
+            //         onPressed: () {
+            //           Navigator.push(
+            //               context,
+            //               MaterialPageRoute(
+            //                   builder: (context) => FriendRequestsScreen()));
+            //         },
+            //         icon: Icon(Icons.person_add)),
+            //     IconButton(
+            //         onPressed: () {
+            //           Navigator.push(
+            //               context,
+            //               MaterialPageRoute(
+            //                   builder: (context) => AddFriendsScreen()));
+            //         },
+            //         icon: Icon(Icons.search)),
+            //     IconButton(
+            //         onPressed: () {
+            //           setState(() {}); //refresh this page to show any changes
+            //         },
+            //         icon: Icon(Icons.refresh))
+            //   ],
+            // ),
+            // body: Column(children: <Widget>[
+            //   Consumer<AuthProvider>(builder: (BuildContext context,
+            //       AuthProvider myAuthProvider, Widget? child) {
+            //     myAuthProvider.updateCurrentUser();
+            //     currUser = (myAuthProvider.currentUserModel!);
+            //     friendsList = (myAuthProvider.currentUserModel?.friends)!;
+            //     return const Text("");
+            //   }),
+            appBar: friendsListAppBar,
+            body: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                      height: 500.h,
+                      width: double.infinity,
+                      child: const FriendsListViewWidget()),
+                ),
+              ],
+            ),
+            //]
           ),
-        //]
+        );
+      },
     );
     //);
   }

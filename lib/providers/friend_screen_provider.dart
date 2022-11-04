@@ -11,17 +11,17 @@ class FriendScreenProvider with ChangeNotifier {
       Provider.of<AuthProvider>(Get.context!, listen: false);
   bool isLoading = false;
 
-  ///this function blocks the user
-  Future<void> blockUser({required String uid}) async {
-    isLoading = true;
-    notifyListeners();
-    try {
-      await firestoreService.blockUser(
-          currentUserUID: authProvider.currentUserModel!.uid, blockUID: uid);
-    } catch (e) {
-
-    }
-    isLoading = false;
-    notifyListeners();
-  }
+  // ///this function blocks the user
+  // Future<void> blockUser({required String uid}) async {
+  //   isLoading = true;
+  //   notifyListeners();
+  //   try {
+  //     await firestoreService.blockUser(
+  //         currentUserUID: authProvider.currentUserModel!.uid, blockUID: uid);
+  //   } catch (e) {
+  //
+  //   }
+  //   isLoading = false;
+  //   notifyListeners();
+  // }
 }

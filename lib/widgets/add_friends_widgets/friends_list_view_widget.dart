@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/friend_screen_provider.dart';
 import 'package:harmony_app/screens/profile_screen.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
@@ -11,6 +12,7 @@ import '../../helpers/text_styles.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../../providers/friends_list_provider.dart';
+
 List<dynamic>? friendsList;
 
 class FriendsListViewWidget extends StatefulWidget {
@@ -28,63 +30,62 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
   final FriendsListProvider _friendsListProvider =
       Provider.of<FriendsListProvider>(Get.context!, listen: false);
   ChatProvider chatProvider =
-  Provider.of<ChatProvider>(Get.context!, listen: false);
+      Provider.of<ChatProvider>(Get.context!, listen: false);
   AuthProvider authProvider =
-  Provider.of<AuthProvider>(Get.context!, listen: false);
-  FriendScreenProvider friendScreenProvider = Provider.of<FriendScreenProvider>(Get.context!, listen: false);
+      Provider.of<AuthProvider>(Get.context!, listen: false);
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-        builder: (BuildContext context, AuthProvider myAuthProvider,
-        Widget? child) {
+    return Consumer<AuthProvider>(builder:
+        (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+      myAuthProvider.updateCurrentUser();
+      friendsList = myAuthProvider.currentUserModel?.friends;
 
-          myAuthProvider.updateCurrentUser();
-          friendsList = myAuthProvider.currentUserModel?.friends;
+      if (friendsList!.isEmpty) {
+        return Text(
+          'No friends',
+          style: AppTextStyles.headline(),
+        );
+      }
 
-          if (friendsList!.isEmpty) {
-            return Text(
-              'No friends',
-              style: AppTextStyles.headline(),
-            );
+      if (friendsList!.last.toString() ==
+          myAuthProvider.currentUserModel?.uid.toString()) {
+        friendsList?.removeLast();
+      }
+
+      return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .where("uid", whereIn: friendsList)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Error, reload');
           }
 
-          if (friendsList!.last.toString() ==
-              myAuthProvider.currentUserModel?.uid.toString()) {
-                friendsList?.removeLast();
-          }
-          debugPrint("friends list screen " + friendsList.toString());
-
-          return StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('users')
-                .where("uid", whereIn: friendsList)
-                .snapshots(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot> snapshot) {
-
-              if (snapshot.hasError) {
-                return const Text('Error, reload');
-              }
-
-              List<DocumentSnapshot> documents = snapshot.data?.docs ?? [];
-              return ListView(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  children: documents
-                      .map((e) =>
-                      Card(
+          List<DocumentSnapshot> documents = snapshot.data?.docs ?? [];
+          return ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              children: documents
+                  .map((e) => Card(
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             TextButton(
                               onPressed: () async {
-                                await _friendsListProvider.setUserModel(e['uid']);
+                                await _friendsListProvider
+                                    .setUserModel(e['uid']);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProfileScreen(userModel: _friendsListProvider.temp!,
-                                                isPrivate: _friendsListProvider.isPrivateUser(_friendsListProvider.temp!))));
+                                        builder: (context) => ProfileScreen(
+                                            userModel:
+                                                _friendsListProvider.temp!,
+                                            isPrivate: _friendsListProvider
+                                                .isPrivateUser(
+                                                    _friendsListProvider
+                                                        .temp!))));
                               },
                               style: ElevatedButton.styleFrom(
                                 shape: StadiumBorder(),
@@ -99,44 +100,60 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
                             Container(
                               child: Row(
                                 children: [
-                                  IconButton(onPressed: () {
-                                    friendScreenProvider.blockUser(uid: e['uid']);
-
-                                  },  icon: const Icon(Icons.block),
-                                    color: Colors.yellow,),
+                                  CustomAppButton(
+                                    widget: Text(
+                                      (myAuthProvider
+                                              .currentUserModel!.blockedUsers
+                                              .contains(e['uid']))
+                                          ? "Unblock"
+                                          : "Block",
+                                      style: AppTextStyles.button(),
+                                    ),
+                                    onTap: () {
+                                      if (myAuthProvider
+                                          .currentUserModel!.blockedUsers
+                                          .contains(e['uid'])) {
+                                        _friendsListProvider.unblockUser(
+                                            uid: e['uid']);
+                                      } else {
+                                        _friendsListProvider.blockUser(
+                                            uid: e['uid']);
+                                      }
+                                    },
+                                    buttonColor: AppColors.redError,
+                                  ),
                                   IconButton(
                                     icon: const Icon(Icons.message),
                                     color: Colors.green,
                                     onPressed: () {
                                       chatProvider
                                           .openChatScreenFromFriendListWidget(
-                                          uid1: authProvider
-                                              .currentUserModel!.uid,
-                                          uid2: e['uid']);
+                                              uid1: authProvider
+                                                  .currentUserModel!.uid,
+                                              uid2: e['uid']);
                                     },
                                   ),
                                   IconButton(
-                                    icon: const Icon(
-                                        Icons.remove_circle_outline),
+                                    icon:
+                                        const Icon(Icons.remove_circle_outline),
                                     color: Colors.red,
                                     onPressed: () {
                                       //debugPrint(e['uid']);
                                       var collection = FirebaseFirestore
                                           .instance
                                           .collection('users');
-                                      collection.doc(
-                                          _friendsListProvider.currUser).update(
-                                          {
-                                            'friends': FieldValue.arrayRemove(
-                                                [e.get('uid')]),
-                                          });
+                                      collection
+                                          .doc(_friendsListProvider.currUser)
+                                          .update({
+                                        'friends': FieldValue.arrayRemove(
+                                            [e.get('uid')]),
+                                      });
                                       collection.doc(e.get('uid')).update({
-                                        'friends':
-                                        FieldValue.arrayRemove(
+                                        'friends': FieldValue.arrayRemove(
                                             [_friendsListProvider.currUser]),
                                       });
-                                      _friendsListProvider.currUser.remove(
-                                          e['uid']);
+                                      _friendsListProvider.currUser
+                                          .remove(e['uid']);
                                       setState(() {});
                                     },
                                   ),
@@ -146,9 +163,9 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
                           ],
                         ),
                       ))
-                      .toList());
-            },
-          );
-        } );
+                  .toList());
+        },
+      );
+    });
   }
 }

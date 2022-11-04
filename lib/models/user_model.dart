@@ -12,7 +12,7 @@ class UserModel {
   List<dynamic> friends;
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
-  List<String> blockedUsers;
+  List<dynamic> blockedUsers;
 
   UserModel(
       {required this.email,

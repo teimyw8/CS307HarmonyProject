@@ -247,4 +247,23 @@ class FirestoreService {
       print(e);
     }
   }
+
+  ///this function blocks a specified user in Firestore
+  Future<void> unblockUser({required String currentUserUID, required String blockUID}) async {
+    try {
+      var currentUserDoc = await firebaseFirestore.collection('users').doc(currentUserUID).get();
+      List<dynamic> blockedUsers = currentUserDoc.data()!.containsKey('blockedUsers')
+          ? currentUserDoc.data()!['blockedUsers']
+          : [];
+      if (blockedUsers.contains(blockUID)) {
+        blockedUsers.remove(blockUID);
+      }
+      await firebaseFirestore
+          .collection("users")
+          .doc(currentUserUID)
+          .update({'blockedUsers': blockedUsers});
+    } catch (e) {
+      print(e);
+    }
+  }
 }
