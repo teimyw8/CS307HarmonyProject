@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:harmony_app/screens/list_of_friends_simple.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
@@ -229,8 +230,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    CircleAvatar(
+                    ProfilePicture(
+                      name: '',
                       radius: 65,
+                      fontsize: 21,
+                      img: _editProfileProvider.getUserProfilePic(),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
