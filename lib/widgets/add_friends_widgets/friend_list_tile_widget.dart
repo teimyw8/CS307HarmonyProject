@@ -43,7 +43,7 @@ class _FriendListTileWidgetState extends State<FriendListTileWidget> {
             TextButton(
               onPressed: () async {
                 if (widget.friendModel.blockedUsers
-                    .contains(authProvider.currentUserModel!.uid)) return null;
+                    .contains(authProvider.currentUserModel!.uid)) return;
                 await _friendsListProvider.setUserModel(widget.friendModel.uid);
                 Navigator.push(
                     context,
@@ -96,7 +96,7 @@ class _FriendListTileWidgetState extends State<FriendListTileWidget> {
                     color: Colors.green,
                     onPressed: () {
                       if (widget.friendModel.blockedUsers
-                          .contains(authProvider.currentUserModel!.uid)) return null;
+                          .contains(authProvider.currentUserModel!.uid)) return;
                       chatProvider.openChatScreenFromFriendListWidget(
                           uid1: authProvider.currentUserModel!.uid,
                           uid2: widget.friendModel.uid);
@@ -107,7 +107,7 @@ class _FriendListTileWidgetState extends State<FriendListTileWidget> {
                     color: Colors.red,
                     onPressed: () {
                       if (widget.friendModel.blockedUsers
-                          .contains(authProvider.currentUserModel!.uid)) return null;
+                          .contains(authProvider.currentUserModel!.uid)) return;
                       //debugPrint(e['uid']);
                       var collection =
                           FirebaseFirestore.instance.collection('users');

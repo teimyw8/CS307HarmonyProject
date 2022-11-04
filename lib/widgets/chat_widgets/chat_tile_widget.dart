@@ -8,6 +8,7 @@ import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/chat_provider.dart';
 import 'package:harmony_app/screens/chat_screen.dart';
+import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -23,67 +24,94 @@ class ChatTileWidget extends StatefulWidget {
 }
 
 class _ChatTileWidgetState extends State<ChatTileWidget> {
-  ChatProvider chatProvider = Provider.of<ChatProvider>(Get.context!, listen: false);
-  AuthProvider authProvider = Provider.of<AuthProvider>(Get.context!, listen: false);
+  ChatProvider chatProvider =
+      Provider.of<ChatProvider>(Get.context!, listen: false);
+  AuthProvider authProvider =
+      Provider.of<AuthProvider>(Get.context!, listen: false);
 
   UserModel? partnerUserModel;
 
   Future<void> getPartnerModel() async {
-    partnerUserModel = await chatProvider.getPartnerUserModelFromFirestore(uid: (widget.chatModel.uid1 == authProvider.currentUserModel!.uid) ? widget.chatModel.uid2 : widget.chatModel.uid1);
-    setState(()=>{});
+    partnerUserModel = await chatProvider.getPartnerUserModelFromFirestore(
+        uid: (widget.chatModel.uid1 == authProvider.currentUserModel!.uid)
+            ? widget.chatModel.uid2
+            : widget.chatModel.uid1);
+    setState(() => {});
   }
 
   @override
   void initState() {
     getPartnerModel();
-
-    setState(()=>{});
+    setState(() => {});
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return (partnerUserModel == null) ? Container() : GestureDetector(
-      onTap: () async {
-        Get.to(() => ChatScreen(doesChatExistInFirestore: true, chatModel: widget.chatModel, myUserModel: authProvider.currentUserModel!, partnerUserModel: partnerUserModel!,));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.r), color: AppColors.grey20),
-        padding: EdgeInsets.all(10.h),
-        margin: EdgeInsets.only(bottom: 10.h),
-        width: double.infinity,
-        child:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    "${partnerUserModel!.firstName} ${partnerUserModel!.lastName}",
-                    style: AppTextStyles.footNote().copyWith(color: AppColors.black, fontWeight: FontWeight.w600),
+    return (partnerUserModel == null)
+        ? Container()
+        : GestureDetector(
+            onTap: () async {
+              if (partnerUserModel!.blockedUsers
+                  .contains(authProvider.currentUserModel!.uid)) {
+                PopUpDialog.showAcknowledgePopUpDialog(
+                    title: "Can't open chat",
+                    message: "This user blocked you",
+                    onOkClick: () {
+                      Get.close(1);
+                    });
+                return;
+              }
+              Get.to(() => ChatScreen(
+                    doesChatExistInFirestore: true,
+                    chatModel: widget.chatModel,
+                    myUserModel: authProvider.currentUserModel!,
+                    partnerUserModel: partnerUserModel!,
+                  ));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: AppColors.grey20),
+              padding: EdgeInsets.all(10.h),
+              margin: EdgeInsets.only(bottom: 10.h),
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "${partnerUserModel!.firstName} ${partnerUserModel!.lastName}",
+                          style: AppTextStyles.footNote().copyWith(
+                              color: AppColors.black,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Text(
+                        "${DateFormat("dd MMM HH:mm").format(widget.chatModel.lastEdited)}",
+                        style: AppTextStyles.footNote(),
+                      ),
+                    ],
                   ),
-                ),
-                Text(
-                  "${DateFormat("dd MMM HH:mm").format(widget.chatModel.lastEdited)}",
-                  style: AppTextStyles.footNote(),
-                ),
-              ],
-            ),
-            SizedBox(height: 5.h,),
-            Padding(
-              padding: EdgeInsets.only(left: 8.w),
-              child: Text(
-                "${widget.chatModel.lastMessage}",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.footNote().copyWith(color: AppColors.greyText),
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.w),
+                    child: Text(
+                      "${widget.chatModel.lastMessage}",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.footNote()
+                          .copyWith(color: AppColors.greyText),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
