@@ -65,6 +65,10 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
             return const Text('Error, reload');
           }
 
+          if (snapshot.data == null) {
+            return const Text('Loading');
+          }
+
           List<DocumentSnapshot> documents = snapshot.data?.docs ?? [];
           return ListView(
               scrollDirection: Axis.vertical,
