@@ -163,7 +163,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                             itemCount: users.length,
                             itemBuilder: (context, index) {
                               return (users[index].uid ==
-                                      myAuthProvider.currentUserModel!.uid)
+                                      myAuthProvider.currentUserModel!.uid || users[index].blockedUsers.contains(myAuthProvider.currentUserModel!.uid))
                                   ? Container()
                                   : SearchUserTileWidget(
                                       userModel: users[index],
