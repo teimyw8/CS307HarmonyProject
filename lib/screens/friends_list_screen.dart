@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
@@ -8,24 +7,40 @@ import 'package:harmony_app/screens/add_friends_screen.dart';
 import 'package:harmony_app/screens/chat_screen.dart';
 import 'package:harmony_app/screens/friend_requests_screen.dart';
 import 'package:harmony_app/screens/profile_friends_screens.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:harmony_app/widgets/add_friends_widgets/friends_list_app_bar.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-
-var currUser;
-late List<dynamic> friendsList;
+import '../providers/friends_list_provider.dart';
+import '../widgets/add_friends_widgets/friends_list_view_widget.dart';
 
 //this screen displays the friends list from the current user.
 //it uses a stream builder to query the information from firestore
 //it displays the informations in Cards
 
-class FriendsListPage extends StatefulWidget {
-  const FriendsListPage({Key? key}) : super(key: key);
+class FriendsListScreen extends StatefulWidget {
+  const FriendsListScreen({Key? key}) : super(key: key);
 
   @override
-  _FriendsListPageState createState() => _FriendsListPageState();
+  _FriendsListScreenState createState() => _FriendsListScreenState();
 }
 
-class _FriendsListPageState extends State<FriendsListPage> {
+class _FriendsListScreenState extends State<FriendsListScreen> {
+  final FriendsListProvider _friendsListProvider =
+      Provider.of<FriendsListProvider>(Get.context!, listen: false);
+  FriendsListAppBar? friendsListAppBar;
+
+  @override
+  void initState() {
+    super.initState();
+    friendsListAppBar = FriendsListAppBar(callback: this.callback);
+  }
+
+  void callback() {
+    setState(() {}); //refresh this page to show any changes
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,14 +84,17 @@ class _FriendsListPageState extends State<FriendsListPage> {
             friendsList = (myAuthProvider.currentUserModel?.friends)!;
             return const Text("");
           }),
-          Expanded(
-            child: Container(
-                height: double.infinity,
-                width: double.infinity,
-                child: friendsListView()),
-          ),
-        ],
-      ),
+      //appBar: friendsListAppBar,
+      //body: Column(
+      //  children: <Widget>[
+      //    Expanded(
+      //      child: Container(
+      //          height: 500.h,
+      //          width: double.infinity,
+      //          child: const FriendsListViewWidget()),
+      //    ),
+      //  ],
+      //),
     );
   }
 }
@@ -200,3 +218,4 @@ class _friendsListViewState extends State<friendsListView> {
     );
   }
 }
+

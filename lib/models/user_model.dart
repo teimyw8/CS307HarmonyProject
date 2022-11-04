@@ -6,8 +6,9 @@ class UserModel {
   String username;
   String bio;
   String spotifyToken;
+  String profilepic;
   int displayProfileTo;
-  bool displayName;
+  bool displayName; //whether or not we display the name is profile page
   List<dynamic> friends;
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
@@ -23,6 +24,7 @@ class UserModel {
       required this.displayProfileTo,
       required this.displayName,
       required this.spotifyToken,
+      required this.profilepic,
       required this.friendRequestsReceived,
       required this.friendRequestsSent,});
 
@@ -33,6 +35,7 @@ class UserModel {
         bio: json["bio"] ?? "",
         friends: json["friends"] ?? [],
         uid: json["uid"] ?? "",
+        profilepic: json["profilepic"] ?? "",
         username: json["username"] ?? "",
         displayProfileTo: json["displayProfileTo"] ?? 0,
         displayName: json["displayName"] ?? true,

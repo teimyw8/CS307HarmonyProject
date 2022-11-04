@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:ffi';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +51,21 @@ class EditProfileProvider with ChangeNotifier {
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
+  }
+
+  Future<void> setProfilePic(UserModel temp, String url) async {
+    try {
+      var udc =  _firestoreService.firebaseFirestore.collection('users').doc(temp.uid);
+      await udc.update({"profilepic": url});
+      print(udc);
+      currentUserModel = temp;
+      _authProvider.currentUserModel = temp;
+      _authProvider.updateProfilePic(url);
+      notifyListeners();
+    } catch (e) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+    print(temp);
   }
 
   bool meetsUsernameReqs(String username) {
@@ -204,6 +223,15 @@ class EditProfileProvider with ChangeNotifier {
     }
   }
 
+  void uploadImage(String fileName) {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child(fileName);
+  }
+
+  String getUserProfilePic() {
+    return currentUserModel!.profilepic;
+  }
+
   ///this function shows an error dialog
   void showErrorDialog(String message) {
     PopUpDialog.showAcknowledgePopUpDialog(
@@ -235,13 +263,11 @@ class EditProfileProvider with ChangeNotifier {
     value ??= "";
     UserModel temp = currentUserModel!;
     int val = -1;
-    if (value == 'no one') {
+    if (value == SecurityConstants.PROFILEPAGESETTINGS[SecurityConstants.NOONE]) {
       val = SecurityConstants.NOONE;
-    }
-    if (value == 'only my friends') {
+    } else if (value == SecurityConstants.PROFILEPAGESETTINGS[SecurityConstants.ONLYFRIENDS]) {
       val = SecurityConstants.ONLYFRIENDS;
-    }
-    if (value == 'everyone') {
+    } else if (value == SecurityConstants.PROFILEPAGESETTINGS[SecurityConstants.EVERYONE]) {
       val = SecurityConstants.EVERYONE;
     }
     temp.displayProfileTo = val;

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/helpers/field_validators.dart';
@@ -27,6 +28,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
+  final formKey = GlobalKey<FormState>();
   UserModel? temp;
 
   String _syncState = '';
@@ -79,10 +81,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  _test() {
-    print("");
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -102,6 +100,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider _authProvider =
+    Provider.of<AuthProvider>(Get.context!, listen: false);
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -126,7 +126,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => (FriendsListPage())));
+                            builder: (context) => (FriendsListScreen())));
                   },
                 ),
                 backgroundColor: AppColors.white,
@@ -154,6 +154,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Consumer<AuthProvider>(
+                                builder: (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
+                                  return ProfilePicture(
+                                    name: 'apple',
+                                    radius: 60,
+                                    fontsize: 21,
+                                    img: myAuthProvider.currentUserModel?.profilepic ?? "",
+                                  );
+                                },
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  _authProvider.onProfilePic();
+                                },
+                                child: const Text('Edit Profile Picture'),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 16),

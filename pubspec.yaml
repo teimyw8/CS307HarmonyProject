@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   spotify_sdk:
 
   cupertino_icons: ^1.0.2
@@ -30,6 +31,10 @@ dependencies:
   flutter_chat_ui: ^1.6.4
   instant: ^0.4.1
   timezone: ^0.9.0
+  firebase_storage: ^10.3.11
+  flutter_profile_picture: ^2.0.0
+  flutter_speed_dial: ^6.2.0
+  image_picker: ^0.8.6
 
 
 dev_dependencies:

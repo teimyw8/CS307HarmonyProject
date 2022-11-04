@@ -7,9 +7,12 @@ import 'package:harmony_app/providers/add_friends_provider.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/chat_provider.dart';
 import 'package:harmony_app/providers/edit_profile_provider.dart';
+import 'package:harmony_app/providers/friends_list_provider.dart';
+import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/chat_service.dart';
+import 'package:harmony_app/services/feed_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +23,7 @@ void setupLocator() {
   GetIt.instance.registerLazySingleton(() => AuthService());
   GetIt.instance.registerLazySingleton(() => FirestoreService());
   GetIt.instance.registerLazySingleton(() => ChatService());
+  GetIt.instance.registerLazySingleton(() => FeedService());
 }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +36,8 @@ void main() async {
       ChangeNotifierProvider(create: (_) => AddFriendsProvider()),
       ChangeNotifierProvider(create: (_) => FriendRequestsProvider()),
       ChangeNotifierProvider(create: (_) => ChatProvider()),
+      ChangeNotifierProvider(create: (_) => FriendsListProvider()),
+      ChangeNotifierProvider(create: (_) => FeedProvider()),
     ], child: const MyApp()),
   );
 }

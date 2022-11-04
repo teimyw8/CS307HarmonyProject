@@ -50,7 +50,7 @@ class _FriendRequestsScreenState extends State<FriendRequestsScreen> {
       },
       child: Scaffold(
         appBar: CustomAppBar(
-          title: "Add Friends",
+          title: "Harmony",
           needBackArrow: true,
         ),
         body: Consumer2<FriendRequestsProvider, AuthProvider>(
