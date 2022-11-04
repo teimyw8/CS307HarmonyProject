@@ -41,12 +41,12 @@ class _FriendListTileWidgetState extends State<FriendListTileWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            ProfilePicture(
-              name: '',
-              radius: 25,
-              fontsize: 21,
-              img: widget.friendModel.profilepic,
-            ),
+            // ProfilePicture(
+            //   name: '',
+            //   radius: 25,
+            //   fontsize: 21,
+            //   img: widget.friendModel.profilepic,
+            // ),
             TextButton(
               onPressed: () async {
                 if (widget.friendModel.blockedUsers

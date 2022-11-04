@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 
@@ -33,9 +34,12 @@ class friends_profile_screen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                 CircleAvatar(
-                  radius: 50,
-                ),
+                // ProfilePicture(
+                //   name: '',
+                //   radius: 50,
+                //   fontsize: 21,
+                //   img: widget.friendModel.profilepic,
+                // ),
                 Text(
                   name,
                   style: AppTextStyles.profileNames(),
