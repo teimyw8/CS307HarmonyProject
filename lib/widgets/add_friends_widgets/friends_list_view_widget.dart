@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../../helpers/colors.dart';
 import '../../helpers/text_styles.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/chat_provider.dart';
 import '../../providers/friends_list_provider.dart';
 List<dynamic>? friendsList;
 
@@ -25,9 +26,10 @@ class FriendsListViewWidget extends StatefulWidget {
 class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
   final FriendsListProvider _friendsListProvider =
       Provider.of<FriendsListProvider>(Get.context!, listen: false);
-  final AuthProvider _authProvider =
+  ChatProvider chatProvider =
+  Provider.of<ChatProvider>(Get.context!, listen: false);
+  AuthProvider authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
@@ -62,7 +64,7 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
                 return const Text('Error, reload');
               }
 
-              List<DocumentSnapshot> documents = snapshot.data!.docs;
+              List<DocumentSnapshot> documents = snapshot.data?.docs ?? [];
               return ListView(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -98,7 +100,13 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
                                   IconButton(
                                     icon: const Icon(Icons.message),
                                     color: Colors.green,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      chatProvider
+                                          .openChatScreenFromFriendListWidget(
+                                          uid1: authProvider
+                                              .currentUserModel!.uid,
+                                          uid2: e['uid']);
+                                    },
                                   ),
                                   IconButton(
                                     icon: const Icon(

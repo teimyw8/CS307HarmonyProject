@@ -89,7 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Icon(Icons.music_note, color: Colors.green),
                     label: "Share Daily Song",
                     onTap: () => _feedProvider.activityTimeCheck(context)
-                )
+                ),
+                SpeedDialChild(
+                    child: Icon(Icons.chat, color: Colors.green),
+                    label: "Chats",
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => AllChatsScreen()))
+                ),
               ],
             ),
           ),

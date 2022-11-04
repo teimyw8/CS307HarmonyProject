@@ -12,6 +12,7 @@ class UserModel {
   List<dynamic> friends;
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
+  List<String> blockedUsers;
 
   UserModel(
       {required this.email,
@@ -26,7 +27,8 @@ class UserModel {
       required this.spotifyToken,
       required this.profilepic,
       required this.friendRequestsReceived,
-      required this.friendRequestsSent,});
+      required this.friendRequestsSent,
+      required this.blockedUsers});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         email: json["email"] ?? "",
@@ -42,6 +44,7 @@ class UserModel {
         spotifyToken: json["spotifyToken"] ?? "",
         friendRequestsReceived: json["friendRequestsReceived"] ?? [],
         friendRequestsSent: json["friendRequestsSent"] ?? [],
+        blockedUsers: json["blockedUsers"] ?? [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -57,6 +60,7 @@ class UserModel {
         "spotifyToken": spotifyToken,
         "friendRequestsReceived": friendRequestsReceived,
         "friendRequestsSent": friendRequestsSent,
+        "blockedUsers": blockedUsers
       };
 
   @override

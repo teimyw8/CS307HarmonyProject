@@ -230,4 +230,21 @@ class FirestoreService {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
+
+  ///this function blocks a specified user in Firestore
+  Future<void> blockUser({required String currentUserUID, required String blockUID}) async {
+    try {
+      var currentUserDoc = await firebaseFirestore.collection('users').doc(currentUserUID).get();
+      List<dynamic> blockedUsers = currentUserDoc.data()!.containsKey('blockedUsers')
+          ? currentUserDoc.data()!['blockedUsers']
+          : [];
+      blockedUsers.add(blockUID);
+      await firebaseFirestore
+          .collection("users")
+          .doc(currentUserUID)
+          .update({'blockedUsers': blockedUsers});
+    } catch (e) {
+      print(e);
+    }
+  }
 }
