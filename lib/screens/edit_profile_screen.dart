@@ -52,6 +52,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .collection('users')
           .doc(_editProfileProvider.currentUserModel!.uid)
           .update({'spotifyToken': connected});
+      _editProfileProvider.currentUserModel!.spotifyToken = connected;
+      _editProfileProvider.notifyListeners();
     } else {
       setState(() {
         _errorMessage =
@@ -71,6 +73,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .collection('users')
           .doc(_editProfileProvider.currentUserModel!.uid)
           .update({'spotifyToken': ''});
+      _editProfileProvider.currentUserModel!.spotifyToken = '';
+      _editProfileProvider.notifyListeners();
     }
   }
 
@@ -87,8 +91,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
 
     AuthProvider _authProvider =
-        Provider.of<AuthProvider>(Get.context!, listen: false);
-    String token = _authProvider.currentUserModel!.spotifyToken;
+        Provider.of<AuthProvider>(Get.context!, listen: true);
+    String token = _editProfileProvider.currentUserModel!.spotifyToken;
+
     setState(() {
       if (token == '') {
         _syncState = 'Sync with Spotify';
