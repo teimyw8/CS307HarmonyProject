@@ -67,9 +67,7 @@ class SpotifyService {
     return artistList;
 
   }
-  static getTopGenres(){
 
-  }
 
   static desyncSpotify () async {
     return await SpotifySdk.disconnect();
