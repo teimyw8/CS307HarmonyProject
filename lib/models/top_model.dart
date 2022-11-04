@@ -40,23 +40,32 @@ class TopSongModel {
     return 'UserModel{name: $name';
   }
 }
-class Genre {
-  String name;
+class TopData {
+  List<dynamic> genres;
+  List<dynamic> artists;
+  List<dynamic> songs;
 
 
-  Genre(
-      {required this.name});
 
-  factory Genre.fromJson(Map<String, dynamic> json) => Genre(
-      name: json["name"]
+  TopData(
+      {required this.genres,
+        required this.artists,
+        required this.songs,});
+
+  factory TopData.fromJson(Map<String, dynamic> json) => TopData(
+      genres: json["topGenres"] ?? [],
+      artists: json["topArtists"] ?? [],
+      songs: json["topSongs"] ?? [],
   );
-
+ /*
   Map<String, dynamic> toJson() => {
-    "name": name
+    "names": names
   };
 
   @override
   String toString() {
     return 'UserModel{name: $name';
   }
+
+  */
 }

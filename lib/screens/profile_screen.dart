@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:harmony_app/screens/list_of_friends_simple.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +17,12 @@ import '../helpers/colors.dart';
 import '../helpers/text_styles.dart';
 import '../models/user_model.dart';
 import '../providers/edit_profile_provider.dart';
+import '../services/firestore_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   UserModel userModel;
   bool isPrivate;
+
 
   ProfileScreen({Key? key, required this.userModel, required this.isPrivate})
       : super(key: key);
@@ -29,6 +34,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
+  FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
 
   List<String> songs = List.filled(5, '');
 
@@ -38,16 +44,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   List<String> titles = List.filled(3, '');
 
-  void setFriendsSongs() async {
+  void setFriendsData() async {
+    var dataTemp = await _firestoreService.retrieveUserFromFirestore(uid: widget.userModel.uid);
+    setState(() {
 
+      TopData test = TopData.fromJson(dataTemp!);
+      int length;
+
+      if (test.songs.length < 5) {
+        length = test.songs.length;
+      } else {
+        length = 5;
+      }
+
+      for (int i = 0; i < length; i++) {
+        songs[i] = test.songs[i];
+      }
+
+      if (test.artists.length < 5) {
+        length = test.artists.length;
+      } else {
+        length = 5;
+      }
+
+      for (int i = 0; i < length; i++) {
+        artists[i] = test.artists[i];
+      }
+
+      if (test.genres.length < 5) {
+        length = test.genres.length;
+      } else {
+        length = 5;
+      }
+
+      for (int i = 0; i < length; i++) {
+        genres[i] = test.genres[i];
+      }
+
+
+
+    });
   }
 
-  void setFriendsArtists() async {
-
-  }
 
 
   void setSongs() async {
+
     List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
 
     int length;
@@ -116,8 +158,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .update({'topArtists': artists});
   }
 
-  void setGenres() {}
-
   @override
   void initState() {
     super.initState();
@@ -145,8 +185,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         titles[0] = "Top Songs";
         titles[1] = "Top Artists";
         titles[2] = "Top Genres";
-        setFriendsArtists();
-        setFriendsSongs();
+        setFriendsData();
+
       }
     } else {
       if (_editProfileProvider.currentUserModel!.spotifyToken == "") {
@@ -172,7 +212,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         titles[2] = "Top Genres";
         setArtists();
         setSongs();
-        setGenres();
       }
     }
   }
