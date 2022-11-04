@@ -26,7 +26,7 @@ class UserModel {
       required this.spotifyToken,
       required this.profilepic,
       required this.friendRequestsReceived,
-      required this.friendRequestsSent});
+      required this.friendRequestsSent,});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         email: json["email"] ?? "",

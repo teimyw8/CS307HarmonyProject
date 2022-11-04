@@ -8,9 +8,12 @@ import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/post_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/screens/all_chats_screen.dart';
+import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/share_daily_activity_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
 import 'package:provider/provider.dart';
 
 import '../services/firestore_service.dart';
