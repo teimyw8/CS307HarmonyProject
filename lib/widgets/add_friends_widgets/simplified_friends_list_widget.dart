@@ -9,7 +9,7 @@ import '../../models/user_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/friends_list_provider.dart';
 
-List<dynamic>? friendsList;
+List<String>? friendsList;
 
 class simpFriendsListWidget extends StatefulWidget {
   UserModel userModel;
@@ -29,13 +29,13 @@ class _simpFriendsListWidgetState extends State<simpFriendsListWidget> {
         builder: (BuildContext context, AuthProvider myAuthProvider,
         Widget? child) {
 
-      friendsList = widget.userModel.friends;
+      friendsList = widget.userModel.friends.cast<String>();
 
       if (friendsList!.contains(widget.userModel.uid.toString())) {
         friendsList?.remove(widget.userModel.uid.toString());
       }
 
-      if (friendsList!.isEmpty) {
+      if (friendsList == null || friendsList!.isEmpty) {
         return Text(
           'No friends',
           style: AppTextStyles.headline(),
@@ -45,13 +45,17 @@ class _simpFriendsListWidgetState extends State<simpFriendsListWidget> {
           return StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('users')
-                  .where("uid", whereIn: friendsList)
+                  .where('uid', whereIn: friendsList)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
 
                 if (snapshot.hasError) {
                   return const Text('Error, reload');
+                }
+
+                if (snapshot.data == null) {
+                  return Text('Waiting');
                 }
 
                 List<DocumentSnapshot> documents = snapshot.data!.docs;

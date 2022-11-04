@@ -138,6 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Text("Loading");
                   }
 
+                  if (snapshot.data == null) {
+                    return Text('Waiting');
+                  }
+
                   List<PostModel> posts = snapshot.data!.docs
                       .map((doc) => PostModel.fromJson(
                           doc.data() as Map<String, dynamic>)).toList();

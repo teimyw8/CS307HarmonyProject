@@ -1,7 +1,12 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:harmony_app/screens/list_of_friends_simple.dart';
+import 'package:harmony_app/screens/shared_songs_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
@@ -13,10 +18,12 @@ import '../helpers/colors.dart';
 import '../helpers/text_styles.dart';
 import '../models/user_model.dart';
 import '../providers/edit_profile_provider.dart';
+import '../services/firestore_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   UserModel userModel;
   bool isPrivate;
+
 
   ProfileScreen({Key? key, required this.userModel, required this.isPrivate})
       : super(key: key);
@@ -28,6 +35,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
+  FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
 
   List<String> songs = List.filled(5, '');
 
@@ -37,7 +45,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   List<String> titles = List.filled(3, '');
 
+  void setFriendsData() async {
+    var dataTemp = await _firestoreService.retrieveUserFromFirestore(uid: widget.userModel.uid);
+    setState(() {
+
+      TopData test = TopData.fromJson(dataTemp!);
+      int length;
+
+      if (test.songs.length < 5) {
+        length = test.songs.length;
+      } else {
+        length = 5;
+      }
+
+      for (int i = 0; i < length; i++) {
+        songs[i] = test.songs[i];
+      }
+
+      if (test.artists.length < 5) {
+        length = test.artists.length;
+      } else {
+        length = 5;
+      }
+
+      for (int i = 0; i < length; i++) {
+        artists[i] = test.artists[i];
+      }
+
+      if (test.genres.length < 5) {
+        length = test.genres.length;
+      } else {
+        length = 5;
+      }
+
+      for (int i = 0; i < length; i++) {
+        genres[i] = test.genres[i];
+      }
+
+
+
+    });
+  }
+
+
+
   void setSongs() async {
+
     List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
 
     int length;
@@ -52,6 +105,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         songs[i] = topSongs[i].name;
       }
     });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'topSongs': songs});
   }
 
   void setArtists() async {
@@ -65,6 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     }
     List<String> genreList = genreSet.toList();
+
     int length;
 
     if (genreSet.length < 5) {
@@ -88,36 +147,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
         artists[i] = topArtists[i].name;
       }
     });
-  }
 
-  void setGenres() {}
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'topGenres': genres});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'topArtists': artists});
+  }
 
   @override
   void initState() {
     super.initState();
-    print(widget.userModel.spotifyToken);
-    if(widget.userModel.spotifyToken == ""){
-      for(String s in songs){
-        s = "";
-      }
-      for(String s in artists){
-        s = "";
-      }
-      for(String s in genres){
-        s = "";
-      }
-      for(String s in titles){
-        s = "";
-      }
-      titles[0] = "You must have your spotify account synced to see your analytics";
+    print(widget.userModel.uid);
+    print('\n$_editProfileProvider.currentUserModel!.uid');
+    if(_editProfileProvider.currentUserModel!.uid != widget.userModel.uid){
+      if (widget.userModel.spotifyToken == "") {
+        for (String s in songs) {
+          s = "";
+        }
+        for (String s in artists) {
+          s = "";
+        }
+        for (String s in genres) {
+          s = "";
+        }
+        for (String s in titles) {
+          s = "";
+        }
 
+
+        titles[0] =
+        "Your friend must have their spotify account synced to see their analytics";
+      } else {
+        titles[0] = "Top Songs";
+        titles[1] = "Top Artists";
+        titles[2] = "Top Genres";
+        setFriendsData();
+
+      }
     } else {
-      titles[0] = "Top Songs";
-      titles[1] = "Top Artists";
-      titles[2] = "Top Genres";
-      setArtists();
-      setSongs();
-      setGenres();
+      if (_editProfileProvider.currentUserModel!.spotifyToken == "") {
+        for (String s in songs) {
+          s = "";
+        }
+        for (String s in artists) {
+          s = "";
+        }
+        for (String s in genres) {
+          s = "";
+        }
+        for (String s in titles) {
+          s = "";
+        }
+
+
+        titles[0] =
+        "You must have your spotify account synced to see your analytics";
+      } else {
+        titles[0] = "Top Songs";
+        titles[1] = "Top Artists";
+        titles[2] = "Top Genres";
+        setArtists();
+        setSongs();
+      }
     }
   }
 
@@ -207,6 +303,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           child: const Text('Friends'),
                         ),
+                        if(widget.userModel.uid != _editProfileProvider.currentUserModel!.uid)
+                        ElevatedButton(
+                            onPressed: () {
+                              if(widget.userModel.spotifyToken == ""){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text(
+                                            'Your friend is not synced with spotify'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
+                                            child: const Text('Ok'),
+                                          ),
+
+                                        ],
+                                      ),
+                                );
+                              } else if (_editProfileProvider.currentUserModel!.spotifyToken == ""){
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        title: const Text(
+                                            'You are not synced with spotify'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
+                                            child: const Text('Ok'),
+                                          ),
+
+                                        ],
+                                      ),
+                                );
+                              } else {
+                                Get.to(() => SharedSongsScreen(userModel : widget.userModel));
+                              }
+                            },
+                            child: Text("Shared Songs"))
+
                       ],
                     ),
                   ],
