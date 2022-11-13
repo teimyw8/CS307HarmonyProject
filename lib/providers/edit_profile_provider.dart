@@ -125,6 +125,12 @@ class EditProfileProvider with ChangeNotifier {
     return bio;
   }
 
+  String getUID() {
+    String? uid = currentUserModel?.uid;
+    uid ??= "";
+    return uid;
+  }
+
   String getDisplayProfileTo() {
     int? val = currentUserModel?.displayProfileTo;
     val ??= 1;

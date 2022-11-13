@@ -11,7 +11,6 @@ import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/models/top_model.dart';
-import 'package:harmony_app/services/path_service.dart';
 import 'package:harmony_app/services/spotify_service.dart';
 
 import '../helpers/colors.dart';
@@ -19,11 +18,11 @@ import '../helpers/text_styles.dart';
 import '../models/user_model.dart';
 import '../providers/edit_profile_provider.dart';
 import '../services/firestore_service.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProfileScreen extends StatefulWidget {
   UserModel userModel;
   bool isPrivate;
-
 
   ProfileScreen({Key? key, required this.userModel, required this.isPrivate})
       : super(key: key);
@@ -46,9 +45,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> titles = List.filled(3, '');
 
   void setFriendsData() async {
-    var dataTemp = await _firestoreService.retrieveUserFromFirestore(uid: widget.userModel.uid);
+    var dataTemp = await _firestoreService.retrieveUserFromFirestore(
+        uid: widget.userModel.uid);
     setState(() {
-
       TopData test = TopData.fromJson(dataTemp!);
       int length;
 
@@ -81,16 +80,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       for (int i = 0; i < length; i++) {
         genres[i] = test.genres[i];
       }
-
-
-
     });
   }
 
-
-
   void setSongs() async {
-
     List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
 
     int length;
@@ -117,8 +110,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Set<String> genreSet = Set();
     int found = 0;
     //Generate genres
-    for (TopArtistModel a in topArtists){
-      for(Object o in a.genres){
+    for (TopArtistModel a in topArtists) {
+      for (Object o in a.genres) {
         genreSet.add(o.toString());
       }
     }
@@ -164,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     print(widget.userModel.uid);
     print('\n$_editProfileProvider.currentUserModel!.uid');
-    if(_editProfileProvider.currentUserModel!.uid != widget.userModel.uid){
+    if (_editProfileProvider.currentUserModel!.uid != widget.userModel.uid) {
       if (widget.userModel.spotifyToken == "") {
         for (String s in songs) {
           s = "";
@@ -179,15 +172,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
-
         titles[0] =
-        "Your friend must have their spotify account synced to see their analytics";
+            "Your friend must have their spotify account synced to see their analytics";
       } else {
         titles[0] = "Top Songs";
         titles[1] = "Top Artists";
         titles[2] = "Top Genres";
         setFriendsData();
-
       }
     } else {
       if (_editProfileProvider.currentUserModel!.spotifyToken == "") {
@@ -204,9 +195,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
-
         titles[0] =
-        "You must have your spotify account synced to see your analytics";
+            "You must have your spotify account synced to see your analytics";
       } else {
         titles[0] = "Top Songs";
         titles[1] = "Top Artists";
@@ -217,8 +207,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void _shareContent() {
+    Share.share(_editProfileProvider.getUserProfilePic());
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(widget.userModel.profilepic);
     if (widget.isPrivate) {
       return Scaffold(
         appBar: CustomAppBar(
@@ -290,62 +285,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .apply(color: AppColors.white),
                               )
                             : SizedBox()),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: AppTextStyles.button(),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ListOfFriends(
-                                        userModel: widget.userModel)));
-                          },
-                          child: const Text('Friends'),
+                        Row(
+                          children: [
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                textStyle: AppTextStyles.button(),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ListOfFriends(
+                                            userModel: widget.userModel)));
+                              },
+                              child: const Text('Friends'),
+                            ),
+                            if (widget.userModel.uid
+                                    .compareTo(_editProfileProvider.getUID()) ==
+                                0)
+                              ElevatedButton.icon(
+                                  onPressed: _shareContent,
+                                  icon: const Icon(Icons.share),
+                                  label: const Text('Share Profile'))
+                          ],
                         ),
-                        if(widget.userModel.uid != _editProfileProvider.currentUserModel!.uid)
-                        ElevatedButton(
-                            onPressed: () {
-                              if(widget.userModel.spotifyToken == ""){
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title: const Text(
-                                            'Your friend is not synced with spotify'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                context, 'Cancel'),
-                                            child: const Text('Ok'),
-                                          ),
-
-                                        ],
-                                      ),
-                                );
-                              } else if (_editProfileProvider.currentUserModel!.spotifyToken == ""){
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title: const Text(
-                                            'You are not synced with spotify'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                context, 'Cancel'),
-                                            child: const Text('Ok'),
-                                          ),
-
-                                        ],
-                                      ),
-                                );
-                              } else {
-                                Get.to(() => SharedSongsScreen(userModel : widget.userModel));
-                              }
-                            },
-                            child: Text("Shared Songs"))
-
+                        if (widget.userModel.uid !=
+                            _editProfileProvider.currentUserModel!.uid)
+                          ElevatedButton(
+                              onPressed: () {
+                                if (widget.userModel.spotifyToken == "") {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text(
+                                          'Your friend is not synced with spotify'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else if (_editProfileProvider
+                                        .currentUserModel!.spotifyToken ==
+                                    "") {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text(
+                                          'You are not synced with spotify'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  Get.to(() => SharedSongsScreen(
+                                      userModel: widget.userModel));
+                                }
+                              },
+                              child: Text("Shared Songs"))
                       ],
                     ),
                   ],
@@ -359,14 +366,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: AppTextStyles.tileText().apply(color: AppColors.white),
                 ),
               ),
-
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Container(
                   height: 60,
                   width: 400,
-
                   child: Text(
                     titles[0],
                     style: TextStyle(
@@ -456,7 +461,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   height: 40,
                   width: 300,
-
                   child: Text(
                     titles[1],
                     style: TextStyle(
@@ -546,7 +550,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Container(
                   height: 40,
                   width: 300,
-
                   child: Text(
                     titles[2],
                     style: TextStyle(
