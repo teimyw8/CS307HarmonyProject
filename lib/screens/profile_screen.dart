@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -43,6 +47,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> genres = List.filled(5, '');
 
   List<String> titles = List.filled(3, '');
+
+  GlobalKey _globalKey = new GlobalKey();
+
+  Future<String?> _capturePng() async {
+    try {
+      print('inside');
+      print(_globalKey.currentContext);
+      RenderRepaintBoundary boundary =
+      _globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData =
+      await image.toByteData(format: ui.ImageByteFormat.png);
+      var pngBytes = byteData?.buffer.asUint8List();
+      var bs64 = base64Encode(pngBytes!);
+      print(pngBytes);
+      print(bs64);
+      setState(() {});
+      return bs64;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 
   void setFriendsData() async {
     var dataTemp = await _firestoreService.retrieveUserFromFirestore(
@@ -207,8 +234,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  void _shareContent() {
-    Share.share(_editProfileProvider.getUserProfilePic());
+  Future<void> _shareContent() async {
+    Future<String?> temp = _capturePng();
+    String? image = await temp;
+    image ??= "";
+    Share.share(image!);
   }
 
   @override
@@ -216,6 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     print(widget.userModel.profilepic);
     if (widget.isPrivate) {
       return Scaffold(
+        key: _globalKey,
         appBar: CustomAppBar(
           title: "Harmony",
           needBackArrow: true,
