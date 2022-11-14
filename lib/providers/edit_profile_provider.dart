@@ -125,6 +125,12 @@ class EditProfileProvider with ChangeNotifier {
     return bio;
   }
 
+  String getUID() {
+    String? uid = currentUserModel?.uid;
+    uid ??= "";
+    return uid;
+  }
+
   String getDisplayProfileTo() {
     int? val = currentUserModel?.displayProfileTo;
     val ??= 1;
@@ -184,21 +190,6 @@ class EditProfileProvider with ChangeNotifier {
       }
       _authProvider.stopLoading();
     }
-    /*
-    User firebaseUser = await _authService.firebaseAuth.currentUser!;
-    String message = "";
-    await firebaseUser.verifyBeforeUpdateEmail(email);
-    if (firebaseUser.emailVerified) {
-      firebaseUser
-          .updateEmail(email)
-          .then(
-            (value) => message = 'Success',
-      )
-          .catchError((onError) => message = onError.toString());
-    }
-    return message;
-
-     */
   }
 
   ///this function is triggered when the user clicks on Reset button on ForgotPasswordScreen
@@ -244,7 +235,10 @@ class EditProfileProvider with ChangeNotifier {
 
   void updateDisplayName(String? value) {
     value ??= "";
+    print(currentUserModel.toString());
+    print(getUserProfilePic());
     UserModel temp = currentUserModel!;
+    print(temp.toString());
     bool val = false;
     if (value == 'my real name') {
       val = true;
@@ -252,6 +246,7 @@ class EditProfileProvider with ChangeNotifier {
       val = false;
     }
     temp.displayName = val;
+    print(temp.toString());
     try {
       setUserInfo(UserModel.fromJson(temp.toJson()));
     } on FirestoreException catch (e) {
@@ -262,6 +257,7 @@ class EditProfileProvider with ChangeNotifier {
   void updateDisplayProfileTo(String? value) {
     value ??= "";
     UserModel temp = currentUserModel!;
+    print(temp.toString());
     int val = -1;
     if (value == SecurityConstants.PROFILEPAGESETTINGS[SecurityConstants.NOONE]) {
       val = SecurityConstants.NOONE;
@@ -271,6 +267,7 @@ class EditProfileProvider with ChangeNotifier {
       val = SecurityConstants.EVERYONE;
     }
     temp.displayProfileTo = val;
+    print(temp.toString());
     try {
       setUserInfo(UserModel.fromJson(temp.toJson()));
     } on FirestoreException catch (e) {
