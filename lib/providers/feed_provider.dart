@@ -189,6 +189,80 @@ class FeedProvider with ChangeNotifier {
     }
   }
 
+  Future<void> scheduleNotifs() async {
+    final StreamController<String?> selectNotificationStream =
+    StreamController<String?>.broadcast();
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            selectNotificationStream.add(notificationResponse.payload);
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            if (notificationResponse.actionId == 'id_3') {
+              selectNotificationStream.add(notificationResponse.payload);
+            }
+            break;
+        }
+      },
+
+    );
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    // DateTime a = DateTime.now();
+
+    // if (DateTime.now().compareTo(a) > 0) {
+    //   return;
+    // }
+    // var scheduledDate = tz.TZDateTime.from(a, tz.getLocation(timeZoneName));
+    // print(notif.toString() + 'notiftime');
+    print("hello1");
+    print(tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)));
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        'Time to share your daily song, head to the homepage!',
+        'Remember: You only have 5 minutes!',
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+                'full screen channel id', 'full screen channel name',
+                channelDescription: 'full screen channel description',
+                priority: Priority.high,
+                importance: Importance.high,
+                fullScreenIntent: true)),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+        1,
+        'Time to share your daily song, head to the homepage!',
+        'Remember: You only have 2 minutes!',
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+                'full screen channel i', 'full screen channel nam',
+                channelDescription: 'full screen channel description',
+                priority: Priority.high,
+                importance: Importance.high,
+                fullScreenIntent: true)),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime);
+    print(flutterLocalNotificationsPlugin.getActiveNotifications());
+    print(flutterLocalNotificationsPlugin.pendingNotificationRequests());
+    // flutterLocalNotificationsPlugin.
+    print("hello");
+  }
+
 
 
 
