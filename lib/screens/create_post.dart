@@ -43,6 +43,22 @@ class _CreatePostState extends State<CreatePost> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                ///in a single post they can either, share a song, an album, an artist or a playlist.
+                /// and the can always acompany it with a text
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Text',
+                    ),
+                    controller: _feedProvider.spotifyTextEditingController,
+                    validator: (value) {
+                      ///it is ok for the post to not have any song/aritst/album/playlist attatched to it
+                    },
+                  ),
+                ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 16),

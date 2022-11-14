@@ -32,12 +32,16 @@ class FeedProvider with ChangeNotifier {
   bool areVariablesInitialized = false;
   final formKey = GlobalKey<FormState>();
 
+  ///this are for the regular posts
   TextEditingController? textEditingController =
   TextEditingController();
-
-  TextEditingController? songTextEditingController =
+  TextEditingController spotifyTextEditingController =
   TextEditingController();
 
+
+  ///this are for the daily activity
+  TextEditingController? songTextEditingController =
+  TextEditingController();
   TextEditingController? artistTextEditingController =
   TextEditingController();
 
