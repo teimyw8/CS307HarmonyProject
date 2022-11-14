@@ -88,6 +88,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         MaterialPageRoute(builder: (context) => CreatePost()))
                 ),
                 SpeedDialChild(
+                    child: Icon(Icons.add, color: Colors.green),
+                    label: "Rate an album",
+                    // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePost()))
+                ),
+                SpeedDialChild(
+                    child: Icon(Icons.add, color: Colors.green),
+                    label: "Rate a song",
+                    // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePost()))
+                ),
+                SpeedDialChild(
+                    child: Icon(Icons.add, color: Colors.green),
+                    label: "Rate an artist",
+                    // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePost()))
+                ),
+                SpeedDialChild(
                     child: Icon(Icons.music_note, color: Colors.green),
                     label: "Share Daily Song",
                     onTap: () => _feedProvider.activityTimeCheck(context)
@@ -199,7 +214,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
 
                                       mainDisplay(e),
-                                      handleBottomText(e)
+                                      handleBottomText(e),
+                                      IconButton(onPressed: () {
+                                        print("up");
+                                      }, icon: const Icon(Icons.thumb_up)),
+                                      IconButton(onPressed: () {
+                                        print("down");
+                                      }, icon: const Icon(Icons.thumb_down))
                                     ],
                                   ),
                                 ))
@@ -233,6 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   handleBottomText(e) {
     if (e.isPost == 'false') {
+      print(e.text);
       return Text(e.text,
           style: AppTextStyles.headline());
     }
