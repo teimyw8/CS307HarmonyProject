@@ -51,7 +51,7 @@ class _CreatePostState extends State<CreatePost> {
                   child: TextFormField(
                     decoration: const InputDecoration(
                       border: UnderlineInputBorder(),
-                      labelText: 'Text',
+                      labelText: 'Song/Artist/Album/Playlist',
                     ),
                     controller: _feedProvider.spotifyTextEditingController,
                     validator: (value) {
