@@ -54,6 +54,7 @@ class UserModel {
         "bio": bio,
         "friends": friends,
         "uid": uid,
+        "profilepic": profilepic,
         "username": username,
         "displayProfileTo": displayProfileTo,
         "displayName": displayName,
@@ -65,6 +66,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, bio: $bio, displayProfileTo: $displayProfileTo, displayName: $displayName, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived}';
+    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, bio: $bio, displayProfileTo: $displayProfileTo, displayName: $displayName, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived, profilepic: $profilepic}';
   }
 }
