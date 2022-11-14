@@ -36,7 +36,6 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

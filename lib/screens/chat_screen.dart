@@ -33,6 +33,7 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
+
 class _ChatScreenState extends State<ChatScreen> {
   ChatService get firestoreService => GetIt.instance<ChatService>();
   AuthProvider authProvider =
