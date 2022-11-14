@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final FeedProvider _feedProvider =
       Provider.of<FeedProvider>(Get.context!, listen: false);
 
+
   @override
   void initState() {
     Future.delayed(Duration(seconds: 0), () {
@@ -237,8 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: AppTextStyles.headline());
     }
     else {
-      return Text("",
-          style: AppTextStyles.headline());
+      return const SizedBox.shrink();
     }
   }
 }
