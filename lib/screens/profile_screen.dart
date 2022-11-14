@@ -9,6 +9,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -26,6 +27,7 @@ import '../models/user_model.dart';
 import '../providers/edit_profile_provider.dart';
 import '../services/firestore_service.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   UserModel userModel;
@@ -238,10 +240,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  static Future<File> imageToFile({required String imageName, required String ext, required Uint8List pngBytes}) async {
+    //var bytes = await rootBundle.load('assets/$imageName.$ext');
+    String tempPath = (await getTemporaryDirectory()).path;
+    File file = File('$tempPath/profile.png');
+    await file.writeAsBytes(
+        pngBytes);
+    return file;
+  }
+
   Future<void> _shareContent() async {
     Future<Uint8List> temp = _capturePng();
-    Uint8List image = await temp;
-    print(image);
+    Uint8List pngBytes = await temp;
+    print(pngBytes);
+    //Image image = Image.memory(pngBytes);
+    File imagePlaceHolder = await imageToFile(
+        imageName: "photo_placeholder", ext: "jpg", pngBytes: pngBytes);
+    /*
     await Firebase.initializeApp(); //delete later
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference ref = storage.ref().child('');
@@ -253,7 +268,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }).catchError((onError) {
       print(onError);
     });
-    Share.share(image_url);
+    */
+    XFile file = XFile(imagePlaceHolder.path);
+    Share.shareXFiles([file]);
   }
 
   @override
