@@ -37,6 +37,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
 
+
+  //Design constants
+  TextStyle primaryTextStyle = TextStyle();
+  TextStyle secondaryTextStyle = TextStyle();
+
+  Color primaryColor = Colors.white;
+  Color secondaryColor = Colors.green;
+
+
   List<String> songs = List.filled(5, '');
 
   List<String> artists = List.filled(5, '');
@@ -162,8 +171,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    print(widget.userModel.uid);
-    print('\n$_editProfileProvider.currentUserModel!.uid');
+
+
     if(_editProfileProvider.currentUserModel!.uid != widget.userModel.uid){
       if (widget.userModel.spotifyToken == "") {
         for (String s in songs) {
@@ -227,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           needSettings: true,
           needFriendsList: true,
         ),
-        backgroundColor: AppColors.green,
+        backgroundColor: secondaryColor,
         body: Column(
           children: [
             Row(
@@ -259,13 +268,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           needSettings: true,
           needFriendsList: true,
         ),
-        backgroundColor: AppColors.green,
+        backgroundColor: secondaryColor,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                color: AppColors.green,
+                color: primaryColor,
                 padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 15.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -287,7 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ? Text(
                                 "@${widget.userModel.username}",
                                 style: AppTextStyles.subNote()
-                                    .apply(color: AppColors.white),
+                                    .apply(color: secondaryColor),
                               )
                             : SizedBox()),
                         TextButton(
@@ -306,13 +315,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if(widget.userModel.uid != _editProfileProvider.currentUserModel!.uid)
                         ElevatedButton(
                             onPressed: () {
-                              if(widget.userModel.spotifyToken == ""){
+                              if(_editProfileProvider.currentUserModel!.spotifyToken == ""){
+
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
                                         title: const Text(
-                                            'Your friend is not synced with spotify'),
+                                            'You are not synced with spotify'),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () => Navigator.pop(
@@ -323,13 +333,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                                 );
-                              } else if (_editProfileProvider.currentUserModel!.spotifyToken == ""){
+                              } else if (widget.userModel.spotifyToken == ""){
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) =>
                                       AlertDialog(
                                         title: const Text(
-                                            'You are not synced with spotify'),
+                                            'Your friend is not synced with spotify'),
                                         actions: <Widget>[
                                           TextButton(
                                             onPressed: () => Navigator.pop(
@@ -356,7 +366,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const EdgeInsets.symmetric(horizontal: 17, vertical: 0),
                 child: Text(
                   widget.userModel.bio,
-                  style: AppTextStyles.tileText().apply(color: AppColors.white),
+                  style: AppTextStyles.tileText().apply(color: AppColors.green),
                 ),
               ),
 
