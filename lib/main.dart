@@ -19,6 +19,8 @@ import 'package:provider/provider.dart';
 
 import 'providers/friend_requests_provider.dart';
 
+
+//TODO for chats. When deleting one chat, the UserModel for the remaining chat gets set to that user model of the deleted chat
 ///this function sets up the Service variables instances
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => AuthService());
@@ -26,6 +28,9 @@ void setupLocator() {
   GetIt.instance.registerLazySingleton(() => ChatService());
   GetIt.instance.registerLazySingleton(() => FeedService());
 }
+
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
