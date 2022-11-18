@@ -42,8 +42,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextStyle primaryTextStyle = TextStyle();
   TextStyle secondaryTextStyle = TextStyle();
 
-  Color primaryColor = Colors.white;
-  Color secondaryColor = Colors.green;
+  Color primaryColor = AppColors.white;
+  Color secondaryColor = AppColors.green;
 
 
   List<String> songs = List.filled(5, '');
@@ -274,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                color: primaryColor,
+                color: secondaryColor,
                 padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 15.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -366,10 +366,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const EdgeInsets.symmetric(horizontal: 17, vertical: 0),
                 child: Text(
                   widget.userModel.bio,
-                  style: AppTextStyles.tileText().apply(color: AppColors.green),
+                  style: AppTextStyles.tileText().apply(color: primaryColor),
                 ),
               ),
 
+              Container(
+
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -430,36 +433,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    songs[3],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    songs[4],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
+
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -520,36 +494,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    artists[3],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    artists[4],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
+
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -610,36 +555,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    genres[3],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    genres[4],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
+
             ],
           ),
         ),
