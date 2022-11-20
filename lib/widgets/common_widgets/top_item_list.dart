@@ -12,6 +12,11 @@ import '../../screens/profile_screen.dart';
 
 class TopItemList extends StatelessWidget {
   final double fontSize;
+  final double height;
+  final double width;
+
+  final bool iconBool;
+
   final String title;
   final String item1;
   final String item2;
@@ -24,87 +29,170 @@ class TopItemList extends StatelessWidget {
     this.item1 = "item 1",
     this.item2 = "item 2",
     this.item3 = "item 3",
+    this.height = 30,
+    this.width = 400,
+    this.iconBool = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (iconBool) {
+      return Column(
+        children: [
 
-    return Column(
-      children: [
-        //Title
-        Padding(
-          padding:
-          const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 10,
-          ),
-          child: Container(
-            height: 30,
-            width: 400,
-            color: const Color(0xDCDCDCCD),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: fontSize + 5,
+          //Title
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 10,
+            ),
+            child: Container(
+              height: height -10,
+              width: width,
+              color: const Color(0xDCDCDCCD),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: fontSize + 5,
+                ),
               ),
             ),
           ),
-        ),
 
-        //Item 1
-        Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-          child: Container(
-            height: 30,
-            width: 400,
-            color: const Color(0xDCDCDCCD),
-            child: Text(
-              item1,
-              style: TextStyle(
-                fontSize: fontSize,
+          //Item 1
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            child: Container(
+                height: height,
+                width: width,
+                color: const Color(0xDCDCDCCD),
+                child: Row(
+                  children: [
+                    Icon(Icons.access_time, size: height),
+                    Text(
+                      item1,
+                      style: TextStyle(
+                        fontSize: fontSize,
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+
+          //Item 2
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            child: Container(
+              height: height,
+              width: width,
+              color: const Color(0xDCDCDCCD),
+              child: Row(
+                children: [
+                  Icon(Icons.access_time, size: height),
+                  Text(
+                    item2,
+                    style: TextStyle(
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              )),
+          ),
+
+          //Item 3
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            child: Container(
+              height: height,
+              width: width,
+              color: const Color(0xDCDCDCCD),
+              child: Row(
+                children: [
+                  Icon(Icons.access_time, size: height),
+                  Text(
+                    item3,
+                    style: TextStyle(
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              )),
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          //Title
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 10,
+            ),
+            child: Container(
+              height: height,
+              width: width,
+              color: const Color(0xDCDCDCCD),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: fontSize + 5,
+                ),
               ),
             ),
           ),
-        ),
 
-        //Item 2
-        Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-          child: Container(
-            height: 30,
-            width: 400,
-            color: const Color(0xDCDCDCCD),
-            child: Text(
-              item2,
-              style: TextStyle(
-                fontSize: fontSize,
+          //Item 1
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            child: Container(
+                height: height,
+                width: width,
+                color: const Color(0xDCDCDCCD),
+                child: Text(
+                  item1,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                  ),
+                )),
+          ),
+
+          //Item 2
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            child: Container(
+              height: height,
+              width: width,
+              color: const Color(0xDCDCDCCD),
+              child: Text(
+                item2,
+                style: TextStyle(
+                  fontSize: fontSize,
+                ),
               ),
             ),
           ),
-        ),
 
-        //Item 3
-        Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-          child: Container(
-            height: 30,
-            width: 400,
-            color: const Color(0xDCDCDCCD),
-            child: Text(
-              item3,
-              style: TextStyle(
-                fontSize: fontSize,
+          //Item 3
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            child: Container(
+              height: height,
+              width: width,
+              color: const Color(0xDCDCDCCD),
+              child: Text(
+                item3,
+                style: TextStyle(
+                  fontSize: fontSize,
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    );
-
+        ],
+      );
+    }
 
     /*
     return Container(

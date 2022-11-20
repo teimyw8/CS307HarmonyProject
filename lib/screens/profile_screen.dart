@@ -369,14 +369,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
 
+              //Analytics
+
               Column(
                 children: [
-
-                  TopItemList(fontSize: 15,),
-
+                  //Songs
+                  TopItemList(fontSize: 15, iconBool: true, height: 40,),
+                  //Genres
                   TopItemList(fontSize: 15),
-
-                  TopItemList(fontSize: 15),
+                  //Artists
+                  TopItemList(fontSize: 15, iconBool: true, height: 40,),
                 ],
               )
             ],
