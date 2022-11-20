@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/screens/list_of_friends_simple.dart';
 import 'package:harmony_app/screens/shared_songs_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+import 'package:harmony_app/widgets/common_widgets/top_item_list.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/models/top_model.dart';
@@ -24,7 +25,6 @@ class ProfileScreen extends StatefulWidget {
   UserModel userModel;
   bool isPrivate;
 
-
   ProfileScreen({Key? key, required this.userModel, required this.isPrivate})
       : super(key: key);
 
@@ -35,8 +35,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
-  FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
 
+  FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
 
   //Design constants
   TextStyle primaryTextStyle = TextStyle();
@@ -44,7 +44,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Color primaryColor = AppColors.white;
   Color secondaryColor = AppColors.green;
-
 
   List<String> songs = List.filled(5, '');
 
@@ -55,9 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> titles = List.filled(3, '');
 
   void setFriendsData() async {
-    var dataTemp = await _firestoreService.retrieveUserFromFirestore(uid: widget.userModel.uid);
+    var dataTemp = await _firestoreService.retrieveUserFromFirestore(
+        uid: widget.userModel.uid);
     setState(() {
-
       TopData test = TopData.fromJson(dataTemp!);
       int length;
 
@@ -90,16 +89,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       for (int i = 0; i < length; i++) {
         genres[i] = test.genres[i];
       }
-
-
-
     });
   }
 
-
-
   void setSongs() async {
-
     List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
 
     int length;
@@ -126,8 +119,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Set<String> genreSet = Set();
     int found = 0;
     //Generate genres
-    for (TopArtistModel a in topArtists){
-      for(Object o in a.genres){
+    for (TopArtistModel a in topArtists) {
+      for (Object o in a.genres) {
         genreSet.add(o.toString());
       }
     }
@@ -172,8 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
 
-
-    if(_editProfileProvider.currentUserModel!.uid != widget.userModel.uid){
+    if (_editProfileProvider.currentUserModel!.uid != widget.userModel.uid) {
       if (widget.userModel.spotifyToken == "") {
         for (String s in songs) {
           s = "";
@@ -188,15 +180,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
-
         titles[0] =
-        "Your friend must have their spotify account synced to see their analytics";
+            "Your friend must have their spotify account synced to see their analytics";
       } else {
         titles[0] = "Top Songs";
         titles[1] = "Top Artists";
         titles[2] = "Top Genres";
         setFriendsData();
-
       }
     } else {
       if (_editProfileProvider.currentUserModel!.spotifyToken == "") {
@@ -213,9 +203,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
-
         titles[0] =
-        "You must have your spotify account synced to see your analytics";
+            "You must have your spotify account synced to see your analytics";
       } else {
         titles[0] = "Top Songs";
         titles[1] = "Top Artists";
@@ -268,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           needSettings: true,
           needFriendsList: true,
         ),
-        backgroundColor: secondaryColor,
+        backgroundColor: primaryColor,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,250 +301,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                           child: const Text('Friends'),
                         ),
-                        if(widget.userModel.uid != _editProfileProvider.currentUserModel!.uid)
-                        ElevatedButton(
-                            onPressed: () {
-                              if(_editProfileProvider.currentUserModel!.spotifyToken == ""){
-
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title: const Text(
-                                            'You are not synced with spotify'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                context, 'Cancel'),
-                                            child: const Text('Ok'),
-                                          ),
-
-                                        ],
-                                      ),
-                                );
-                              } else if (widget.userModel.spotifyToken == ""){
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
-                                        title: const Text(
-                                            'Your friend is not synced with spotify'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () => Navigator.pop(
-                                                context, 'Cancel'),
-                                            child: const Text('Ok'),
-                                          ),
-
-                                        ],
-                                      ),
-                                );
-                              } else {
-                                Get.to(() => SharedSongsScreen(userModel : widget.userModel));
-                              }
-                            },
-                            child: Text("Shared Songs"))
-
+                        if (widget.userModel.uid !=
+                            _editProfileProvider.currentUserModel!.uid)
+                          ElevatedButton(
+                              onPressed: () {
+                                if (_editProfileProvider
+                                        .currentUserModel!.spotifyToken ==
+                                    "") {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text(
+                                          'You are not synced with spotify'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else if (widget.userModel.spotifyToken ==
+                                    "") {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text(
+                                          'Your friend is not synced with spotify'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  Get.to(() => SharedSongsScreen(
+                                      userModel: widget.userModel));
+                                }
+                              },
+                              child: Text("Shared Songs"))
                       ],
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 17, vertical: 0),
-                child: Text(
-                  widget.userModel.bio,
-                  style: AppTextStyles.tileText().apply(color: primaryColor),
-                ),
-              ),
 
+              //Bio
               Container(
-
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Container(
-                  height: 60,
-                  width: 400,
-
-                  child: Text(
-                    titles[0],
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                color: secondaryColor,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 17,
+                    right: 17,
+                    bottom: 20,
                   ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
                   child: Text(
-                    songs[0],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    songs[1],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    songs[2],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
+                    widget.userModel.bio,
+                    style: AppTextStyles.tileText().apply(color: primaryColor),
                   ),
                 ),
               ),
 
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Container(
-                  height: 40,
-                  width: 300,
+              Column(
+                children: [
 
-                  child: Text(
-                    titles[1],
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    artists[0],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    artists[1],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    artists[2],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
+                  TopItemList(fontSize: 15,),
 
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Container(
-                  height: 40,
-                  width: 300,
+                  TopItemList(fontSize: 15),
 
-                  child: Text(
-                    titles[2],
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    genres[0],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    genres[1],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                child: Container(
-                  height: 30,
-                  width: 400,
-                  color: const Color(0xDCDCDCCD),
-                  child: Text(
-                    genres[2],
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ),
-
+                  TopItemList(fontSize: 15),
+                ],
+              )
             ],
           ),
         ),
