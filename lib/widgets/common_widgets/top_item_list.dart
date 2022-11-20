@@ -14,6 +14,7 @@ class TopItemList extends StatelessWidget {
   final double fontSize;
   final double height;
   final double width;
+  final int syncState;
 
   final bool iconBool;
 
@@ -32,10 +33,25 @@ class TopItemList extends StatelessWidget {
     this.height = 30,
     this.width = 400,
     this.iconBool = false,
+    this.syncState = 1,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("syncState\n");
+    print("$syncState\n");
+    if(syncState == 0){
+      return Container();
+    }
+    if(syncState == 2){
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        child:  Text(
+          "Spotify must be synced to see analytics",
+          style: TextStyle(fontSize: 20),
+        ),
+      );
+    }
     if (iconBool) {
       return Column(
         children: [

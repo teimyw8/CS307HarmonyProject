@@ -53,6 +53,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   List<String> titles = List.filled(3, '');
 
+  List<int> syncStates = List.filled(3, 0);
+  bool synced = false;
+
   void setFriendsData() async {
     var dataTemp = await _firestoreService.retrieveUserFromFirestore(
         uid: widget.userModel.uid);
@@ -180,9 +183,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
-        titles[0] =
-            "Your friend must have their spotify account synced to see their analytics";
+        setState(() {
+          syncStates[0] = 2;
+          syncStates[1] = 0;
+          syncStates[2] = 0;
+        });
       } else {
+        setState(() {
+          syncStates[0] = 1;
+          syncStates[1] = 1;
+          syncStates[2] = 1;
+        });
         titles[0] = "Top Songs";
         titles[1] = "Top Artists";
         titles[2] = "Top Genres";
@@ -203,9 +214,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
-        titles[0] =
-            "You must have your spotify account synced to see your analytics";
+        setState(() {
+          syncStates[0] = 2;
+          syncStates[1] = 0;
+          syncStates[2] = 0;
+        });
+
       } else {
+
+        setState(() {
+          syncStates[0] = 1;
+          syncStates[1] = 1;
+          syncStates[2] = 1;
+        });
+
         titles[0] = "Top Songs";
         titles[1] = "Top Artists";
         titles[2] = "Top Genres";
@@ -370,17 +392,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
 
               //Analytics
+                Column(
+                  children: [
+                    //Songs
+                    TopItemList(
+                      fontSize: 15,
+                      iconBool: true,
+                      height: 40,
+                      syncState: syncStates[0],
+                    ),
+                    //Genres
+                    TopItemList(
+                      fontSize: 15,
+                      syncState: syncStates[1],
+                    ),
+                    //Artists
+                    TopItemList(
+                      fontSize: 15,
+                      iconBool: true,
+                      height: 40,
+                      syncState: syncStates[2],
+                    ),
+                  ],
+                ),
 
-              Column(
-                children: [
-                  //Songs
-                  TopItemList(fontSize: 15, iconBool: true, height: 40,),
-                  //Genres
-                  TopItemList(fontSize: 15),
-                  //Artists
-                  TopItemList(fontSize: 15, iconBool: true, height: 40,),
-                ],
-              )
             ],
           ),
         ),
