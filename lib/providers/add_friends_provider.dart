@@ -15,6 +15,7 @@ class AddFriendsProvider with ChangeNotifier {
   AuthProvider _authProvider =
       Provider.of<AuthProvider>(Get.context!, listen: false);
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
+  List<dynamic> suggestedFriendsList = [];
 
   bool isLoading = false;
   bool areVariablesInitialized = false;
@@ -23,6 +24,7 @@ class AddFriendsProvider with ChangeNotifier {
 
     searchBarEditingController = TextEditingController();
     isLoading = false;
+    suggestedFriendsList = getSuggestedFriends();
 
     areVariablesInitialized = true;
     notifyListeners();
@@ -53,6 +55,10 @@ class AddFriendsProvider with ChangeNotifier {
           });
     }
     stopLoading();
+  }
+
+  List<dynamic> getSuggestedFriends() {
+    return [];
   }
 
   void startLoading() {

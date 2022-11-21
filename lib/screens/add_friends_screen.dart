@@ -96,9 +96,9 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                     ),
                   ],
                 ),
-                if (myAddFriendsProvider.searchBarEditingController!.text
+                (myAddFriendsProvider.searchBarEditingController!.text
                     .trim()
-                    .isNotEmpty)
+                    .isNotEmpty) ?
                   StreamBuilder(
                     stream: _firestoreService.firebaseFirestore
                         .collection('users')
@@ -179,7 +179,31 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                             }),
                       );
                     },
-                  ),
+                  )
+                :
+                  Expanded(
+                    child: ListView.builder(
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: myAddFriendsProvider.suggestedFriendsList.length,
+                        itemBuilder: (context, index) {
+                          return /*(users[index].uid ==
+                              myAuthProvider.currentUserModel!.uid || users[index].blockedUsers.contains(myAuthProvider.currentUserModel!.uid))
+                              ? Container()
+                              : SearchUserTileWidget(
+                            userModel: users[index],
+                            onSendFriendRequest: () =>
+                                myAddFriendsProvider
+                                    .sendFriendRequest(
+                                    sendToUID: users[index].uid),
+                            isFriendRequestSent: myAuthProvider
+                                .currentUserModel!.friendRequestsSent
+                                .contains(users[index].uid),
+                          )*/ Container();
+                          // return Text(users[index].toString());
+                        }),
+            ),
               ]),
             ) : Container();
           },
