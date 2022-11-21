@@ -29,6 +29,7 @@ import '../services/firestore_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
+
 class ProfileScreen extends StatefulWidget {
   UserModel userModel;
   bool isPrivate;
