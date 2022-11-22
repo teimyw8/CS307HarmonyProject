@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_bar.dart';
+import '../widgets/common_widgets/custom_text_field.dart';
 import 'create_post.dart';
 import 'home_screen.dart';
 
@@ -28,6 +29,9 @@ class _CreatePostState extends State<CreatePost> {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final FeedProvider _feedProvider =
       Provider.of<FeedProvider>(Get.context!, listen: false);
+
+  List<String> optionsSpotify = <String>['Song', 'Artist', 'Album', 'Playlist'];
+  late String option = optionsSpotify.first;
 
   @override
   Widget build(BuildContext context) {
@@ -47,26 +51,9 @@ class _CreatePostState extends State<CreatePost> {
                 /// and the can always acompany it with a text
                 Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Song/Artist/Album/Playlist',
-                    ),
-                    controller: _feedProvider.spotifyTextEditingController,
-                    validator: (value) {
-                      ///it is ok for the post to not have any song/aritst/album/playlist attatched to it
-                    },
-                  ),
-                ),
-                Padding(
-                  padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Text',
-                    ),
+                  child: CustomTextField(
+                    hintText: "Description",
                     controller: _feedProvider.textEditingController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -75,6 +62,38 @@ class _CreatePostState extends State<CreatePost> {
                     },
                   ),
                 ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(width: 10.w,),
+                        Expanded(
+                          child: CustomTextField(
+                            hintText: "Song/Artist/Album",
+                            controller: _feedProvider.spotifyTextEditingController,
+                            onChanged: (value) {
+                              //setState(() {});
+                            },
+                          ),
+                        ),
+                        //Spacer(),
+                        DropdownButton<String>(
+                            value: option,
+                            items: optionsSpotify.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged:  (String? value) {
+                              // This is called when the user selects an item.
+                              setState(() {
+                                option = value!;
+                              });
+                            },
+                        ),
+                        SizedBox(width: 10.w,),
+                      ],
+                    ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
@@ -85,13 +104,11 @@ class _CreatePostState extends State<CreatePost> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
-
                         _feedProvider.createPost();
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen()));
                       }
                     },
                     child: Text(

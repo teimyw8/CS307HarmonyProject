@@ -60,20 +60,15 @@ class _HomeScreenState extends State<HomeScreen> {
               needAvatar: true,
               needSettings: true,
               needFriendsList: true,
-/*              onHomeClicked: () {
-                debugPrint(
-                    'Temporary, must be deleted when we finalize the home page');
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => (FriendsListScreen())));
-              },*/
             ),
             backgroundColor: AppColors.white,
             body: Column(
               children: [
                 Container(
-                    height: 837.h, width: double.infinity, child: getFeed()),
+                    height: 837.h,
+                    width: double.infinity,
+                    child: getFeed()
+                ),
               ],
             ),
             floatingActionButton: SpeedDial(
@@ -118,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
         //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
-        print(uidList.toString());
+        //print(uidList.toString());
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,10 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   List<PostModel> posts = snapshot.data!.docs
                       .map((doc) => PostModel.fromJson(
                           doc.data() as Map<String, dynamic>)).toList();
-                  //sort the List in order to get chronological order
-                  //posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
-                  //we want to remove all posts not from today
+                  //filter to only get the last days list of posts.
                   List postsFiltered = _feedProvider.lastDayOnly(posts);
 
                   return Expanded(

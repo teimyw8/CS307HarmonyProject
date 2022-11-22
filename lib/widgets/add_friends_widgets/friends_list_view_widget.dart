@@ -42,13 +42,13 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
 
       myAuthProvider.updateCurrentUser();
       friendsList = myAuthProvider.currentUserModel?.friends;
-      debugPrint("friendslist = " + friendsList.toString());
+      //debugPrint("friendslist = " + friendsList.toString());
 
       if (friendsList!.contains(myAuthProvider.currentUserModel?.uid.toString())) {
         friendsList?.remove(myAuthProvider.currentUserModel?.uid.toString());
       }
       if (friendsList!.isEmpty) {
-        debugPrint('here');
+        //debugPrint('here');
         return Text(
           'No friends',
           style: AppTextStyles.headline(),
