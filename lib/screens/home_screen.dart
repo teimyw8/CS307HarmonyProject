@@ -199,7 +199,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
 
                                       mainDisplay(e),
-                                      handleBottomText(e)
+                                      handleBottomText(e),
+                                      IconButton(
+                                        icon: const Icon(Icons.thumb_up_alt_outlined),
+                                        onPressed: () {
+                                          print(e.uid);
+                                          print(e.dateTime);
+                                          _feedProvider.handleLikes(e.uid, e.dateTime);
+                                        },
+                                      )
                                     ],
                                   ),
                                 ))

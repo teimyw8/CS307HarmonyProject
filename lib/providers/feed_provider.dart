@@ -95,6 +95,10 @@ class FeedProvider with ChangeNotifier {
     }
   }
 
+  handleLikes(uid, dateTime) {
+    _feedService.getLikes(uid, dateTime);
+  }
+
   List listOfUsers() {
     List uidList = (_authProvider.currentUserModel?.friends)!;
     if (!uidList.contains(_authProvider.currentUserModel!.uid)) {

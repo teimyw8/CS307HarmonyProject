@@ -35,6 +35,37 @@ class FeedService {
     }
   }
 
+   getLikes(uid, dateTime) async {
+    try {
+      var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
+      print(userDoc.docs[0].get('text'));
+      // var userDocData = userDoc.data()!;
+      // if (!userDoc.exists) {
+      //   throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+      // }
+      // int p = 0;
+      // for (int i = 0; i < userDocData.length; i++) {
+      //   p = i + 1;
+      //   k = userDocData[p.toString()][0].toDate();
+      //   // print(k);
+      //   // if (k.month == DateTime.now().toUtc().month && k.day == DateTime.now().toUtc().day) {
+      //   //   break;
+      //   // }
+      //   if (k.month == DateTime
+      //       .now()
+      //       .month && k.day == DateTime
+      //       .now()
+      //       .day) {
+      //     break;
+      //   }
+      // }
+      // return k;
+    }
+    catch (e) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+  }
+
   Future<DateTime> getDailyActivityTime() async {
     try {
       var userDoc = await firebaseFirestore.collection('activity_times').doc(
