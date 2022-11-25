@@ -96,7 +96,14 @@ class FeedProvider with ChangeNotifier {
   }
 
   handleLikes(uid, dateTime) {
-    _feedService.getLikes(uid, dateTime);
+    _feedService.checkLiked(uid, dateTime);
+  }
+
+  bool isLiked(uid, dateTime) {
+    if (_feedService.checkLiked(uid,dateTime) == true) {
+      return true;
+    }
+    return false;
   }
 
   List listOfUsers() {
