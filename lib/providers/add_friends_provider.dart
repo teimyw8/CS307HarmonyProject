@@ -42,6 +42,16 @@ class AddFriendsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+/*  int getUserModelIndex(List<dynamic> userModels, String uid) {
+    for (int i = 0; i < userModels.length; i++) {
+      if (userModels[i] == uid) {
+        return i;
+      }
+    }
+    print("ERROR: uid didn't match to any UserModels in friends list.");
+    return -1;
+  }*/
+
   void sendFriendRequest({required String sendToUID}) {
     startLoading();
     try {
@@ -76,19 +86,25 @@ class AddFriendsProvider with ChangeNotifier {
     }
 
     //counts how many times a friends' friend appears
-    Map<UserModel, int> overlap = HashMap();
+    Map<String, int> overlap = HashMap();
+    friends = [];
     for (int i = 0; i < friendsLists.length; i++) {
       friends = friendsLists[i];
       for (int j = 0; j < friends.length; j++) {
         String friendUid = friends[j];
         if (currentUser.uid != friendUid &&
             !currentUser.friends.contains(friendUid)) {
-          var userDocData =
-              await _firestoreService.retrieveUserFromFirestore(uid: friendUid);
-          friend = UserModel.fromJson(userDocData!);
-          if (!friend.blockedUsers.contains(currentUser.uid)) {
-            overlap.update(friend, (value) => value++, ifAbsent: () => 1);
-          }
+/*          if (!overlap.containsKey(friendUid)) {
+            var userDocData =
+            await _firestoreService.retrieveUserFromFirestore(uid: friendUid);
+            friends.add(UserModel.fromJson(userDocData!));
+            if (!friends.last.blockedUsers.contains(currentUser.uid)) {
+              overlap.update(friendUid, (value) => value++, ifAbsent: () => 1);
+            }
+          } else {
+            overlap.update(friendUid, (value) => value++, ifAbsent: () => 1);
+          }*/
+          overlap.update(friendUid, (value) => ++value, ifAbsent: () => 1);
         }
       }
     }
@@ -103,9 +119,17 @@ class AddFriendsProvider with ChangeNotifier {
     int index;
     int count = 0;
     for (index = pairs.length - 1; index >= 0 && count < 30; index--) {
-      toReturn.add(pairs[index].friend);
+/*      int friendsInd = getUserModelIndex(friends, pairs[index].uid);
+      toReturn.add(friends[friendsInd]);
+      friends.removeAt(friendsInd);*/
+      var userDocData =
+      await _firestoreService.retrieveUserFromFirestore(uid: pairs[index].uid);
+      friend = UserModel.fromJson(userDocData!);
       print(pairs[index]);
-      count++;
+      if (!friend.blockedUsers.contains(currentUser.uid)) {
+        toReturn.add(friend);
+        count++;
+      }
     }
 
     return toReturn;
@@ -123,12 +147,12 @@ class AddFriendsProvider with ChangeNotifier {
 }
 
 class Pair {
-  UserModel friend;
+  String uid;
   int appearances;
-  Pair(this.friend, this.appearances);
+  Pair(this.uid, this.appearances);
 
   @override
   String toString() {
-    return '{ ${this.friend.username}, ${this.appearances} }';
+    return '{ ${this.uid}, ${this.appearances} }';
   }
 }
