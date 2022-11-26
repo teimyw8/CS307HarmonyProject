@@ -188,19 +188,16 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                         shrinkWrap: true,
                         itemCount: myAddFriendsProvider.suggestedFriendsList.length,
                         itemBuilder: (context, index) {
-                          return /*(users[index].uid ==
-                              myAuthProvider.currentUserModel!.uid || users[index].blockedUsers.contains(myAuthProvider.currentUserModel!.uid))
-                              ? Container()
-                              : SearchUserTileWidget(
-                            userModel: users[index],
+                          return SearchUserTileWidget(
+                            userModel: myAddFriendsProvider.suggestedFriendsList[index],
                             onSendFriendRequest: () =>
                                 myAddFriendsProvider
                                     .sendFriendRequest(
-                                    sendToUID: users[index].uid),
+                                    sendToUID: myAddFriendsProvider.suggestedFriendsList[index].uid),
                             isFriendRequestSent: myAuthProvider
                                 .currentUserModel!.friendRequestsSent
                                 .contains(users[index].uid),
-                          )*/ Container();
+                          );
                           // return Text(users[index].toString());
                         }),
             ),

@@ -23,12 +23,12 @@ class AddFriendsProvider with ChangeNotifier {
 
   bool isLoading = false;
   bool areVariablesInitialized = false;
-  void initializeVariables() {
+  Future<void> initializeVariables() async {
     areVariablesInitialized = false;
 
     searchBarEditingController = TextEditingController();
     isLoading = false;
-    suggestedFriendsList = getSuggestedFriends();
+    suggestedFriendsList = await getSuggestedFriends();
 
     areVariablesInitialized = true;
     notifyListeners();
@@ -76,36 +76,59 @@ class AddFriendsProvider with ChangeNotifier {
     }
 
     //counts how many times a friends' friend appears
-    Map<String, int> overlap = HashMap();
-    for(int i = 0; i < friendsLists.length; i++) {
+    Map<UserModel, int> overlap = HashMap();
+    for (int i = 0; i < friendsLists.length; i++) {
       friends = friendsLists[i];
       for (int j = 0; j < friends.length; j++) {
         String friendUid = friends[j];
-        if (currentUser.uid != friendUid && !currentUser.friends.contains(friendUid)) {
-          if (!overlap.containsKey(friendUid)) {
-            var userDocData =
-            await _firestoreService.retrieveUserFromFirestore(uid: friendUid);
-            friend = UserModel.fromJson(userDocData!);
-            if (!friend.blockedUsers.contains(currentUser.uid)) {
-              overlap.update(friendUid, (value) => value++, ifAbsent: () => 1);
-            }
-          } else {
-            overlap.update(friendUid, (value) => value++, ifAbsent: () => 1);
+        if (currentUser.uid != friendUid &&
+            !currentUser.friends.contains(friendUid)) {
+          var userDocData =
+              await _firestoreService.retrieveUserFromFirestore(uid: friendUid);
+          friend = UserModel.fromJson(userDocData!);
+          if (!friend.blockedUsers.contains(currentUser.uid)) {
+            overlap.update(friend, (value) => value++, ifAbsent: () => 1);
           }
         }
       }
     }
-    return [];
+
+    List<Pair> pairs = [];
+    overlap.forEach((key, value) {
+      pairs.add(Pair(key, value));
+    });
+    pairs.sort((a, b) => a.appearances.compareTo(b.appearances));
+
+    List<dynamic> toReturn = [];
+    int index;
+    int count = 0;
+    for (index = pairs.length - 1; index >= 0 && count < 30; index--) {
+      toReturn.add(pairs[index].friend);
+      print(pairs[index]);
+      count++;
+    }
+
+    return toReturn;
   }
 
   void startLoading() {
     isLoading = true;
     notifyListeners();
   }
+
   void stopLoading() {
     isLoading = false;
     notifyListeners();
   }
+}
 
+class Pair {
+  UserModel friend;
+  int appearances;
+  Pair(this.friend, this.appearances);
 
+  @override
+  String toString() {
+    return '{ ${this.friend.username}, ${this.appearances} }';
+  }
 }
