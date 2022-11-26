@@ -177,7 +177,11 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                                 users[index]
                                                     .blockedUsers
                                                     .contains(myAuthProvider
-                                                        .currentUserModel!.uid))
+                                                        .currentUserModel!
+                                                        .uid) ||
+                                                myAuthProvider
+                                                    .currentUserModel!.friends
+                                                    .contains(users[index].uid))
                                             ? Container()
                                             : SearchUserTileWidget(
                                                 userModel: users[index],
