@@ -196,7 +196,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                     sendToUID: myAddFriendsProvider.suggestedFriendsList[index].uid),
                             isFriendRequestSent: myAuthProvider
                                 .currentUserModel!.friendRequestsSent
-                                .contains(users[index].uid),
+                                .contains(myAddFriendsProvider.suggestedFriendsList[index].uid),
                           );
                           // return Text(users[index].toString());
                         }),
