@@ -126,6 +126,7 @@ class AddFriendsProvider with ChangeNotifier {
       await _firestoreService.retrieveUserFromFirestore(uid: pairs[index].uid);
       friend = UserModel.fromJson(userDocData!);
       print(pairs[index]);
+
       if (!friend.blockedUsers.contains(currentUser.uid)) {
         toReturn.add(friend);
         count++;

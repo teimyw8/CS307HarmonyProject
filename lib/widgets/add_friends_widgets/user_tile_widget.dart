@@ -51,14 +51,17 @@ class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "${widget.userModel.firstName} ${widget.userModel.lastName}",
-                    style: AppTextStyles.tileText(),
-                  ),
+                  if (widget.userModel.displayName)
+                    Text(
+                      "${widget.userModel.firstName} ${widget.userModel.lastName}",
+                      style: AppTextStyles.tileText(),
+                    ),
                   Text(
                     "@${widget.userModel.username}",
-                    style: AppTextStyles.tileText()
-                        .copyWith(color: AppColors.greyText, fontSize: 13.sp),
+                    style: (widget.userModel.displayName)
+                        ? AppTextStyles.tileText().copyWith(
+                            color: AppColors.greyText, fontSize: 13.sp)
+                        : AppTextStyles.tileText(),
                   ),
                 ],
               )
