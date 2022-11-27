@@ -96,13 +96,15 @@ class FeedProvider with ChangeNotifier {
   }
 
   handleLikes(uid, dateTime) {
-    _feedService.checkLiked(uid, dateTime);
+    // _feedService.checkLiked(uid, dateTime);
   }
 
-  bool isLiked(uid, dateTime) {
-    if (_feedService.checkLiked(uid,dateTime) == true) {
+  Future<bool> isLiked(uid, dateTime) async {
+    print(_feedService.checkLiked(uid,dateTime, _authProvider.currentUserModel!.uid));
+    if (await _feedService.checkLiked(uid,dateTime, _authProvider.currentUserModel!.uid) == true) {
       return true;
     }
+
     return false;
   }
 

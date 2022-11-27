@@ -201,16 +201,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       mainDisplay(e),
                                       handleBottomText(e),
                                       IconButton(
-                                        icon: _feedProvider.isLiked(e.uid, e.dateTime)?
-                                        Icon(Icons.thumb_up_alt_outlined)
-                                            :Icon(Icons.thumb_up),
+                                        icon: await _feedProvider.isLiked(e.uid,e.dateTime)? //this one checks in db if it is liked or not by this user to alter the icon
+                                        Icon(Icons.thumb_up)
+                                            :Icon(Icons.thumb_up_alt_outlined),
 
                                         onPressed: () {
-                                          print(e.uid);
-                                          print(e.dateTime);
-                                          _feedProvider.handleLikes(e.uid, e.dateTime);
+                                          _feedProvider.isLiked(e.uid, e.dateTime); //this one swaps from liked to unliked in the icon
+                                          // print(e.uid);
+                                          // print(e.dateTime);
+                                          // _feedProvider.handleLikes(e.uid, e.dateTime);
                                         },
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ))
@@ -252,4 +253,5 @@ class _HomeScreenState extends State<HomeScreen> {
           style: AppTextStyles.headline());
     }
   }
+
 }
