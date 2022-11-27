@@ -202,6 +202,10 @@ class FeedProvider with ChangeNotifier {
     }
   }
 
+  String getLikes(uid, dateTime) {
+    return "1";
+  }
+
 
 
 
