@@ -21,7 +21,6 @@ import '../models/user_model.dart';
 import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_loader.dart';
 import 'friends_list_screen.dart';
-import '../widgets/common_widgets/shared_song_list.dart';
 
 class SharedSongsScreen extends StatefulWidget {
   UserModel userModel;
