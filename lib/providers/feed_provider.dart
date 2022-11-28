@@ -100,7 +100,7 @@ class FeedProvider with ChangeNotifier {
   }
 
   Future<bool> isLiked(uid, dateTime) async {
-    print(_feedService.checkLiked(uid,dateTime, _authProvider.currentUserModel!.uid));
+    // print(_feedService.checkLiked(uid,dateTime, _authProvider.currentUserModel!.uid));
     if (await _feedService.checkLiked(uid,dateTime, _authProvider.currentUserModel!.uid) == true) {
       return true;
     }

@@ -134,13 +134,11 @@ class FeedService {
   Future<bool> checkLiked(uid, dateTime, curUserUid) async {
     var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
     var allLikes = userDoc.docs[0].get('likes');
-
-    if(allLikes[curUserUid] == null || allLikes[curUserUid] == false) {
-      return false;
+    print(allLikes);
+    if (allLikes.contains("wfe")) {
+      return true;
     }
-print('w');
-    return true;
+    return false;
   }
 
-  
 }

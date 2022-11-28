@@ -201,8 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       mainDisplay(e),
                                       handleBottomText(e),
                                       IconButton(
-                                        icon: //await _feedProvider.isLiked(e.uid,e.dateTime)
-                                          true? //this one checks in db if it is liked or not by this user to alter the icon
+                                        icon: await _feedProvider.isLiked(e.uid,e.dateTime) ? //this one checks in db if it is liked or not by this user to alter the icon
                                         Icon(Icons.thumb_up)
                                             :Icon(Icons.thumb_up_alt_outlined),
 
