@@ -201,18 +201,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       mainDisplay(e),
                                       handleBottomText(e),
                                       IconButton(
-                                        icon: await _feedProvider.isLiked(e.uid,e.dateTime) ? //this one checks in db if it is liked or not by this user to alter the icon
+                                        icon: true ?//await _feedProvider.isLiked(e.uid,e.dateTime) ? //USE FUTUREBUILDER
                                         Icon(Icons.thumb_up)
                                             :Icon(Icons.thumb_up_alt_outlined),
 
                                         onPressed: () {
-                                          _feedProvider.isLiked(e.uid, e.dateTime); //this one swaps from liked to unliked in the icon
-                                          // print(e.uid);
-                                          // print(e.dateTime);
-                                          // _feedProvider.handleLikes(e.uid, e.dateTime);
+                                          _feedProvider.handleLikes(e.uid, e.dateTime);
+                                          setState(() {});
                                         },
                                       ),
-                                      Text(_feedProvider.getLikes(e.uid, e.dateTime), style: TextStyle(fontSize: 20))
+                                      // Text(await _feedProvider.getLikes(e.uid, e.dateTime), style: TextStyle(fontSize: 20))
                                     ],
                                   ),
                                 ))

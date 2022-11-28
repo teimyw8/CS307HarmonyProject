@@ -96,12 +96,12 @@ class FeedProvider with ChangeNotifier {
   }
 
   handleLikes(uid, dateTime) {
-    // _feedService.checkLiked(uid, dateTime);
+    return _feedService.handleLiked(uid, dateTime, _authProvider.currentUserModel!.uid);
   }
 
   Future<bool> isLiked(uid, dateTime) async {
     // print(_feedService.checkLiked(uid,dateTime, _authProvider.currentUserModel!.uid));
-    if (await _feedService.checkLiked(uid,dateTime, _authProvider.currentUserModel!.uid) == true) {
+    if (await _feedService.isLiked(uid,dateTime, _authProvider.currentUserModel!.uid) == true) {
       return true;
     }
 
@@ -202,8 +202,8 @@ class FeedProvider with ChangeNotifier {
     }
   }
 
-  String getLikes(uid, dateTime) {
-    return "1";
+  Future<String> getLikes(uid, dateTime) {
+    return _feedService.countLikes(uid,dateTime);
   }
 
 

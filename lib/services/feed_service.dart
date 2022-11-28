@@ -35,31 +35,12 @@ class FeedService {
     }
   }
 
-   getLikes(uid, dateTime) async {
+   Future<String> countLikes(uid, dateTime) async {
     try {
       var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
-      print(userDoc.docs[0].get('text'));
-      // var userDocData = userDoc.data()!;
-      // if (!userDoc.exists) {
-      //   throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
-      // }
-      // int p = 0;
-      // for (int i = 0; i < userDocData.length; i++) {
-      //   p = i + 1;
-      //   k = userDocData[p.toString()][0].toDate();
-      //   // print(k);
-      //   // if (k.month == DateTime.now().toUtc().month && k.day == DateTime.now().toUtc().day) {
-      //   //   break;
-      //   // }
-      //   if (k.month == DateTime
-      //       .now()
-      //       .month && k.day == DateTime
-      //       .now()
-      //       .day) {
-      //     break;
-      //   }
-      // }
-      // return k;
+      var len =  userDoc.docs[0].get('likes').length;
+      return len.toString();
+
     }
     catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
@@ -131,14 +112,29 @@ class FeedService {
     }
   }
 
-  Future<bool> checkLiked(uid, dateTime, curUserUid) async {
+  Future<bool> isLiked(uid, dateTime, curUserUid) async {
     var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
     var allLikes = userDoc.docs[0].get('likes');
-    print(allLikes);
-    if (allLikes.contains("wfe")) {
+    if (allLikes.contains(curUserUid)) {
       return true;
     }
     return false;
+  }
+
+  handleLiked(uid, dateTime, curUserUid) async {
+    var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
+    if (await isLiked(uid, dateTime, curUserUid) == true) {
+        var l = userDoc.docs[0];
+        var e = await firebaseFirestore.collection("posts").doc(l.id);
+        e.update({"likes": FieldValue.arrayUnion([curUserUid]),
+        });
+    }
+    else {
+      var l = userDoc.docs[0];
+      var e = await firebaseFirestore.collection("posts").doc(l.id);
+      e.update({"likes": FieldValue.arrayRemove([curUserUid]),
+      });
+    }
   }
 
 }
