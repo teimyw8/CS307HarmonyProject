@@ -22,6 +22,7 @@ class FeedProvider with ChangeNotifier {
   AuthProvider _authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
@@ -30,7 +31,8 @@ class FeedProvider with ChangeNotifier {
 
   bool isLoading = false;
   bool areVariablesInitialized = false;
-  final formKey = GlobalKey<FormState>();
+  final formKeyPosts = GlobalKey<FormState>();
+  final formKeyDaily = GlobalKey<FormState>();
 
   ///this are for the regular posts
   TextEditingController? textEditingController =
@@ -56,11 +58,11 @@ class FeedProvider with ChangeNotifier {
 
   Future<void> createPost() async {
     _authProvider.startLoading();
-    formKey.currentState!.save();
+    formKeyPosts.currentState!.save();
 
     try {
       debugPrint(textEditingController!.text);
-      if (formKey.currentState!.validate()) {
+      if (formKeyPosts.currentState!.validate()) {
         await _feedService.addPostToFirestore(
             song: "",
             artist: "",
@@ -79,11 +81,11 @@ class FeedProvider with ChangeNotifier {
 
   Future<void> createDailyPost() async {
     _authProvider.startLoading();
-    formKey.currentState!.save();
+    formKeyDaily.currentState!.save();
 
     try {
       print(textEditingController!.text);
-      if (formKey.currentState!.validate()) {
+      if (formKeyDaily.currentState!.validate()) {
         await _feedService.addPostToFirestore(
             song: songTextEditingController!.text,
             artist: artistTextEditingController!.text,
