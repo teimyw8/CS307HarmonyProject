@@ -292,7 +292,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             : SizedBox()),
                         TextButton(
                           style: TextButton.styleFrom(
-                            textStyle: AppTextStyles.button(),
+                            backgroundColor: AppColors.grey50,
+                            animationDuration: 0.5.seconds,
                           ),
                           onPressed: () {
                             Navigator.push(
@@ -301,7 +302,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     builder: (context) => ListOfFriends(
                                         userModel: widget.userModel)));
                           },
-                          child: const Text('Friends'),
+                          child: const Text(
+                              'Friends',
+                            
+                          ),
                         ),
                         if(widget.userModel.uid != _editProfileProvider.currentUserModel!.uid)
                         ElevatedButton(

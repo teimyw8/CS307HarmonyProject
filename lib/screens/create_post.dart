@@ -105,6 +105,8 @@ class _CreatePostState extends State<CreatePost> {
                           const SnackBar(content: Text('Processing Data')),
                         );
                         _feedProvider.createPost();
+                        _feedProvider.spotifyTextEditingController.clear();
+                        _feedProvider.textEditingController?.clear();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
