@@ -38,8 +38,8 @@ class TopItemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("syncState\n");
-    print("$syncState\n");
+    //print("syncState\n");
+    //print("$syncState\n");
     if(syncState == 0){
       return Container();
     }
@@ -61,15 +61,16 @@ class TopItemList extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: 20,
               right: 20,
-              top: 10,
+              top: 20,
             ),
             child: Container(
               height: height -10,
               width: width,
-              color: const Color(0xDCDCDCCD),
+              //color: const Color(0xFF606266),
               child: Text(
                 title,
                 style: TextStyle(
+                color: AppColors.green,
                   fontSize: fontSize + 5,
                 ),
               ),
@@ -145,15 +146,16 @@ class TopItemList extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: 20,
               right: 20,
-              top: 10,
+              top: 20,
             ),
             child: Container(
               height: height,
               width: width,
-              color: const Color(0xDCDCDCCD),
+              //color: const Color(0xFF606266),
               child: Text(
                 title,
                 style: TextStyle(
+                  color: AppColors.green,
                   fontSize: fontSize + 5,
                 ),
               ),

@@ -195,8 +195,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           syncStates[2] = 1;
         });
         titles[0] = "Top Songs";
-        titles[1] = "Top Artists";
-        titles[2] = "Top Genres";
+        titles[1] = "Top Genres";
+        titles[2] = "Top Artists";
         setFriendsData();
       }
     } else {
@@ -229,8 +229,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
 
         titles[0] = "Top Songs";
-        titles[1] = "Top Artists";
-        titles[2] = "Top Genres";
+        titles[1] = "Top Genres";
+        titles[2] = "Top Artists";
         setArtists();
         setSongs();
       }
@@ -307,7 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ? Text(
                                 "@${widget.userModel.username}",
                                 style: AppTextStyles.subNote()
-                                    .apply(color: secondaryColor),
+                                    .apply(color: primaryColor),
                               )
                             : SizedBox()),
                         TextButton(
@@ -400,11 +400,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       iconBool: true,
                       height: 40,
                       syncState: syncStates[0],
+                      title: titles[0],
+                      item1: songs[0],
+                      item2: songs[1],
+                      item3: songs[2],
+
+
+
                     ),
                     //Genres
                     TopItemList(
                       fontSize: 15,
                       syncState: syncStates[1],
+                      title: titles[1],
+                      item1: genres[0],
+                      item2: genres[1],
+                      item3: genres[2],
                     ),
                     //Artists
                     TopItemList(
@@ -412,6 +423,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       iconBool: true,
                       height: 40,
                       syncState: syncStates[2],
+                      title: titles[2],
+                      item1: artists[0],
+                      item2: artists[1],
+                      item3: artists[2],
                     ),
                   ],
                 ),

@@ -1,14 +1,14 @@
 class TopArtistModel {
   String name;
-  String iconPic;
+ // String iconPic;
   List<dynamic> genres;
 
 
   TopArtistModel(
-      {required this.name, required this.genres, required this.iconPic});
+      {required this.name, required this.genres});
 
   factory TopArtistModel.fromJson(Map<String, dynamic> json) => TopArtistModel(
-      name: json["name"], genres: json["genres"], iconPic: json["iconPic"],
+      name: json["name"], genres: json["genres"],
   );
 
   Map<String, dynamic> toJson() => {
