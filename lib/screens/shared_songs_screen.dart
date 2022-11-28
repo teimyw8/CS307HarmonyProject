@@ -80,6 +80,7 @@ class SharedSongsScreenState extends State<SharedSongsScreen> {
     if (songs[0] == "") {
       setState(() {
         songs[0] = "You have no shared songs";
+        length = 1;
       });
     }
   }

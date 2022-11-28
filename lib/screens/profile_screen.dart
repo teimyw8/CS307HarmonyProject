@@ -219,9 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           syncStates[1] = 0;
           syncStates[2] = 0;
         });
-
       } else {
-
         setState(() {
           syncStates[0] = 1;
           syncStates[1] = 1;
@@ -310,8 +308,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .apply(color: primaryColor),
                               )
                             : SizedBox()),
-                        TextButton(
-                          style: TextButton.styleFrom(
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
                             textStyle: AppTextStyles.button(),
                           ),
                           onPressed: () {
@@ -326,6 +324,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (widget.userModel.uid !=
                             _editProfileProvider.currentUserModel!.uid)
                           ElevatedButton(
+                              style: TextButton.styleFrom(
+                                textStyle: AppTextStyles.button(),
+                              ),
                               onPressed: () {
                                 if (_editProfileProvider
                                         .currentUserModel!.spotifyToken ==
@@ -392,45 +393,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
 
               //Analytics
-                Column(
-                  children: [
-                    //Songs
-                    TopItemList(
-                      fontSize: 15,
-                      iconBool: true,
-                      height: 40,
-                      syncState: syncStates[0],
-                      title: titles[0],
-                      item1: songs[0],
-                      item2: songs[1],
-                      item3: songs[2],
-
-
-
-                    ),
-                    //Genres
-                    TopItemList(
-                      fontSize: 15,
-                      syncState: syncStates[1],
-                      title: titles[1],
-                      item1: genres[0],
-                      item2: genres[1],
-                      item3: genres[2],
-                    ),
-                    //Artists
-                    TopItemList(
-                      fontSize: 15,
-                      iconBool: true,
-                      height: 40,
-                      syncState: syncStates[2],
-                      title: titles[2],
-                      item1: artists[0],
-                      item2: artists[1],
-                      item3: artists[2],
-                    ),
-                  ],
-                ),
-
+              Column(
+                children: [
+                  //Songs
+                  TopItemList(
+                    fontSize: 15,
+                    iconBool: true,
+                    height: 40,
+                    syncState: syncStates[0],
+                    title: titles[0],
+                    item1: songs[0],
+                    item2: songs[1],
+                    item3: songs[2],
+                  ),
+                  //Genres
+                  TopItemList(
+                    fontSize: 15,
+                    syncState: syncStates[1],
+                    title: titles[1],
+                    item1: genres[0],
+                    item2: genres[1],
+                    item3: genres[2],
+                  ),
+                  //Artists
+                  TopItemList(
+                    fontSize: 15,
+                    iconBool: true,
+                    height: 40,
+                    syncState: syncStates[2],
+                    title: titles[2],
+                    item1: artists[0],
+                    item2: artists[1],
+                    item3: artists[2],
+                  ),
+                ],
+              ),
             ],
           ),
         ),
