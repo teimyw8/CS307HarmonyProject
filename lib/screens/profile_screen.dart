@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    SpotifyService.searchSongs();
+    SpotifyService.searchArtist("Lucki");
 
     super.initState();
 
