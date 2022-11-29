@@ -131,8 +131,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Text("Loading");
                   }
 
-                  if (snapshot.data == null) {
-                    return Text('Waiting');
+                  if (snapshot.data.isBlank != 0) {
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                              'Nothing to see here....',
+                              style: AppTextStyles.headline(),
+                          ),
+                        ],
+                    );
                   }
 
                   List<PostModel> posts = snapshot.data!.docs
