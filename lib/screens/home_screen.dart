@@ -191,9 +191,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       ),
-
-                                      mainDisplay(e),
-                                      handleBottomText(e)
+                                      //PostDisplaySpotify(e),
+                                      DailyDisplay(e),
+                                      DailyBottomText(e)
                                     ],
                                   ),
                                 ))
@@ -206,7 +206,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  mainDisplay(e) {
+  // PostDisplaySpotify(e) {
+  //   return Container(
+  //     child: ListTile(
+  //       title: Text(e.text),
+  //     ),
+  //   );
+  // }
+
+  DailyDisplay(e) {
     if (e.isPost == "false") {
       return Container(
         child: ListTile(
@@ -225,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  handleBottomText(e) {
+  DailyBottomText(e) {
     if (e.isPost == 'false') {
       return Text(e.text,
           style: AppTextStyles.headline());
