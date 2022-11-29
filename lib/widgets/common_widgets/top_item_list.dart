@@ -23,7 +23,7 @@ class TopItemList extends StatelessWidget {
   final String item2;
   final String item3;
 
-  TopItemList({
+  TopItemList( {
     Key? key,
     this.fontSize = 10.0,
     this.title = "title",
@@ -86,7 +86,10 @@ class TopItemList extends StatelessWidget {
                 color: const Color(0xDCDCDCCD),
                 child: Row(
                   children: [
-                    Icon(Icons.access_time, size: height),
+                    CircleAvatar(
+                      radius: height,
+                      backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"),
+                    ),
                     Text(
                       item1,
                       style: TextStyle(
@@ -106,7 +109,10 @@ class TopItemList extends StatelessWidget {
               color: const Color(0xDCDCDCCD),
               child: Row(
                 children: [
-                  Icon(Icons.access_time, size: height),
+                  CircleAvatar(
+                    radius: height,
+                    backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"),
+                  ),
                   Text(
                     item2,
                     style: TextStyle(
@@ -126,7 +132,10 @@ class TopItemList extends StatelessWidget {
               color: const Color(0xDCDCDCCD),
               child: Row(
                 children: [
-                  Icon(Icons.access_time, size: height),
+                  CircleAvatar(
+                    radius: height,
+                    backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"),
+                  ),
                   Text(
                     item3,
                     style: TextStyle(
