@@ -117,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
         //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
-        print(uidList.toString());
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

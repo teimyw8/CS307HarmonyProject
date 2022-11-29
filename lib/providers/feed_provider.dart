@@ -54,7 +54,6 @@ class FeedProvider with ChangeNotifier {
     formKey.currentState!.save();
 
     try {
-      debugPrint(textEditingController!.text);
       if (formKey.currentState!.validate()) {
         await _feedService.addPostToFirestore(
             song: "",
@@ -67,7 +66,6 @@ class FeedProvider with ChangeNotifier {
         );
       }
     } on FirestoreException catch (e) {
-      debugPrint('failed addPostoFirestore');
       showErrorDialog(e.cause);
     }
   }
@@ -90,7 +88,6 @@ class FeedProvider with ChangeNotifier {
         );
       }
     } on FirestoreException catch (e) {
-      debugPrint('failed addPostoFirestore');
       showErrorDialog(e.cause);
     }
   }
