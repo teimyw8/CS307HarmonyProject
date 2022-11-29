@@ -63,7 +63,8 @@ class FeedProvider with ChangeNotifier {
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
-            isPost: "true"
+            isPost: "true",
+            likes: []
         );
       }
     } on FirestoreException catch (e) {
@@ -86,7 +87,8 @@ class FeedProvider with ChangeNotifier {
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
-            isPost: "false"
+            isPost: "false",
+            likes: []
         );
       }
     } on FirestoreException catch (e) {
