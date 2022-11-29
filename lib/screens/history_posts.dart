@@ -75,6 +75,7 @@ class _HistoryPostsState extends State<HistoryPosts> {
                 stream: _firestoreService.firebaseFirestore
                     .collection('posts')
                     .where('uid', isEqualTo: myAuthProvider.currentUserModel?.uid)
+                    .orderBy("dateTime", descending: true)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
