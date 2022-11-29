@@ -4,6 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/user_model.dart';
+import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+
+import '../../providers/auth_provider.dart';
+import '../../providers/friends_list_provider.dart';
+import '../../screens/profile_screen.dart';
 
 class SearchUserTileWidget extends StatefulWidget {
   UserModel userModel;
@@ -20,6 +26,11 @@ class SearchUserTileWidget extends StatefulWidget {
 }
 
 class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
+  final FriendsListProvider _friendsListProvider =
+      Provider.of<FriendsListProvider>(Get.context!, listen: false);
+  AuthProvider authProvider =
+      Provider.of<AuthProvider>(Get.context!, listen: false);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -33,29 +44,31 @@ class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              (widget.userModel.profilepic == null || widget.userModel.profilepic == "")
-              ? Container(
-                height: 50.h,
-                child: CachedNetworkImage(
-                  imageUrl:
-                      "https://www.pngkey.com/png/detail/115-1150152_default-profile-picture-avatar-png-green.png",
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                          value: downloadProgress.progress),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-              )
-              : Container(
-                height: 50.h,
-                child: CachedNetworkImage(
-                  imageUrl:
-                  widget.userModel.profilepic,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                          value: downloadProgress.progress),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-              ),
+              (widget.userModel.profilepic == null ||
+                      widget.userModel.profilepic == "")
+                  ? Container(
+                      height: 50.h,
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            "https://www.pngkey.com/png/detail/115-1150152_default-profile-picture-avatar-png-green.png",
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                    )
+                  : Container(
+                      height: 50.h,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.userModel.profilepic,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                    ),
               SizedBox(
                 width: 10.w,
               ),
@@ -79,16 +92,44 @@ class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
               )
             ],
           ),
-          GestureDetector(
-              onTap: () {
-                if (!widget.isFriendRequestSent) {
-                  widget.onSendFriendRequest();
-                }
-              },
-              child: Icon(
-                widget.isFriendRequestSent ? Icons.check : Icons.add,
-                size: 30.h,
-              ))
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  if (widget.userModel.blockedUsers
+                      .contains(authProvider.currentUserModel!.uid)) return;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileScreen(
+                              userModel: widget.userModel,
+                              isPrivate: _friendsListProvider
+                                  .isPrivateUser(widget.userModel))));
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: StadiumBorder(),
+                  primary: AppColors.green,
+                ),
+                child: Text(
+                  'Profile',
+                  style: TextStyle(color: AppColors.white),
+                ),
+              ),
+              SizedBox(
+                width: 10.w,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    if (!widget.isFriendRequestSent) {
+                      widget.onSendFriendRequest();
+                    }
+                  },
+                  child: Icon(
+                    widget.isFriendRequestSent ? Icons.check : Icons.add,
+                    size: 30.h,
+                  ))
+            ],
+          ),
         ],
       ),
     );
