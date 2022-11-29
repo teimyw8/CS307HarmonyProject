@@ -397,9 +397,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : SizedBox()),
                           Row(
                             children: [
-                              TextButton(
+                              if (widget.userModel.uid
+                                  .compareTo(_editProfileProvider.getUID()) != 0)
+                              ElevatedButton(
                                 style: TextButton.styleFrom(
                                   textStyle: AppTextStyles.button(),
+                                  primary: AppColors.white,
+                                  backgroundColor: Colors.blue,
+                                  onSurface: AppColors.grey40
                                 ),
                                 onPressed: () {
                                   Navigator.push(
@@ -411,8 +416,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: const Text('Friends'),
                               ),
                               if (widget.userModel.uid
-                                      .compareTo(_editProfileProvider.getUID()) ==
-                                  0)
+                                      .compareTo(_editProfileProvider.getUID()) == 0)
                                 ElevatedButton.icon(
                                     onPressed: _shareContent,
                                     icon: const Icon(Icons.share),
