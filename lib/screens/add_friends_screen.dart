@@ -219,29 +219,40 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                       if (!myAddFriendsProvider.searchBarEditingController!.text
                           .trim()
                           .isNotEmpty)
-                        Expanded(
-                          child: ListView.builder(
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: myAddFriendsProvider
-                                  .suggestedFriendsList.length,
-                              itemBuilder: (context, index) {
-                                return SearchUserTileWidget(
-                                  userModel: myAddFriendsProvider
-                                      .suggestedFriendsList[index],
-                                  onSendFriendRequest: () =>
-                                      myAddFriendsProvider.sendFriendRequest(
-                                          sendToUID: myAddFriendsProvider
-                                              .suggestedFriendsList[index].uid),
-                                  isFriendRequestSent: myAuthProvider
-                                      .currentUserModel!.friendRequestsSent
-                                      .contains(myAddFriendsProvider
-                                          .suggestedFriendsList[index].uid),
-                                );
-                                // return Text(users[index].toString());
-                              }),
-                        ),
+                        (myAddFriendsProvider.suggestedFriendsList.length > 0)
+                            ? Expanded(
+                                child: ListView.builder(
+                                    padding: EdgeInsets.symmetric(vertical: 15),
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: myAddFriendsProvider
+                                        .suggestedFriendsList.length,
+                                    itemBuilder: (context, index) {
+                                      return SearchUserTileWidget(
+                                        userModel: myAddFriendsProvider
+                                            .suggestedFriendsList[index],
+                                        onSendFriendRequest: () =>
+                                            myAddFriendsProvider
+                                                .sendFriendRequest(
+                                                    sendToUID:
+                                                        myAddFriendsProvider
+                                                            .suggestedFriendsList[
+                                                                index]
+                                                            .uid),
+                                        isFriendRequestSent: myAuthProvider
+                                            .currentUserModel!
+                                            .friendRequestsSent
+                                            .contains(myAddFriendsProvider
+                                                .suggestedFriendsList[index]
+                                                .uid),
+                                      );
+                                      // return Text(users[index].toString());
+                                    }),
+                              )
+                            : Text(
+                                'No recommendations',
+                                style: AppTextStyles.subNote(),
+                              ),
                     ]),
                   )
                 : Container();
