@@ -33,11 +33,23 @@ class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              (widget.userModel.profilepic == null || widget.userModel.profilepic == "")
+              ? Container(
                 height: 50.h,
                 child: CachedNetworkImage(
                   imageUrl:
-                      "https://thumbs.dreamstime.com/b/male-avatar-icon-flat-style-male-user-icon-cartoon-man-avatar-hipster-vector-stock-91462914.jpg",
+                      "https://www.pngkey.com/png/detail/115-1150152_default-profile-picture-avatar-png-green.png",
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                          value: downloadProgress.progress),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+              )
+              : Container(
+                height: 50.h,
+                child: CachedNetworkImage(
+                  imageUrl:
+                  widget.userModel.profilepic,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                           value: downloadProgress.progress),
@@ -51,14 +63,17 @@ class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "${widget.userModel.firstName} ${widget.userModel.lastName}",
-                    style: AppTextStyles.tileText(),
-                  ),
+                  if (widget.userModel.displayName)
+                    Text(
+                      "${widget.userModel.firstName} ${widget.userModel.lastName}",
+                      style: AppTextStyles.tileText(),
+                    ),
                   Text(
                     "@${widget.userModel.username}",
-                    style: AppTextStyles.tileText()
-                        .copyWith(color: AppColors.greyText, fontSize: 13.sp),
+                    style: (widget.userModel.displayName)
+                        ? AppTextStyles.tileText().copyWith(
+                            color: AppColors.greyText, fontSize: 13.sp)
+                        : AppTextStyles.tileText(),
                   ),
                 ],
               )

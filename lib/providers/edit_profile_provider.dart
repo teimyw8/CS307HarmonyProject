@@ -57,7 +57,6 @@ class EditProfileProvider with ChangeNotifier {
     try {
       var udc =  _firestoreService.firebaseFirestore.collection('users').doc(temp.uid);
       await udc.update({"profilepic": url});
-      print(udc);
       currentUserModel = temp;
       _authProvider.currentUserModel = temp;
       _authProvider.updateProfilePic(url);
@@ -65,7 +64,6 @@ class EditProfileProvider with ChangeNotifier {
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
-    print(temp);
   }
 
   bool meetsUsernameReqs(String username) {
@@ -171,7 +169,6 @@ class EditProfileProvider with ChangeNotifier {
   ///This function is triggered to send a confirmation email to a new email a user is trying to switch to.
   Future<void> validateNewEmail(String email) async {
     if (formKey.currentState!.validate()) {
-      print('validate was true');
       _authProvider.startLoading();
       try {
         await _authService.firebaseAuth.currentUser
@@ -185,7 +182,6 @@ class EditProfileProvider with ChangeNotifier {
       } on AuthException catch (e) {
         _authProvider.showErrorDialog(e.cause);
       } catch (e) {
-        print(e.toString());
         _authProvider.showErrorDialog(e.toString());
       }
       _authProvider.stopLoading();
@@ -235,10 +231,7 @@ class EditProfileProvider with ChangeNotifier {
 
   void updateDisplayName(String? value) {
     value ??= "";
-    print(currentUserModel.toString());
-    print(getUserProfilePic());
     UserModel temp = currentUserModel!;
-    print(temp.toString());
     bool val = false;
     if (value == 'my real name') {
       val = true;
@@ -246,7 +239,6 @@ class EditProfileProvider with ChangeNotifier {
       val = false;
     }
     temp.displayName = val;
-    print(temp.toString());
     try {
       setUserInfo(UserModel.fromJson(temp.toJson()));
     } on FirestoreException catch (e) {
@@ -257,7 +249,6 @@ class EditProfileProvider with ChangeNotifier {
   void updateDisplayProfileTo(String? value) {
     value ??= "";
     UserModel temp = currentUserModel!;
-    print(temp.toString());
     int val = -1;
     if (value == SecurityConstants.PROFILEPAGESETTINGS[SecurityConstants.NOONE]) {
       val = SecurityConstants.NOONE;
@@ -267,7 +258,6 @@ class EditProfileProvider with ChangeNotifier {
       val = SecurityConstants.EVERYONE;
     }
     temp.displayProfileTo = val;
-    print(temp.toString());
     try {
       setUserInfo(UserModel.fromJson(temp.toJson()));
     } on FirestoreException catch (e) {

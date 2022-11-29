@@ -57,131 +57,205 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
               AddFriendsProvider myAddFriendsProvider,
               AuthProvider myAuthProvider,
               Widget? child) {
-            return (myAddFriendsProvider.areVariablesInitialized) ? Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Column(children: [
-                SizedBox(height: 10.h),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.person_add,
-                      size: 40.h,
-                    ),
-                    SizedBox(
-                      width: 5.w,
-                    ),
-                    Text(
-                      "Add Friends",
-                      style: AppTextStyles.headline().copyWith(fontSize: 32.sp),
-                    )
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Icon(
-                      Icons.search,
-                      size: 40.h,
-                    ),
-                    Expanded(
-                      child: CustomTextField(
-                        hintText: "Search...",
-                        controller:
-                            myAddFriendsProvider.searchBarEditingController,
-                        onChanged: (value) {
-                          //setState(() {});
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                if (myAddFriendsProvider.searchBarEditingController!.text
-                    .trim()
-                    .isNotEmpty)
-                  StreamBuilder(
-                    stream: _firestoreService.firebaseFirestore
-                        .collection('users')
-                        .where(
-                          'username',
-                          isGreaterThanOrEqualTo: myAddFriendsProvider
-                              .searchBarEditingController!.text
-                              .trim(),
-                          isLessThan: myAddFriendsProvider
-                                  .searchBarEditingController!.text
-                                  .trim()
-                                  .substring(
-                                      0,
-                                      myAddFriendsProvider
-                                              .searchBarEditingController!.text
-                                              .trim()
-                                              .length -
-                                          1) +
-                              String.fromCharCode(myAddFriendsProvider
-                                      .searchBarEditingController!.text
-                                      .trim()
-                                      .codeUnitAt(myAddFriendsProvider
-                                              .searchBarEditingController!.text
-                                              .trim()
-                                              .length -
-                                          1) +
-                                  1),
-                        )
-                        .snapshots(), //myAddFriendsProvider.currentSnapshot,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) // TODO: show alert
-                        return Text('Something went wrong');
-
-                      // if (snapshot.connectionState == ConnectionState.waiting)
-                      //   return Expanded(child: CustomAppLoader());
-
-                      var len = snapshot.data?.docs.length ?? 0;
-                      if (len == 0) {
-                        return Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Text("No users found",
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.grey))
-                            ],
+            return (myAddFriendsProvider.areVariablesInitialized)
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Column(children: [
+                      SizedBox(height: 10.h),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.person_add,
+                            size: 40.h,
                           ),
-                        );
-                      }
+                          SizedBox(
+                            width: 5.w,
+                          ),
+                          Text(
+                            "Add Friends",
+                            style: AppTextStyles.headline()
+                                .copyWith(fontSize: 32.sp),
+                          )
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.search,
+                            size: 40.h,
+                          ),
+                          Expanded(
+                            child: CustomTextField(
+                              hintText: "Search...",
+                              controller: myAddFriendsProvider
+                                  .searchBarEditingController,
+                              onChanged: (value) {
+                                //setState(() {});
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      (myAddFriendsProvider.searchBarEditingController!.text
+                              .trim()
+                              .isNotEmpty)
+                          ? StreamBuilder(
+                              stream: _firestoreService.firebaseFirestore
+                                  .collection('users')
+                                  .where(
+                                    'username',
+                                    isGreaterThanOrEqualTo: myAddFriendsProvider
+                                        .searchBarEditingController!.text
+                                        .trim(),
+                                    isLessThan: myAddFriendsProvider
+                                            .searchBarEditingController!.text
+                                            .trim()
+                                            .substring(
+                                                0,
+                                                myAddFriendsProvider
+                                                        .searchBarEditingController!
+                                                        .text
+                                                        .trim()
+                                                        .length -
+                                                    1) +
+                                        String.fromCharCode(myAddFriendsProvider
+                                                .searchBarEditingController!
+                                                .text
+                                                .trim()
+                                                .codeUnitAt(myAddFriendsProvider
+                                                        .searchBarEditingController!
+                                                        .text
+                                                        .trim()
+                                                        .length -
+                                                    1) +
+                                            1),
+                                  )
+                                  .snapshots(), //myAddFriendsProvider.currentSnapshot,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasError) // TODO: show alert
+                                  return Text('Something went wrong');
 
-                      List<UserModel> users = snapshot.data!.docs
-                          .map((doc) => UserModel.fromJson(
-                              doc.data() as Map<String, dynamic>))
-                          .toList();
+                                // if (snapshot.connectionState == ConnectionState.waiting)
+                                //   return Expanded(child: CustomAppLoader());
 
-                      return Expanded(
-                        child: ListView.builder(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: users.length,
-                            itemBuilder: (context, index) {
-                              return (users[index].uid ==
-                                      myAuthProvider.currentUserModel!.uid || users[index].blockedUsers.contains(myAuthProvider.currentUserModel!.uid))
-                                  ? Container()
-                                  : SearchUserTileWidget(
-                                      userModel: users[index],
-                                      onSendFriendRequest: () =>
-                                          myAddFriendsProvider
-                                              .sendFriendRequest(
-                                                  sendToUID: users[index].uid),
-                                      isFriendRequestSent: myAuthProvider
-                                          .currentUserModel!.friendRequestsSent
-                                          .contains(users[index].uid),
-                                    );
-                              // return Text(users[index].toString());
-                            }),
-                      );
-                    },
-                  ),
-              ]),
-            ) : Container();
+                                var len = snapshot.data?.docs.length ?? 0;
+                                if (len == 0) {
+                                  return Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Text("No users found",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.grey))
+                                      ],
+                                    ),
+                                  );
+                                }
+
+                                List<UserModel> users = snapshot.data!.docs
+                                    .map((doc) => UserModel.fromJson(
+                                        doc.data() as Map<String, dynamic>))
+                                    .toList();
+
+                                return Expanded(
+                                  child: ListView.builder(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 15),
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: users.length,
+                                      itemBuilder: (context, index) {
+                                        return (users[index].uid ==
+                                                    myAuthProvider
+                                                        .currentUserModel!
+                                                        .uid ||
+                                                users[index]
+                                                    .blockedUsers
+                                                    .contains(myAuthProvider
+                                                        .currentUserModel!
+                                                        .uid) ||
+                                                myAuthProvider
+                                                    .currentUserModel!.friends
+                                                    .contains(users[index].uid))
+                                            ? Container()
+                                            : SearchUserTileWidget(
+                                                userModel: users[index],
+                                                onSendFriendRequest: () =>
+                                                    myAddFriendsProvider
+                                                        .sendFriendRequest(
+                                                            sendToUID:
+                                                                users[index]
+                                                                    .uid),
+                                                isFriendRequestSent:
+                                                    myAuthProvider
+                                                        .currentUserModel!
+                                                        .friendRequestsSent
+                                                        .contains(
+                                                            users[index].uid),
+                                              );
+                                        // return Text(users[index].toString());
+                                      }),
+                                );
+                              },
+                            )
+                          : SizedBox(height: 10.h),
+                      if (!myAddFriendsProvider.searchBarEditingController!.text
+                          .trim()
+                          .isNotEmpty)
+                        Text(
+                          'Recommended',
+                          style: AppTextStyles.largeTitle()
+                              .copyWith(fontSize: 24.sp),
+                        ),
+                      if (!myAddFriendsProvider.searchBarEditingController!.text
+                          .trim()
+                          .isNotEmpty)
+                        SizedBox(height: 5.h),
+                      if (!myAddFriendsProvider.searchBarEditingController!.text
+                          .trim()
+                          .isNotEmpty)
+                        (myAddFriendsProvider.suggestedFriendsList.length > 0)
+                            ? Expanded(
+                                child: ListView.builder(
+                                    padding: EdgeInsets.symmetric(vertical: 15),
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: myAddFriendsProvider
+                                        .suggestedFriendsList.length,
+                                    itemBuilder: (context, index) {
+                                      return SearchUserTileWidget(
+                                        userModel: myAddFriendsProvider
+                                            .suggestedFriendsList[index],
+                                        onSendFriendRequest: () =>
+                                            myAddFriendsProvider
+                                                .sendFriendRequest(
+                                                    sendToUID:
+                                                        myAddFriendsProvider
+                                                            .suggestedFriendsList[
+                                                                index]
+                                                            .uid),
+                                        isFriendRequestSent: myAuthProvider
+                                            .currentUserModel!
+                                            .friendRequestsSent
+                                            .contains(myAddFriendsProvider
+                                                .suggestedFriendsList[index]
+                                                .uid),
+                                      );
+                                      // return Text(users[index].toString());
+                                    }),
+                              )
+                            : Text(
+                                'No recommendations',
+                                style: AppTextStyles.subNote(),
+                              ),
+                    ]),
+                  )
+                : Container();
           },
         ),
       ),
