@@ -166,6 +166,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+    SpotifyService.searchSongs();
+
     super.initState();
 
     if (_editProfileProvider.currentUserModel!.uid != widget.userModel.uid) {

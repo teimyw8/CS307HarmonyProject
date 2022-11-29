@@ -68,6 +68,25 @@ class SpotifyService {
 
   }
 
+  static Future<List<TopArtistModel>> searchSongs() async{
+
+    final test = await http.get(Uri.parse(PathService.requestAuthorization(clientID, 'http://localhost:8080','good12')));
+
+
+    final response = await http.get(Uri.parse('https://api.spotify.com/v1/search?q=lucki&type=artist'),
+        headers: {'Authorization': 'Bearer $secret'}
+    );
+
+
+
+    List testList = jsonDecode(response.body)['artists']['items'];
+    List<TopArtistModel> artistList = testList.map( (i) => TopArtistModel.fromJson(i)).toList();
+
+    return artistList;
+
+
+  }
+
 
   static desyncSpotify () async {
     return await SpotifySdk.disconnect();
