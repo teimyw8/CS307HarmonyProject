@@ -10,6 +10,7 @@ class PostModel {
   String isPost;
   String album;
   String playlist;
+  String image;
 
   PostModel(
       {
@@ -22,6 +23,7 @@ class PostModel {
         required this.isPost,
         required this.album,
         required this.playlist,
+        required this.image,
       });
 
 
@@ -35,6 +37,7 @@ class PostModel {
     isPost: json["isPost"] ?? "",
     album: json["album"] ?? "",
     playlist: json["playlist"] ?? "",
+    image: json ["image"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {
@@ -47,5 +50,6 @@ class PostModel {
     "isPost": isPost,
     "album": album,
     "playlist": playlist,
+    "image": image,
   };
 }

@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final FeedProvider _feedProvider =
       Provider.of<FeedProvider>(Get.context!, listen: false);
 
-
   @override
   void initState() {
     Future.delayed(Duration(seconds: 0), () {
@@ -41,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     super.initState();
     _feedProvider.scheduleNotification();
-
   }
 
   @override
@@ -65,15 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
             body: Column(
               children: [
                 Container(
-                    height: 837.h,
-                    width: double.infinity,
-                    child: getFeed()
-                ),
+                    height: 837.h, width: double.infinity, child: getFeed()),
               ],
             ),
             floatingActionButton: SpeedDial(
-              buttonSize: Size(75.0,75.0),
-              childrenButtonSize: Size(75.0,75.0),
+              buttonSize: Size(75.0, 75.0),
+              childrenButtonSize: Size(75.0, 75.0),
               animatedIcon: AnimatedIcons.menu_close,
               animatedIconTheme: IconThemeData(size: 25.0),
               children: [
@@ -81,19 +76,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Icon(Icons.add, color: Colors.green),
                     label: "Create Post",
                     onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CreatePost()))
-                ),
+                        MaterialPageRoute(builder: (context) => CreatePost()))),
                 SpeedDialChild(
                     child: Icon(Icons.music_note, color: Colors.green),
                     label: "Share Daily Song",
-                    onTap: () => _feedProvider.activityTimeCheck(context)
-                ),
+                    onTap: () => _feedProvider.activityTimeCheck(context)),
                 SpeedDialChild(
                     child: Icon(Icons.chat, color: Colors.green),
                     label: "Chats",
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AllChatsScreen()))
-                ),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AllChatsScreen()))),
               ],
             ),
           ),
@@ -106,11 +100,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer2<FeedProvider, AuthProvider>(
       builder: (BuildContext context, FeedProvider myFeedProvider,
           AuthProvider myAuthProvider, Widget? child) {
-
         //add your UID to friends list locally for the querry
         //limitation of firestore querying, this is a work around
         List<dynamic> uidList = myFeedProvider.listOfUsers();
-
 
         //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
         //print(uidList.toString());
@@ -126,7 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
-
                   if (snapshot.hasError) {
                     return Text('Something went wrong');
                   }
@@ -140,7 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   List<PostModel> posts = snapshot.data!.docs
                       .map((doc) => PostModel.fromJson(
-                          doc.data() as Map<String, dynamic>)).toList();
+                          doc.data() as Map<String, dynamic>))
+                      .toList();
 
                   //filter to only get the last days list of posts.
                   List postsFiltered = _feedProvider.lastDayOnly(posts);
@@ -171,19 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           Spacer(),
                                           Text(
-                                            "${DateTime.parse(e.dateTime
-                                                        .toDate()
-                                                        .toString())
-                                                    .year}-${DateTime.parse(e.dateTime
-                                                        .toDate()
-                                                        .toString())
-                                                    .month}-${DateTime.parse(e.dateTime
-                                                        .toDate()
-                                                        .toString())
-                                                    .day}  ${DateTime.parse(e.dateTime
-                                                        .toDate()
-                                                        .toString())
-                                                    .hour}:${DateTime.parse(e.dateTime.toDate().toString()).minute}",
+                                            "${DateTime.parse(e.dateTime.toDate().toString()).year}-${DateTime.parse(e.dateTime.toDate().toString()).month}-${DateTime.parse(e.dateTime.toDate().toString()).day}  ${DateTime.parse(e.dateTime.toDate().toString()).hour}:${DateTime.parse(e.dateTime.toDate().toString()).minute}",
                                             style: AppTextStyles.footNote(),
                                           ),
                                           SizedBox(
@@ -191,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       ),
-                                      //PostDisplaySpotify(e),
+                                      PostDisplaySpotify(e),
                                       DailyDisplay(e),
                                       DailyBottomText(e)
                                     ],
@@ -206,13 +186,46 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // PostDisplaySpotify(e) {
-  //   return Container(
-  //     child: ListTile(
-  //       title: Text(e.text),
-  //     ),
-  //   );
-  // }
+  PostDisplaySpotify(e) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const SizedBox(width: 5,),
+        CircleAvatar(
+          radius: 50,
+          child: CircleAvatar(
+            radius: 45,
+            backgroundImage: NetworkImage(e.image),
+          ),
+        ),
+        const SizedBox(width: 20,),
+        ///This is for when the post is for a song
+        if (!(e.song == null))
+          Column(
+            children: [
+          Text(
+              e.song,
+            style: AppTextStyles.headline(),
+          ),
+          Text(
+              e.artist,
+            style: AppTextStyles.footNote(),
+          ),
+            ],
+          ),
+
+        ///This is for when the post is for a playlist
+        if (!(e.playlist == null))
+          Column(
+            children: [
+              Text(e.playlist),
+            ]
+          )
+
+        ///This is
+      ],
+    );
+  }
 
   DailyDisplay(e) {
     if (e.isPost == "false") {
@@ -223,8 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
           subtitle: Text(e.artist),
         ),
       );
-    }
-    else {
+    } else {
       return Container(
         child: ListTile(
           title: Text(e.text),
@@ -235,10 +247,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   DailyBottomText(e) {
     if (e.isPost == 'false') {
-      return Text(e.text,
-          style: AppTextStyles.headline());
-    }
-    else {
+      return Text(e.text, style: AppTextStyles.headline());
+    } else {
       return const SizedBox.shrink();
     }
   }
