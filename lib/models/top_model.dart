@@ -1,5 +1,6 @@
 class TopArtistModel {
   String name;
+ // String iconPic;
   List<dynamic> genres;
 
 
@@ -7,7 +8,7 @@ class TopArtistModel {
       {required this.name, required this.genres});
 
   factory TopArtistModel.fromJson(Map<String, dynamic> json) => TopArtistModel(
-      name: json["name"], genres: json["genres"]
+      genres: json["genres"], name: json["name"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -16,7 +17,7 @@ class TopArtistModel {
 
   @override
   String toString() {
-    return 'UserModel{name: $name';
+    return 'UserModel{name: $name}';
   }
 }
 

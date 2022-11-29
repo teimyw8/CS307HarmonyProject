@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/screens/list_of_friends_simple.dart';
 import 'package:harmony_app/screens/shared_songs_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+import 'package:harmony_app/widgets/common_widgets/top_item_list.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/models/top_model.dart';
@@ -43,7 +44,15 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
+
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
+
+  //Design constants
+  TextStyle primaryTextStyle = TextStyle();
+  TextStyle secondaryTextStyle = TextStyle();
+
+  Color primaryColor = AppColors.white;
+  Color secondaryColor = AppColors.green;
 
   List<String> songs = List.filled(5, '');
 
@@ -52,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> genres = List.filled(5, '');
 
   List<String> titles = List.filled(3, '');
+
 
   GlobalKey _globalKey = new GlobalKey();
 
@@ -76,6 +86,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return Uint8List(0);
     }
   }
+
+
+  List<int> syncStates = List.filled(3, 0);
+  bool synced = false;
+
 
   void setFriendsData() async {
     var dataTemp = await _firestoreService.retrieveUserFromFirestore(
@@ -187,9 +202,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+    SpotifyService.searchArtist("Lucki");
+
     super.initState();
-    print(widget.userModel.uid);
-    print('\n$_editProfileProvider.currentUserModel!.uid');
+
+
+
     if (_editProfileProvider.currentUserModel!.uid != widget.userModel.uid) {
       if (widget.userModel.spotifyToken == "") {
         for (String s in songs) {
@@ -205,12 +223,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
+
         titles[0] =
             "Your friend must have their spotify account synced to see their analytics";
+
+        setState(() {
+          syncStates[0] = 2;
+          syncStates[1] = 0;
+          syncStates[2] = 0;
+        });
+
       } else {
+        setState(() {
+          syncStates[0] = 1;
+          syncStates[1] = 1;
+          syncStates[2] = 1;
+        });
         titles[0] = "Top Songs";
-        titles[1] = "Top Artists";
-        titles[2] = "Top Genres";
+        titles[1] = "Top Genres";
+        titles[2] = "Top Artists";
         setFriendsData();
       }
     } else {
@@ -228,12 +259,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
+
         titles[0] =
             "You must have your spotify account synced to see your analytics";
+
+        setState(() {
+          syncStates[0] = 2;
+          syncStates[1] = 0;
+          syncStates[2] = 0;
+        });
+
       } else {
+        setState(() {
+          syncStates[0] = 1;
+          syncStates[1] = 1;
+          syncStates[2] = 1;
+        });
+
         titles[0] = "Top Songs";
-        titles[1] = "Top Artists";
-        titles[2] = "Top Genres";
+        titles[1] = "Top Genres";
+        titles[2] = "Top Artists";
         setArtists();
         setSongs();
       }
@@ -285,7 +330,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           needSettings: true,
           needFriendsList: true,
         ),
-        backgroundColor: AppColors.green,
+        backgroundColor: secondaryColor,
         body: Column(
           children: [
             Row(
@@ -310,6 +355,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     } else {
+<<<<<<< HEAD
       return RepaintBoundary(
         key: _globalKey,
         child: Scaffold(
@@ -700,6 +746,167 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
+=======
+      return Scaffold(
+        appBar: CustomAppBar(
+          title: "Harmony",
+          needBackArrow: true,
+          needSettings: true,
+          needFriendsList: true,
+        ),
+        backgroundColor: primaryColor,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                color: secondaryColor,
+                padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 15.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ProfilePicture(
+                      name: '',
+                      radius: 65,
+                      fontsize: 21,
+                      img: _editProfileProvider.getUserProfilePic(),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _editProfileProvider.getPrimaryName(widget.userModel),
+                          style: AppTextStyles.profileNames(),
+                        ),
+                        (widget.userModel.displayName
+                            ? Text(
+                                "@${widget.userModel.username}",
+                                style: AppTextStyles.subNote()
+                                    .apply(color: primaryColor),
+                              )
+                            : SizedBox()),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            textStyle: AppTextStyles.button(),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ListOfFriends(
+                                        userModel: widget.userModel)));
+                          },
+                          child: const Text('Friends'),
+                        ),
+                        if (widget.userModel.uid !=
+                            _editProfileProvider.currentUserModel!.uid)
+                          ElevatedButton(
+                              style: TextButton.styleFrom(
+                                textStyle: AppTextStyles.button(),
+                              ),
+                              onPressed: () {
+                                if (_editProfileProvider
+                                        .currentUserModel!.spotifyToken ==
+                                    "") {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text(
+                                          'You are not synced with spotify'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else if (widget.userModel.spotifyToken ==
+                                    "") {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: const Text(
+                                          'Your friend is not synced with spotify'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'Cancel'),
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  Get.to(() => SharedSongsScreen(
+                                      userModel: widget.userModel));
+                                }
+                              },
+                              child: Text("Shared Songs"))
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              //Bio
+              Container(
+                color: secondaryColor,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 17,
+                    right: 17,
+                    bottom: 20,
+                  ),
+                  child: Text(
+                    widget.userModel.bio,
+                    style: AppTextStyles.tileText().apply(color: primaryColor),
+                  ),
+                ),
+              ),
+
+              //Analytics
+              Column(
+                children: [
+                  //Songs
+                  TopItemList(
+                    fontSize: 15,
+                    iconBool: true,
+                    height: 40,
+                    syncState: syncStates[0],
+                    title: titles[0],
+                    item1: songs[0],
+                    item2: songs[1],
+                    item3: songs[2],
+                  ),
+                  //Genres
+                  TopItemList(
+                    fontSize: 15,
+                    syncState: syncStates[1],
+                    title: titles[1],
+                    item1: genres[0],
+                    item2: genres[1],
+                    item3: genres[2],
+                  ),
+                  //Artists
+                  TopItemList(
+                    fontSize: 15,
+                    iconBool: true,
+                    height: 40,
+                    syncState: syncStates[2],
+                    title: titles[2],
+                    item1: artists[0],
+                    item2: artists[1],
+                    item3: artists[2],
+                  ),
+                ],
+              ),
+            ],
+>>>>>>> thomasSprint3
           ),
         ),
       );
