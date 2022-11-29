@@ -48,7 +48,7 @@ class ChatProvider with ChangeNotifier {
 
   ///this function sends a new message to chat
   Future<void> sendMessageToChat(
-      {required String message, required ChatModel chatModel}) async {
+      {required String message, required ChatModel chatModel, required String tokenId}) async {
     try {
       // first checking if the chat exists.
       // If it doesn't, then we create it first and then send the message
@@ -65,7 +65,7 @@ class ChatProvider with ChangeNotifier {
           isRead: false,
           fromUserId: authProvider.currentUserModel!.uid);
       _chatService.sendMessageToChat(
-          messageModel: messageModel, chatId: chatModel.chatId);
+          messageModel: messageModel, chatId: chatModel.chatId, tokenId: tokenId);
     } on FirestoreException catch (e) {
       _showErrorDialog(e.cause);
     } catch (e) {
@@ -93,12 +93,10 @@ class ChatProvider with ChangeNotifier {
       ChatModel chatModel;
       if (doesChatExist) {
         var chatDoc = await _chatService.fetchChatFromFirestore(uid1: uid1, uid2: uid2);
-        print("chatDoc: $chatDoc");
         chatModel = ChatModel.fromJson(chatDoc);
       } else {
         chatModel = ChatModel(uid1: uid1, uid2: uid2, chatId: "${dateTimeToEST(DateTime.now()).microsecondsSinceEpoch}", lastMessage: "", lastEdited: dateTimeToEST(DateTime.now()), lastMessageSentFromUID: "");
       }
-      print("doesChatExist: $doesChatExist");
       var partnerUserModelDoc = await _firestoreService.retrieveUserFromFirestore(uid: (authProvider.currentUserModel!.uid == uid1) ? uid2 : uid1);
       UserModel partnerUserModel = UserModel.fromJson(partnerUserModelDoc);
       Get.to(() => ChatScreen(doesChatExistInFirestore: doesChatExist, chatModel: chatModel, partnerUserModel: partnerUserModel, myUserModel: authProvider.currentUserModel!));

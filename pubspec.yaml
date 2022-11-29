@@ -39,6 +39,7 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   share_plus: ^6.2.0
   cloud_functions: ^3.3.9
+  firebase_messaging: ^13.1.0
 
 
 dev_dependencies:

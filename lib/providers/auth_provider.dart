@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -124,6 +127,17 @@ class AuthProvider with ChangeNotifier {
             password: loginPasswordTextEditingController!.text);
         var userDocData = await _firestoreService.retrieveUserFromFirestore(
             uid: _authService.firebaseAuth.currentUser!.uid);
+
+        //getting device token
+        await FirebaseMessaging.instance.requestPermission();
+        FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+        String tokenId = await _firebaseMessaging.getToken() ?? "";
+        print(tokenId);
+        await _firestoreService.updateTokenIdInFirestore(
+            uid: _authService.firebaseAuth.currentUser!.uid,
+            tokenId: tokenId
+        );
+
         currentUserModel = UserModel.fromJson(userDocData!);
         goToHomeScreen();
       } on AuthException catch (e) {
@@ -151,6 +165,11 @@ class AuthProvider with ChangeNotifier {
             password: signUpPasswordTextEditingController!.text);
         String uid = _authService.firebaseAuth.currentUser?.uid ?? "";
         if (uid != "") {
+          //getting device token
+          await FirebaseMessaging.instance.requestPermission();
+          FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+          String tokenId = await _firebaseMessaging.getToken() ?? "";
+          print(tokenId);
           await _firestoreService.addUserToFirestore(
               uid: uid,
               email: signUpEmailTextEditingController!.text,
@@ -162,7 +181,8 @@ class AuthProvider with ChangeNotifier {
               displayName: false,
               friends: [],
               password: signUpPasswordTextEditingController!.text,
-              profilepic: "hello"
+              profilepic: "hello",
+              tokenId: tokenId
           );
 
           var userDocData =

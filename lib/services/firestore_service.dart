@@ -31,11 +31,12 @@ class FirestoreService {
       required String lastName,
       required String userName,
       required String bio,
-        required int displayProfileTo,
-        required bool displayName,
+      required int displayProfileTo,
+      required bool displayName,
       required List<String> friends,
       required String password,
-        required String profilepic}) async {
+      required String profilepic,
+      required String tokenId}) async {
     try {
       var usersDocRef = firebaseFirestore.collection('users').doc(uid);
       await usersDocRef.set({
@@ -49,12 +50,31 @@ class FirestoreService {
         "friends": [],
         "uid": uid,
         "password": password,
-        "profilepic": "https://firebasestorage.googleapis.com/v0/b/harmony-5a238.appspot.com/o/image_picker5045730262574777780.jpg?alt=media&token=86fc8768-63f9-4fb8-b98c-055e08fe5fd7"
+        "profilepic":
+            "https://firebasestorage.googleapis.com/v0/b/harmony-5a238.appspot.com/o/image_picker5045730262574777780.jpg?alt=media&token=86fc8768-63f9-4fb8-b98c-055e08fe5fd7",
+        "tokenId": tokenId
       });
     } catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
+
+  ///this function updates tokenId in Firestore
+  ///THROWS AuthException IF FAILS
+  Future<void> updateTokenIdInFirestore(
+      {required String uid,
+        required String tokenId}) async {
+    try {
+      var usersDocRef = firebaseFirestore.collection('users').doc(uid);
+      await usersDocRef.update({
+        "uid": uid,
+        "tokenId": tokenId,
+      });
+    } catch (e) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+  }
+
 
   ///this function checks if a user with this username already exists
   Future<void> doesUsernameAlreadyExist({
@@ -232,12 +252,15 @@ class FirestoreService {
   }
 
   ///this function blocks a specified user in Firestore
-  Future<void> blockUser({required String currentUserUID, required String blockUID}) async {
+  Future<void> blockUser(
+      {required String currentUserUID, required String blockUID}) async {
     try {
-      var currentUserDoc = await firebaseFirestore.collection('users').doc(currentUserUID).get();
-      List<dynamic> blockedUsers = currentUserDoc.data()!.containsKey('blockedUsers')
-          ? currentUserDoc.data()!['blockedUsers']
-          : [];
+      var currentUserDoc =
+          await firebaseFirestore.collection('users').doc(currentUserUID).get();
+      List<dynamic> blockedUsers =
+          currentUserDoc.data()!.containsKey('blockedUsers')
+              ? currentUserDoc.data()!['blockedUsers']
+              : [];
       blockedUsers.add(blockUID);
       await firebaseFirestore
           .collection("users")
@@ -249,12 +272,15 @@ class FirestoreService {
   }
 
   ///this function blocks a specified user in Firestore
-  Future<void> unblockUser({required String currentUserUID, required String blockUID}) async {
+  Future<void> unblockUser(
+      {required String currentUserUID, required String blockUID}) async {
     try {
-      var currentUserDoc = await firebaseFirestore.collection('users').doc(currentUserUID).get();
-      List<dynamic> blockedUsers = currentUserDoc.data()!.containsKey('blockedUsers')
-          ? currentUserDoc.data()!['blockedUsers']
-          : [];
+      var currentUserDoc =
+          await firebaseFirestore.collection('users').doc(currentUserUID).get();
+      List<dynamic> blockedUsers =
+          currentUserDoc.data()!.containsKey('blockedUsers')
+              ? currentUserDoc.data()!['blockedUsers']
+              : [];
       if (blockedUsers.contains(blockUID)) {
         blockedUsers.remove(blockUID);
       }

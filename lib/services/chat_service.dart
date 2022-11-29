@@ -98,7 +98,7 @@ class ChatService {
 
   ///this function sends a chat message to Firebase Firestore chat
   Future<void> sendMessageToChat(
-      {required String chatId, required MessageModel messageModel}) async {
+      {required String chatId, required MessageModel messageModel, required String tokenId}) async {
     try {
       var messagesReference = await firebaseFirestore
           .collection('chats')
@@ -112,12 +112,14 @@ class ChatService {
       });
       AuthProvider authProvider =
           Provider.of<AuthProvider>(Get.context!, listen: false);
+      //sending a notification to the other user with the contents of this message
+      //TODO update tokenId
       sendNotificationToOtherUser(
           body: messageModel.message,
           title:
               "${authProvider.currentUserModel!.firstName} ${authProvider.currentUserModel!.lastName}",
           dateTime: messageModel.dateSent,
-          token: "");
+          tokenId: tokenId);
     } catch (e) {
       //throw FirestoreException("Could not send a message!");
     }
@@ -127,13 +129,13 @@ class ChatService {
       {required String body,
       required String title,
       required DateTime dateTime,
-      required String token}) async {
+      required String tokenId}) async {
     try {
       HttpsCallable callable = FirebaseFunctions.instance
           .httpsCallable('sendNewMessageNotification');
       final response = await callable.call({
         'body': body,
-        'token': token,
+        'token': tokenId,
         'title': title,
         'timestamp': DateFormat('MM ddd – kk:mm').format(dateTime)
       });
