@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostModel {
-  String uid;
+  String uid;   //user ID that created the post
   String username;
   String text;
-  Timestamp dateTime;
+  Timestamp dateTime;    //date of creation post
   String artist;
   String song;
   String isPost;
-
+  String album;
+  String playlist;
 
   PostModel(
       {
@@ -18,7 +19,9 @@ class PostModel {
         required this.dateTime,
         required this.artist,
         required this.song,
-        required this.isPost
+        required this.isPost,
+        required this.album,
+        required this.playlist,
       });
 
 
@@ -29,7 +32,9 @@ class PostModel {
     dateTime: json["dateTime"],
     song: json["song"] ?? "",
     artist: json["artist"] ?? "",
-    isPost: json["isPost"] ?? ""
+    isPost: json["isPost"] ?? "",
+    album: json["album"] ?? "",
+    playlist: json["playlist"] ?? "",
   );
 
   Map<String, dynamic> toJson() => {
@@ -39,6 +44,8 @@ class PostModel {
     "dateTime": dateTime,
     "song": song,
     "artist": artist,
-    "isPost": isPost
+    "isPost": isPost,
+    "album": album,
+    "playlist": playlist,
   };
 }

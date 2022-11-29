@@ -39,7 +39,7 @@ class _CreatePostState extends State<DailyActivity> {
       body: Column(
         children: [
           Form(
-            key: _feedProvider.formKey,
+            key: _feedProvider.formKeyDaily,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -84,7 +84,7 @@ class _CreatePostState extends State<DailyActivity> {
                         primary: AppColors.green
                     ),
                     onPressed: () {
-                      if(_feedProvider.formKey.currentState!.validate()) {
+                      if(_feedProvider.formKeyDaily.currentState!.validate()) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
