@@ -135,10 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+                        children: const [
                           Text(
                               'Nothing to see here....',
-                              style: AppTextStyles.headline(),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'Inter'),
                           ),
                         ],
                     );
