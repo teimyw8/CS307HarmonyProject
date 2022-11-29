@@ -38,10 +38,10 @@ class _HistoryPostsState extends State<HistoryPosts> {
             Scaffold(
               appBar: CustomAppBar(
                 title: "Harmony",
-                needBackArrow: false,
-                needAvatar: true,
-                needSettings: true,
-                needFriendsList: true,
+                needBackArrow: true,
+                needAvatar: false,
+                needSettings: false,
+                needFriendsList: false,
               ),
               backgroundColor: AppColors.white,
               body: Column(

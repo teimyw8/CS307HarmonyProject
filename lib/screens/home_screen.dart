@@ -74,23 +74,23 @@ class _HomeScreenState extends State<HomeScreen> {
               animatedIconTheme: IconThemeData(size: 25.0),
               children: [
                 SpeedDialChild(
-                    child: Icon(Icons.add, color: Colors.green),
+                    child: const Icon(Icons.add, color: Colors.green),
                     label: "Create Post",
                     onTap: () => Navigator.push(context,
                         MaterialPageRoute(builder: (context) => CreatePost()))),
                 SpeedDialChild(
-                    child: Icon(Icons.music_note, color: Colors.green),
+                    child: const Icon(Icons.music_note, color: Colors.green),
                     label: "Share Daily Song",
                     onTap: () => _feedProvider.activityTimeCheck(context)),
                 SpeedDialChild(
-                    child: Icon(Icons.chat, color: Colors.green),
+                    child: const Icon(Icons.chat, color: Colors.green),
                     label: "Chats",
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => AllChatsScreen()))),
                 SpeedDialChild(
-                    child: Icon(Icons.history, color: Colors.green),
+                    child: const Icon(Icons.history, color: Colors.green),
                     label: "Your Posts",
                     onTap: () => Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HistoryPosts()))),
