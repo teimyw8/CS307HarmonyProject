@@ -181,7 +181,8 @@ class AuthProvider with ChangeNotifier {
               friends: [],
               password: signUpPasswordTextEditingController!.text,
               profilepic: "hello",
-              tokenId: tokenId
+              tokenId: tokenId,
+              dailyNotifStatus: true
           );
 
           var userDocData =
