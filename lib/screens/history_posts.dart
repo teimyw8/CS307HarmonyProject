@@ -38,10 +38,10 @@ class _HistoryPostsState extends State<HistoryPosts> {
             Scaffold(
               appBar: CustomAppBar(
                 title: "Harmony",
-                needBackArrow: false,
-                needAvatar: true,
-                needSettings: true,
-                needFriendsList: true,
+                needBackArrow: true,
+                needAvatar: false,
+                needSettings: false,
+                needFriendsList: false,
               ),
               backgroundColor: AppColors.white,
               body: Column(
@@ -75,6 +75,7 @@ class _HistoryPostsState extends State<HistoryPosts> {
                 stream: _firestoreService.firebaseFirestore
                     .collection('posts')
                     .where('uid', isEqualTo: myAuthProvider.currentUserModel?.uid)
+                    .orderBy("dateTime", descending: true)
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
