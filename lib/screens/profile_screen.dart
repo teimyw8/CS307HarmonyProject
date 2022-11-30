@@ -28,8 +28,6 @@ import '../services/firestore_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
-
-
 class ProfileScreen extends StatefulWidget {
   UserModel userModel;
   bool isPrivate;
@@ -62,6 +60,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   List<String> titles = List.filled(3, '');
 
+  List<String> songImages = List.filled(3, '');
+
+  List<String> songArtists = List.filled(3, '');
+
+  List<String> artistImages = List.filled(3, '');
 
   GlobalKey _globalKey = new GlobalKey();
 
@@ -69,11 +72,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       print('inside');
       print(_globalKey.currentContext);
-      RenderRepaintBoundary boundary =
-      _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
+          await image.toByteData(format: ui.ImageByteFormat.png);
       print('byte data: $byteData');
       var pngBytes = byteData?.buffer.asUint8List();
       var bs64 = base64Encode(pngBytes!);
@@ -87,10 +90,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-
   List<int> syncStates = List.filled(3, 0);
   bool synced = false;
-
 
   void setFriendsData() async {
     var dataTemp = await _firestoreService.retrieveUserFromFirestore(
@@ -134,16 +135,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void setSongs() async {
     List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
 
+    print("test" + topSongs[0].artist);
     int length;
 
-    if (topSongs.length < 5) {
+    if (topSongs.length < 3) {
       length = topSongs.length;
     } else {
-      length = 5;
+      length = 3;
     }
     setState(() {
       for (int i = 0; i < length; i++) {
         songs[i] = topSongs[i].name;
+      }
+      for (int i = 0; i < length; i++) {
+        songImages[i] = topSongs[i].image;
+      }
+      for (int i = 0; i < length; i++) {
+        songArtists[i] = topSongs[i].artist;
       }
     });
 
@@ -154,6 +162,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void setArtists() async {
+    List<TopArtistModel> test = await SpotifyService.searchArtist("Lucki");
+
+    print("Artist: " + test[0].name);
+
     List<TopArtistModel> topArtists = await SpotifyService.getTopArtists();
     Set<String> genreSet = Set();
     int found = 0;
@@ -167,10 +179,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     int length;
 
-    if (genreSet.length < 5) {
+    if (genreSet.length < 3) {
       length = topArtists.length;
     } else {
-      length = 5;
+      length = 3;
     }
     setState(() {
       for (int i = 0; i < length; i++) {
@@ -178,14 +190,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     });
 
-    if (topArtists.length < 5) {
+    if (topArtists.length < 3) {
       length = topArtists.length;
     } else {
-      length = 5;
+      length = 3;
     }
     setState(() {
       for (int i = 0; i < length; i++) {
         artists[i] = topArtists[i].name;
+      }
+      for (int i = 0; i < length; i++) {
+        artistImages[i] = topArtists[i].toJson()['images'][0]['url'];
       }
     });
 
@@ -202,11 +217,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    SpotifyService.searchArtist("Lucki");
+
 
     super.initState();
-
-
 
     if (_editProfileProvider.currentUserModel!.uid != widget.userModel.uid) {
       if (widget.userModel.spotifyToken == "") {
@@ -223,7 +236,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
-
         titles[0] =
             "Your friend must have their spotify account synced to see their analytics";
 
@@ -232,7 +244,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           syncStates[1] = 0;
           syncStates[2] = 0;
         });
-
       } else {
         setState(() {
           syncStates[0] = 1;
@@ -259,7 +270,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           s = "";
         }
 
-
         titles[0] =
             "You must have your spotify account synced to see your analytics";
 
@@ -268,7 +278,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           syncStates[1] = 0;
           syncStates[2] = 0;
         });
-
       } else {
         setState(() {
           syncStates[0] = 1;
@@ -285,12 +294,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  static Future<File> imageToFile({required String imageName, required String ext, required Uint8List pngBytes}) async {
+  static Future<File> imageToFile(
+      {required String imageName,
+      required String ext,
+      required Uint8List pngBytes}) async {
     //var bytes = await rootBundle.load('assets/$imageName.$ext');
     String tempPath = (await getTemporaryDirectory()).path;
     File file = File('$tempPath/profile.png');
-    await file.writeAsBytes(
-        pngBytes);
+    await file.writeAsBytes(pngBytes);
     return file;
   }
 
@@ -321,6 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     print(widget.userModel.profilepic);
+
     if (widget.isPrivate) {
       return Scaffold(
         key: _globalKey,
@@ -364,14 +376,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             needSettings: true,
             needFriendsList: true,
           ),
-          backgroundColor: AppColors.green,
+          backgroundColor: AppColors.white,
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
                   color: AppColors.green,
-                  padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 15.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 0.w, vertical: 15.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -385,7 +398,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _editProfileProvider.getPrimaryName(widget.userModel),
+                            _editProfileProvider
+                                .getPrimaryName(widget.userModel),
                             style: AppTextStyles.profileNames(),
                           ),
                           (widget.userModel.displayName
@@ -397,7 +411,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : SizedBox()),
                           Row(
                             children: [
-                              TextButton(
+                              ElevatedButton(
                                 style: TextButton.styleFrom(
                                   textStyle: AppTextStyles.button(),
                                 ),
@@ -410,8 +424,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 child: const Text('Friends'),
                               ),
-                              if (widget.userModel.uid
-                                      .compareTo(_editProfileProvider.getUID()) ==
+                              if (widget.userModel.uid.compareTo(
+                                      _editProfileProvider.getUID()) ==
                                   0)
                                 ElevatedButton.icon(
                                     onPressed: _shareContent,
@@ -432,8 +446,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             'Your friend is not synced with spotify'),
                                         actions: <Widget>[
                                           TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, 'Cancel'),
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
                                             child: const Text('Ok'),
                                           ),
                                         ],
@@ -450,8 +464,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             'You are not synced with spotify'),
                                         actions: <Widget>[
                                           TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, 'Cancel'),
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
                                             child: const Text('Ok'),
                                           ),
                                         ],
@@ -468,15 +482,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 17, vertical: 0),
-                  child: Text(
-                    widget.userModel.bio,
-                    style: AppTextStyles.tileText().apply(color: AppColors.white),
+                Container(
+                  color: AppColors.green,
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 17,
+                      right: 17,
+                      bottom: 20,
+                    ),
+                    child: Text(
+                      widget.userModel.bio,
+                      style: AppTextStyles.tileText()
+                          .apply(color: AppColors.white),
+                    ),
                   ),
                 ),
-
                 //Analytics
                 Column(
                   children: [
@@ -490,15 +511,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       item1: songs[0],
                       item2: songs[1],
                       item3: songs[2],
+                      image1: songImages[0],
+                      image2: songImages[1],
+                      image3: songImages[2],
+                      artist1: " - " + songArtists[0],
+                      artist2: " - " + songArtists[1],
+                      artist3: " - " + songArtists[2],
+
                     ),
                     //Genres
                     TopItemList(
-                      fontSize: 15,
+                      fontSize: 18,
                       syncState: syncStates[1],
                       title: titles[1],
-                      item1: genres[0],
-                      item2: genres[1],
-                      item3: genres[2],
+                      item1: "  " + genres[0],
+                      item2: "  " + genres[1],
+                      item3: "  " + genres[2],
                     ),
                     //Artists
                     TopItemList(
@@ -510,10 +538,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       item1: artists[0],
                       item2: artists[1],
                       item3: artists[2],
+                      image1: artistImages[0],
+                      image2: artistImages[1],
+                      image3: artistImages[2],
                     ),
                   ],
                 ),
-
               ],
             ),
           ),

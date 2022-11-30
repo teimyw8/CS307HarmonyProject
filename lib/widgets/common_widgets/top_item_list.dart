@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/screens/edit_profile_screen.dart';
@@ -23,7 +25,15 @@ class TopItemList extends StatelessWidget {
   final String item2;
   final String item3;
 
-  TopItemList( {
+  final String image1;
+  final String image2;
+  final String image3;
+
+  final String artist1;
+  final String artist2;
+  final String artist3;
+
+  TopItemList({
     Key? key,
     this.fontSize = 10.0,
     this.title = "title",
@@ -34,28 +44,33 @@ class TopItemList extends StatelessWidget {
     this.width = 400,
     this.iconBool = false,
     this.syncState = 1,
+    this.image1 = "",
+    this.image2 = "",
+    this.image3 = "",
+    this.artist1 = "",
+    this.artist2 = "",
+    this.artist3 = "",
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    //print("syncState\n");
-    //print("$syncState\n");
-    if(syncState == 0){
+
+    if (syncState == 0) {
       return Container();
     }
-    if(syncState == 2){
+    if (syncState == 2) {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        child:  Text(
+        child: Text(
           "Spotify must be synced to see analytics",
           style: TextStyle(fontSize: 20),
         ),
       );
     }
     if (iconBool) {
+      print("RAHHHHH" + image1);
       return Column(
         children: [
-
           //Title
           Padding(
             padding: const EdgeInsets.only(
@@ -64,13 +79,13 @@ class TopItemList extends StatelessWidget {
               top: 20,
             ),
             child: Container(
-              height: height -10,
+              height: height - 10,
               width: width,
               //color: const Color(0xFF606266),
               child: Text(
                 title,
                 style: TextStyle(
-                color: AppColors.green,
+                  color: AppColors.green,
                   fontSize: fontSize + 5,
                 ),
               ),
@@ -86,14 +101,20 @@ class TopItemList extends StatelessWidget {
                 color: const Color(0xDCDCDCCD),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: height,
-                      backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
+                    Image(
+                      height: height,
+                      image: NetworkImage(
+                          image1),
                     ),
-                    Text(
-                      item1,
-                      style: TextStyle(
-                        fontSize: fontSize,
+                    Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
+                    Expanded(
+                      child: Text(
+                        item1 + artist1,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          overflow: TextOverflow.clip,
+                        ),
                       ),
                     ),
                   ],
@@ -104,46 +125,58 @@ class TopItemList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             child: Container(
-              height: height,
-              width: width,
-              color: const Color(0xDCDCDCCD),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: height,
-                    backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"),
-                  ),
-                  Text(
-                    item2,
-                    style: TextStyle(
-                      fontSize: fontSize,
+                height: height,
+                width: width,
+                color: const Color(0xDCDCDCCD),
+                child: Row(
+                  children: [
+                    Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
+                    Image(
+                      height: height,
+                      image: NetworkImage(
+                          image2 ),
                     ),
-                  ),
-                ],
-              )),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
+                    Expanded(
+                      child: Text(
+                        item2 + artist2,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          overflow: TextOverflow.clip,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
           ),
 
           //Item 3
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             child: Container(
-              height: height,
-              width: width,
-              color: const Color(0xDCDCDCCD),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: height,
-                    backgroundImage: NetworkImage("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"),
-                  ),
-                  Text(
-                    item3,
-                    style: TextStyle(
-                      fontSize: fontSize,
+                height: height,
+                width: width,
+                color: const Color(0xDCDCDCCD),
+                child: Row(
+                  children: [
+                    Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
+                    Image(
+                      height: height,
+                      image: NetworkImage(
+                          image3),
                     ),
-                  ),
-                ],
-              )),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
+                    Expanded(
+                      child: Text(
+                        item3 + artist3,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
           ),
         ],
       );
@@ -182,6 +215,7 @@ class TopItemList extends StatelessWidget {
                   item1,
                   style: TextStyle(
                     fontSize: fontSize,
+                    overflow: TextOverflow.clip,
                   ),
                 )),
           ),
@@ -193,10 +227,13 @@ class TopItemList extends StatelessWidget {
               height: height,
               width: width,
               color: const Color(0xDCDCDCCD),
-              child: Text(
-                item2,
-                style: TextStyle(
-                  fontSize: fontSize,
+              child: Expanded(
+                child: Text(
+                  item2,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    overflow: TextOverflow.clip,
+                  ),
                 ),
               ),
             ),
@@ -209,10 +246,13 @@ class TopItemList extends StatelessWidget {
               height: height,
               width: width,
               color: const Color(0xDCDCDCCD),
-              child: Text(
-                item3,
-                style: TextStyle(
-                  fontSize: fontSize,
+              child: Expanded(
+                child: Text(
+                  item3,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    overflow: TextOverflow.clip,
+                  ),
                 ),
               ),
             ),

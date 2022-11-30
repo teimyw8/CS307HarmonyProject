@@ -37,7 +37,10 @@ class SpotifyService {
 
   }
   static Future<List<TopArtistModel>> getTopArtists() async{
-    secret = await SpotifySdk.getAccessToken(clientId: clientID, redirectUrl: 'http://localhost:8080', scope: "user-top-read");
+    if(secret == ""){
+      secret = await SpotifySdk.getAccessToken(clientId: clientID, redirectUrl: 'http://localhost:8080', scope: "user-top-read");
+    }
+
 
     final test = await http.get(Uri.parse(PathService.requestAuthorization(clientID, 'http://localhost:8080','good12')));
 
@@ -49,12 +52,18 @@ class SpotifyService {
     List testList = jsonDecode(response.body)['items'];
     List<TopArtistModel> artistList = testList.map( (i) => TopArtistModel.fromJson(i)).toList();
 
+    //print("RAHHHH" + artistList[0].image);
+
     return artistList;
 
 
   }
 
   static Future<List<TopSongModel>> getTopSongs() async{
+    if(secret == ""){
+      secret = await SpotifySdk.getAccessToken(clientId: clientID, redirectUrl: 'http://localhost:8080', scope: "user-top-read");
+    }
+    print("Secret: " + secret);
     final test = await http.get(Uri.parse(PathService.requestAuthorization(clientID, 'http://localhost:8080','good12')));
 
 
@@ -62,8 +71,11 @@ class SpotifyService {
         headers: {'Authorization': 'Bearer $secret'}
     );
 
+
     List testList = jsonDecode(response.body)['items'];
+
     List<TopSongModel> artistList = testList.map( (i) => TopSongModel.fromJson(i)).toList();
+
     return artistList;
 
   }
@@ -71,7 +83,13 @@ class SpotifyService {
 
 
   static Future<List<TopArtistModel>> searchArtist(String query) async{
+    String url = "https://api.spotify.com/v1/search?q=$query&type=artist";
 
+
+    if(secret == ""){
+      secret = await SpotifySdk.getAccessToken(clientId: clientID, redirectUrl: 'http://localhost:8080', scope: "user-top-read");
+    }
+    print("Secret:" + secret);
     final test = await http.get(Uri.parse(PathService.requestAuthorization(clientID, 'http://localhost:8080','good12')));
 
 
@@ -80,10 +98,12 @@ class SpotifyService {
     );
 
 
+//    print(jsonDecode(response.body)['artists']['items']);
 
     List testList = jsonDecode(response.body)['artists']['items'];
+    print(testList[1].toString());
     List<TopArtistModel> artistList = testList.map( (i) => TopArtistModel.fromJson(i)).toList();
-
+    print(testList[0].toString());
     return artistList;
 
   }

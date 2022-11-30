@@ -38,14 +38,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String connected = await SpotifyService.syncSpotify();
 
     if (connected != '') {
-      bool paused = await SpotifyService.getPlayerState();
       setState(() {
         _syncState = "Desync";
-        if (paused) {
-          _errorMessage = 'Paused';
-        } else {
-          _errorMessage = 'Playing';
-        }
+
       });
 
       await FirebaseFirestore.instance
