@@ -79,10 +79,13 @@ class AddFriendsProvider with ChangeNotifier {
 
     //retrieves all of friends' friends
     for (int i = 0; i < friends.length; i++) {
-      var userDocData =
-          await _firestoreService.retrieveUserFromFirestore(uid: friends[i]);
-      friend = UserModel.fromJson(userDocData!);
-      friendsLists.add(friend.friends);
+      try {
+        var userDocData =
+        await _firestoreService.retrieveUserFromFirestore(uid: friends[i]);
+        friend = UserModel.fromJson(userDocData!);
+        friendsLists.add(friend.friends);
+      } catch (e) {}
+
     }
 
     //counts how many times a friends' friend appears

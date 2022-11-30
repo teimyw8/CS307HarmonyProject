@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:get/get.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
 import 'package:intl/intl.dart';
