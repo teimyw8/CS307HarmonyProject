@@ -270,7 +270,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               Row(
                               children: [
-                                Text("Daily Notfication Notifications"),
+                                Text("Enable Daily Notifications"),
                                 FutureBuilder(
                                 future: _editProfileProvider.getDailyNotifStatus(),
                                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -280,7 +280,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       value: b,
                                       activeColor: Colors.green,
                                       onChanged: (bool value) {
-                                        //call function that changes
+                                        _authProvider.swapDailyNotification(b);
                                         setState(() {});
                                       },
                                     );

@@ -285,4 +285,8 @@ class AuthProvider with ChangeNotifier {
     currentUserModel = newUserModel;
     notifyListeners();
   }
+
+  void swapDailyNotification(bool b) {
+    _firestoreService.swapDailyNotification(currentUserModel!.uid,b);
+  }
 }

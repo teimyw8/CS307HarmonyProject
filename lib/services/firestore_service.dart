@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
+import 'package:harmony_app/screens/friends_list_screen.dart';
 
 class FirestoreService {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -307,5 +308,13 @@ class FirestoreService {
     print("^");
     return userDocData["dailyNotifStatus"];
 
+  }
+
+  Future<void> swapDailyNotification(String uid, bool b) async {
+    print(uid);
+    await firebaseFirestore
+        .collection("users")
+        .doc(uid)
+        .update({'dailyNotifStatus': !b});
   }
 }
