@@ -268,7 +268,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   enabled: _editProfileProvider.isEditing,
                                 ),
                               ),
-                              FutureBuilder(
+                              Row(
+                              children: [
+                                Text("Daily Notfication Notifications"),
+                                FutureBuilder(
                                 future: _editProfileProvider.getDailyNotifStatus(),
                                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                                   if(snapshot.hasData) {
@@ -284,6 +287,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   }
                                   return Text("Error", style: TextStyle(fontSize: 20));
                                 },
+                              )
+                  ]
                               ),
                               SizedBox(
                                 height: 10.h,
