@@ -18,7 +18,8 @@ class FeedService {
       required Timestamp dateTime,
       required String song,
       required String artist,
-      required String isPost}) async {
+      required String isPost,
+        required List likes}) async {
     try {
       var postsDocRef = firebaseFirestore.collection('posts');
       await postsDocRef.add({
@@ -28,9 +29,21 @@ class FeedService {
         "dateTime": dateTime,
         "song": song,
         "artist": artist,
-        "isPost": isPost
+        "isPost": isPost,
+        "likes": likes
       });
     } catch (e) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+  }
+
+   Future<String> countLikes(uid, dateTime) async {
+    try {
+      var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
+      var len =  userDoc.docs[0].get('likes').length;
+      return len.toString();
+    }
+    catch (e) {
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
@@ -100,5 +113,27 @@ class FeedService {
     }
   }
 
-  
+  Future<bool> isLiked(uid, dateTime, curUserUid) async {
+    var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
+    var allLikes = userDoc.docs[0].get('likes');
+    if (allLikes.contains(curUserUid)) {
+      return true;
+    }
+    return false;
+  }
+
+  handleLiked(uid, dateTime, curUserUid) async {
+    var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
+    var l = userDoc.docs[0];
+    var e = await firebaseFirestore.collection("posts").doc(l.id);
+    if (await isLiked(uid, dateTime, curUserUid) == false) {
+        e.update({"likes": FieldValue.arrayUnion([curUserUid]),
+        });
+    }
+    else {
+      e.update({"likes": FieldValue.arrayRemove([curUserUid]),
+      });
+    }
+  }
+
 }

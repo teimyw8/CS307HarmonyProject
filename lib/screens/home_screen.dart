@@ -173,6 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
@@ -183,6 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Text(
                                             e.username,
                                             style: AppTextStyles.headline(),
+                                            textScaleFactor: 1.3,
                                           ),
                                           Spacer(),
                                           Text(
@@ -206,9 +208,63 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       ),
-
                                       mainDisplay(e),
-                                      handleBottomText(e)
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          FutureBuilder(
+                                              future: _feedProvider.isLiked(e.uid,e.dateTime),
+                                              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                                                if(snapshot.connectionState == "waiting") {
+                                                  return IconButton(
+                                                    icon: Icon(Icons.thumb_up_alt_outlined),
+                                                    onPressed: () {
+                                                      _feedProvider.handleLikes(e.uid, e.dateTime);
+                                                      setState(() {});
+                                                    },
+                                                  );
+                                                }
+                                                else {
+                                                  if (snapshot.data ?? false == true) {
+                                                    return IconButton(
+                                                      icon: Icon(Icons.thumb_up),
+                                                      iconSize: 19.0,
+                                                      onPressed: () {
+                                                        _feedProvider.handleLikes(e.uid, e.dateTime);
+                                                        setState(() {});
+                                                      },
+                                                    );
+                                                  }
+                                                  else {
+                                                    return IconButton(
+                                                      icon: Icon(Icons.thumb_up_alt_outlined),
+                                                      onPressed: () {
+                                                        _feedProvider.handleLikes(e.uid, e.dateTime);
+                                                        setState(() {});
+                                                      },
+                                                    );
+                                                  }
+                                                }
+                                              }
+                                          ),
+                                          FutureBuilder(
+                                            future: _feedProvider.getLikes(e.uid, e.dateTime),
+                                            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                                              if(snapshot.connectionState == ConnectionState.done) {
+                                                print("done");
+                                                return Text(snapshot.data ?? "", style: TextStyle(fontSize: 20));
+                                              }
+                                              return Text("", style: TextStyle(fontSize: 20));
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      const Divider(
+                                        color: Colors.grey,
+                                      ),
+                                      Center(
+                                        child: handleBottomText(e)
+                                      ),
                                     ],
                                   ),
                                 ))
@@ -234,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
     else {
       return Container(
         child: ListTile(
-          title: Text(e.text),
+          title: Text(e.text, textScaleFactor: 1.2,),
         ),
       );
     }
@@ -250,4 +306,5 @@ class _HomeScreenState extends State<HomeScreen> {
           style: AppTextStyles.headline());
     }
   }
+
 }

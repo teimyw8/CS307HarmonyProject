@@ -62,7 +62,8 @@ class FeedProvider with ChangeNotifier {
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
-            isPost: "true"
+            isPost: "true",
+            likes: []
         );
       }
     } on FirestoreException catch (e) {
@@ -84,12 +85,26 @@ class FeedProvider with ChangeNotifier {
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
-            isPost: "false"
+            isPost: "false",
+            likes: []
         );
       }
     } on FirestoreException catch (e) {
       showErrorDialog(e.cause);
     }
+  }
+
+  handleLikes(uid, dateTime) {
+    return _feedService.handleLiked(uid, dateTime, _authProvider.currentUserModel!.uid);
+  }
+
+  Future<bool> isLiked(uid, dateTime) async {
+    // print(_feedService.checkLiked(uid,dateTime, _authProvider.currentUserModel!.uid));
+    if (await _feedService.isLiked(uid,dateTime, _authProvider.currentUserModel!.uid) == true) {
+      return true;
+    }
+
+    return false;
   }
 
   List listOfUsers() {
@@ -184,6 +199,10 @@ class FeedProvider with ChangeNotifier {
     else {
       showErrorDialog("It is not time for the daily activity yet! Check back again soon!");
     }
+  }
+
+  Future<String> getLikes(uid, dateTime) {
+    return _feedService.countLikes(uid,dateTime);
   }
 
 
