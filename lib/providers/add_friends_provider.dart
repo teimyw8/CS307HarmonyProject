@@ -52,12 +52,12 @@ class AddFriendsProvider with ChangeNotifier {
     return -1;
   }*/
 
-  void sendFriendRequest({required String sendToUID}) {
+  void sendFriendRequest({required String sendToUID, required UserModel userModelToRequest}) {
     startLoading();
     try {
       _firestoreService.sendFriendRequestToUser(
           sendToUID: sendToUID,
-          sendFromUID: _authProvider.currentUserModel!.uid);
+          sendFromUID: _authProvider.currentUserModel!.uid, myUserModel: _authProvider.currentUserModel!, userModelToRequest: userModelToRequest);
       _authProvider.currentUserModel!.friendRequestsSent.add(sendToUID);
       notifyListeners();
     } on FirestoreException catch (e) {

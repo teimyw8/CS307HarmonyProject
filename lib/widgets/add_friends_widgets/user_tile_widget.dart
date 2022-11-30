@@ -58,17 +58,10 @@ class _SearchUserTileWidgetState extends State<SearchUserTileWidget> {
                         errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     )
-                  : Container(
-                      height: 50.h,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.userModel.profilepic,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                      ),
-                    ),
+                  : CircleAvatar (
+                    foregroundImage: NetworkImage(widget.userModel.profilepic),
+                    onForegroundImageError: (context, error) => Icon(Icons.error),
+                  ),
               SizedBox(
                 width: 10.w,
               ),

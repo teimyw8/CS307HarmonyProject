@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -35,6 +36,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      var data = message.data;
+      print(data);
+
+/*      if (message.data['type'] == 'chat') {
+        Navigator.pushNamed(context, '/notiofication',
+            arguments: ChatArguments(notification);
+      }*/
+    });
     Future.delayed(Duration(seconds: 0), () {
       _feedProvider.initializeVariables();
     });

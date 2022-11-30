@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
+import 'package:intl/intl.dart';
+
+import '../models/user_model.dart';
 
 class FirestoreService {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -98,9 +102,27 @@ class FirestoreService {
     // }
   }
 
+  Future<void> sendNotificationToOtherUser(
+      {required String body,
+        required String title,
+        required DateTime dateTime,
+        required String tokenId}) async {
+    try {
+      HttpsCallable callable = FirebaseFunctions.instance
+          .httpsCallable('sendFriendRequestNotification');
+      final response = await callable.call({
+        'body': body,
+        'token': tokenId,
+        'title': title,
+        'timestamp': DateFormat('MM ddd – kk:mm').format(dateTime)
+      });
+      print(response.data);
+    } catch (e) {}
+  }
+
   ///this function updates the friendRequestsReceived for the user to whom the current user just sent the request
   Future<dynamic> sendFriendRequestToUser(
-      {required String sendToUID, required String sendFromUID}) async {
+      {required String sendToUID, required String sendFromUID, required UserModel myUserModel, required UserModel userModelToRequest}) async {
     try {
       var sendToUserDoc =
           await firebaseFirestore.collection('users').doc(sendToUID).get();
@@ -131,6 +153,7 @@ class FirestoreService {
             .doc(sendFromUID)
             .update({'friendRequestsSent': friendRequestsSent});
       }
+      sendNotificationToOtherUser(body: '${myUserModel.username} sent you a friend request', title: 'New Friend Request', dateTime: DateTime.now(), tokenId: userModelToRequest.tokenId);
     } catch (e) {
       print(e);
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);

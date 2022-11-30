@@ -190,7 +190,9 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                                         .sendFriendRequest(
                                                             sendToUID:
                                                                 users[index]
-                                                                    .uid),
+                                                                    .uid,
+                                                            userModelToRequest:
+                                                                users[index]),
                                                 isFriendRequestSent:
                                                     myAuthProvider
                                                         .currentUserModel!
@@ -232,13 +234,14 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                         userModel: myAddFriendsProvider
                                             .suggestedFriendsList[index],
                                         onSendFriendRequest: () =>
-                                            myAddFriendsProvider
-                                                .sendFriendRequest(
-                                                    sendToUID:
-                                                        myAddFriendsProvider
+                                            myAddFriendsProvider.sendFriendRequest(
+                                                sendToUID: myAddFriendsProvider
+                                                    .suggestedFriendsList[index]
+                                                    .uid,
+                                                userModelToRequest:
+                                                    myAddFriendsProvider
                                                             .suggestedFriendsList[
-                                                                index]
-                                                            .uid),
+                                                        index]),
                                         isFriendRequestSent: myAuthProvider
                                             .currentUserModel!
                                             .friendRequestsSent

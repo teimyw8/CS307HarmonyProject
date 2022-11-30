@@ -30,6 +30,7 @@ class FriendsListProvider with ChangeNotifier {
           (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
         myAuthProvider.updateCurrentUser();
         currUser = (myAuthProvider.currentUserModel?.uid);
+        print(currUser);
         friendsList = (myAuthProvider.currentUserModel?.friends)!;
         return const SizedBox.shrink();
       },

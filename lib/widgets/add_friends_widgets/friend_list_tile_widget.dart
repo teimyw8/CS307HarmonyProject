@@ -7,6 +7,7 @@ import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/chat_provider.dart';
 import 'package:harmony_app/providers/friends_list_provider.dart';
+import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/screens/profile_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
 import 'package:provider/provider.dart';
@@ -125,6 +126,7 @@ class _FriendListTileWidgetState extends State<FriendListTileWidget> {
                         'friends': FieldValue.arrayRemove(
                             [_friendsListProvider.currUser]),
                       });
+                      print(_friendsListProvider.currUser);
                       _friendsListProvider.currUser
                           .remove(widget.friendModel.uid);
                       setState(() {});

@@ -37,6 +37,8 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
 
   @override
   void initState() {
+    print('in initState');
+    _friendsListProvider.refresh();
     super.initState();
     friendsListAppBar = FriendsListAppBar(callback: this.callback);
   }
@@ -110,16 +112,4 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
     );
     //);
   }
-}
-
-void refresh() {
-  Consumer<AuthProvider>(
-    builder:
-        (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
-      myAuthProvider.updateCurrentUser();
-      currUser = (myAuthProvider.currentUserModel!);
-      friendsList = (myAuthProvider.currentUserModel?.friends)!;
-      return const SizedBox.shrink();
-    },
-  );
 }
