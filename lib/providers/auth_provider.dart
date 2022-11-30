@@ -169,7 +169,6 @@ class AuthProvider with ChangeNotifier {
           await FirebaseMessaging.instance.requestPermission();
           FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
           String tokenId = await _firebaseMessaging.getToken() ?? "";
-          print(tokenId);
           await _firestoreService.addUserToFirestore(
               uid: uid,
               email: signUpEmailTextEditingController!.text,
