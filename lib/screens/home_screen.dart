@@ -32,6 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final FeedProvider _feedProvider =
       Provider.of<FeedProvider>(Get.context!, listen: false);
+  final AuthProvider _authProvider =
+  Provider.of<AuthProvider>(Get.context!, listen: false);
 
   @override
   void initState() {
@@ -39,7 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
       _feedProvider.initializeVariables();
     });
     super.initState();
-    _feedProvider.scheduleNotification();
+    if(_authProvider.currentUserModel!.dailyNotifStatus){
+      _feedProvider.scheduleNotification();
+    }
 
   }
 
