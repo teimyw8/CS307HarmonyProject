@@ -13,6 +13,7 @@ class UserModel {
   List<dynamic> friendRequestsSent;
   List<dynamic> friendRequestsReceived;
   List<dynamic> blockedUsers;
+  String tokenId;
 
   UserModel(
       {required this.email,
@@ -28,24 +29,25 @@ class UserModel {
       required this.profilepic,
       required this.friendRequestsReceived,
       required this.friendRequestsSent,
-      required this.blockedUsers});
+      required this.blockedUsers,
+      required this.tokenId});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        email: json["email"] ?? "",
-        firstName: json["firstName"] ?? "",
-        lastName: json["lastName"] ?? "",
-        bio: json["bio"] ?? "",
-        friends: json["friends"] ?? [],
-        uid: json["uid"] ?? "",
-        profilepic: json["profilepic"] ?? "",
-        username: json["username"] ?? "",
-        displayProfileTo: json["displayProfileTo"] ?? 0,
-        displayName: json["displayName"] ?? true,
-        spotifyToken: json["spotifyToken"] ?? "",
-        friendRequestsReceived: json["friendRequestsReceived"] ?? [],
-        friendRequestsSent: json["friendRequestsSent"] ?? [],
-        blockedUsers: json["blockedUsers"] ?? [],
-      );
+      email: json["email"] ?? "",
+      firstName: json["firstName"] ?? "",
+      lastName: json["lastName"] ?? "",
+      bio: json["bio"] ?? "",
+      friends: json["friends"] ?? [],
+      uid: json["uid"] ?? "",
+      profilepic: json["profilepic"] ?? "",
+      username: json["username"] ?? "",
+      displayProfileTo: json["displayProfileTo"] ?? 0,
+      displayName: json["displayName"] ?? true,
+      spotifyToken: json["spotifyToken"] ?? "",
+      friendRequestsReceived: json["friendRequestsReceived"] ?? [],
+      friendRequestsSent: json["friendRequestsSent"] ?? [],
+      blockedUsers: json["blockedUsers"] ?? [],
+      tokenId: json["tokenId"] ?? "");
 
   Map<String, dynamic> toJson() => {
         "email": email,
@@ -61,11 +63,12 @@ class UserModel {
         "spotifyToken": spotifyToken,
         "friendRequestsReceived": friendRequestsReceived,
         "friendRequestsSent": friendRequestsSent,
-        "blockedUsers": blockedUsers
+        "blockedUsers": blockedUsers,
+        "tokenId": tokenId
       };
 
   @override
   String toString() {
-    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, friends: $friends, uid: $uid, username: $username, bio: $bio, displayProfileTo: $displayProfileTo, displayName: $displayName, spotifyToken: $spotifyToken, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived, profilepic: $profilepic}';
+    return 'UserModel{email: $email, firstName: $firstName, lastName: $lastName, uid: $uid, username: $username, bio: $bio, spotifyToken: $spotifyToken, profilepic: $profilepic, displayProfileTo: $displayProfileTo, displayName: $displayName, friends: $friends, friendRequestsSent: $friendRequestsSent, friendRequestsReceived: $friendRequestsReceived, blockedUsers: $blockedUsers, tokenId: $tokenId}';
   }
 }

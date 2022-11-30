@@ -126,8 +126,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   needSettings: false,
                   needHome: true,
                   onHomeClicked: () {
-                    debugPrint(
-                        'Temporary, must be deleted when we finalize the home page');
                     Navigator.push(
                         context,
                         MaterialPageRoute(
