@@ -270,7 +270,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               Row(
                               children: [
-                                Text("Enable Daily Notifications"),
+                                Text("Enable Daily Notifications                                  "),
                                 FutureBuilder(
                                 future: _editProfileProvider.getDailyNotifStatus(),
                                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -289,6 +289,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 },
                               )
                   ]
+                              ),
+                              Row(
+                                  children: [
+                                    Text("Enable Chat Notifications                                  "),
+                                    FutureBuilder(
+                                      future: _editProfileProvider.getChatNotifStatus(),
+                                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                        if(snapshot.hasData) {
+                                          bool b = snapshot.data == 'true';
+                                          return Switch(
+                                            value: b,
+                                            activeColor: Colors.green,
+                                            onChanged: (bool value) {
+                                              _authProvider.swapChatNotification(b);
+                                              setState(() {});
+                                            },
+                                          );
+                                        }
+                                        return Text("Error", style: TextStyle(fontSize: 20));
+                                      },
+                                    )
+                                  ]
                               ),
                               SizedBox(
                                 height: 10.h,

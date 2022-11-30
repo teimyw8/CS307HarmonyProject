@@ -38,7 +38,8 @@ class FirestoreService {
       required String password,
       required bool dailyNotifStatus,
       required String profilepic,
-      required String tokenId}) async {
+      required String tokenId,
+        required bool chatNotifStatus}) async {
     try {
       var usersDocRef = firebaseFirestore.collection('users').doc(uid);
       await usersDocRef.set({
@@ -51,6 +52,7 @@ class FirestoreService {
         "displayProfileTo": displayProfileTo,
         "displayName": displayName,
         "friends": [],
+        "chatNotifStatus": chatNotifStatus,
         "uid": uid,
         "password": password,
         "profilepic":
@@ -310,6 +312,20 @@ class FirestoreService {
 
   }
 
+  Future<bool> getChatNotifStatus(String uid) async {
+    var userDoc = await firebaseFirestore
+        .collection("users")
+        .doc(uid).get();
+    var userDocData = userDoc.data()!;
+    if (!userDoc.exists) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+    print(userDocData["chatNotifStatus"]);
+    print("^");
+    return userDocData["chatNotifStatus"];
+
+  }
+
   Future<void> swapDailyNotification(String uid, bool b) async {
     print(uid);
     await firebaseFirestore
@@ -317,4 +333,13 @@ class FirestoreService {
         .doc(uid)
         .update({'dailyNotifStatus': !b});
   }
+
+  void swapChatNotification(String uid, bool b) async{
+    print(uid);
+    await firebaseFirestore
+        .collection("users")
+        .doc(uid)
+        .update({'chatNotifStatus': !b});
+  }
+
 }

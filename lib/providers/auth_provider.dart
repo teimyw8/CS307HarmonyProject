@@ -171,6 +171,7 @@ class AuthProvider with ChangeNotifier {
           String tokenId = await _firebaseMessaging.getToken() ?? "";
           await _firestoreService.addUserToFirestore(
               uid: uid,
+              chatNotifStatus: false,
               email: signUpEmailTextEditingController!.text,
               firstName: signUpFirstNameTextEditingController!.text,
               lastName: signUpLastNameTextEditingController!.text,
@@ -288,5 +289,9 @@ class AuthProvider with ChangeNotifier {
 
   void swapDailyNotification(bool b) {
     _firestoreService.swapDailyNotification(currentUserModel!.uid,b);
+  }
+
+  void swapChatNotification(bool b) {
+    _firestoreService.swapChatNotification(currentUserModel!.uid,b);
   }
 }
