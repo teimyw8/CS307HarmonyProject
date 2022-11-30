@@ -292,4 +292,18 @@ class FirestoreService {
       print(e);
     }
   }
+
+  Future<bool> getDailyNotifStatus(String uid) async {
+    var userDoc = await firebaseFirestore
+        .collection("users")
+        .doc(uid).get();
+    var userDocData = userDoc.data()!;
+    if (!userDoc.exists) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+    print(userDocData["dailyNotifStatus"]);
+    print("^");
+    return userDocData["dailyNotifStatus"];
+
+  }
 }

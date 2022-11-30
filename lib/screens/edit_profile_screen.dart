@@ -268,6 +268,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   enabled: _editProfileProvider.isEditing,
                                 ),
                               ),
+                              FutureBuilder(
+                                future: _editProfileProvider.getDailyNotifStatus(),
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                  if(snapshot.hasData) {
+                                    bool b = snapshot.data == 'true';
+                                    return Switch(
+                                      value: b,
+                                      activeColor: Colors.green,
+                                      onChanged: (bool value) {
+                                        //call function that changes
+                                        setState(() {});
+                                      },
+                                    );
+                                  }
+                                  return Text("Error", style: TextStyle(fontSize: 20));
+                                },
+                              ),
                               SizedBox(
                                 height: 10.h,
                               ),

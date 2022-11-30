@@ -287,4 +287,9 @@ class EditProfileProvider with ChangeNotifier {
     }
     _authProvider.stopLoading();
   }
+
+  Future<String> getDailyNotifStatus() async {
+    var test =  await _firestoreService.getDailyNotifStatus(currentUserModel!.uid);
+    return test.toString();
+  }
 }
