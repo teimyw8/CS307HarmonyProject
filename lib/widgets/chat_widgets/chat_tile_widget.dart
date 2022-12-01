@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -14,10 +15,9 @@ import 'package:intl/intl.dart';
 
 class ChatTileWidget extends StatefulWidget {
   ChatModel chatModel;
+  String chatId;
 
-  ChatTileWidget({
-    required this.chatModel,
-  });
+  ChatTileWidget({required this.chatModel, required this.chatId});
 
   @override
   State<ChatTileWidget> createState() => _ChatTileWidgetState();
@@ -67,6 +67,7 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
                     chatModel: widget.chatModel,
                     myUserModel: authProvider.currentUserModel!,
                     partnerUserModel: partnerUserModel!,
+                    chatId: widget.chatId,
                   ));
             },
             child: Container(
@@ -101,12 +102,42 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 8.w),
-                    child: Text(
-                      "${widget.chatModel.lastMessage}",
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.footNote()
-                          .copyWith(color: AppColors.greyText),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "${widget.chatModel.lastMessage}",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.footNote()
+                                .copyWith(color: AppColors.greyText),
+                          ),
+                        ),
+                        StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance.collection('chats').doc(widget.chatModel.chatId).collection('messages').snapshots(),
+                          builder: (context, snapshot) {
+                            return FutureBuilder<dynamic>(
+                                future: chatProvider.isLastMessageRead(
+                                    chatId: widget.chatModel.chatId),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    if (snapshot.data == false) {
+                                      return Container(
+                                        margin: EdgeInsets.only(right: 10.w),
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColors.redError),
+                                        height: 10.h,
+                                        width: 10.h,
+                                      );
+                                    }
+                                  }
+                                  return Container();
+                                });
+                          }
+                        )
+                      ],
                     ),
                   ),
                 ],

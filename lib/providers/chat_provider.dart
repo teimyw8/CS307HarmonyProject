@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -93,14 +94,20 @@ class ChatProvider with ChangeNotifier {
       ChatModel chatModel;
       if (doesChatExist) {
         var chatDoc = await _chatService.fetchChatFromFirestore(uid1: uid1, uid2: uid2);
+        var chatId = await _chatService.fetchChatIdFromFirestore(uid1: uid1, uid2: uid2);
+        print("chatDoc: $chatDoc");
         chatModel = ChatModel.fromJson(chatDoc);
+        var partnerUserModelDoc = await _firestoreService.retrieveUserFromFirestore(uid: (authProvider.currentUserModel!.uid == uid1) ? uid2 : uid1);
+        UserModel partnerUserModel = UserModel.fromJson(partnerUserModelDoc);
+        Get.to(() => ChatScreen(doesChatExistInFirestore: doesChatExist, chatModel: chatModel, partnerUserModel: partnerUserModel, myUserModel: authProvider.currentUserModel!, chatId: chatId,));
       } else {
-        chatModel = ChatModel(uid1: uid1, uid2: uid2, chatId: "${dateTimeToEST(DateTime.now()).microsecondsSinceEpoch}", lastMessage: "", lastEdited: dateTimeToEST(DateTime.now()), lastMessageSentFromUID: "");
+        chatModel = ChatModel(uid1: uid1, uid2: uid2, chatId: "${dateTimeToEST(DateTime.now()).microsecondsSinceEpoch}", lastMessage: "", lastEdited: dateTimeToEST(DateTime.now()), lastMessageSentFromUID: "",);
+        var partnerUserModelDoc = await _firestoreService.retrieveUserFromFirestore(uid: (authProvider.currentUserModel!.uid == uid1) ? uid2 : uid1);
+        UserModel partnerUserModel = UserModel.fromJson(partnerUserModelDoc);
+        Get.to(() => ChatScreen(doesChatExistInFirestore: doesChatExist, chatModel: chatModel, partnerUserModel: partnerUserModel, myUserModel: authProvider.currentUserModel!, chatId: '',));
+
       }
-      var partnerUserModelDoc = await _firestoreService.retrieveUserFromFirestore(uid: (authProvider.currentUserModel!.uid == uid1) ? uid2 : uid1);
-      UserModel partnerUserModel = UserModel.fromJson(partnerUserModelDoc);
-      Get.to(() => ChatScreen(doesChatExistInFirestore: doesChatExist, chatModel: chatModel, partnerUserModel: partnerUserModel, myUserModel: authProvider.currentUserModel!));
-    } catch (e) {
+      } catch (e) {
       _showErrorDialog(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
@@ -115,18 +122,36 @@ class ChatProvider with ChangeNotifier {
     } on FirestoreException catch (e) {
       _showErrorDialog(e.cause);
     } catch (e) {
-      print(e);
       _showErrorDialog(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
 
   ///this function shows an error dialog
   void _showErrorDialog(String message) {
+    print('EORRRRRRRORR');
     PopUpDialog.showAcknowledgePopUpDialog(
         title: "Error!",
         message: message,
         onOkClick: () {
           Get.close(1);
         });
+  }
+
+  ///this function checks if the user's last message is read
+  Future<bool> isLastMessageRead({required String chatId}) async {
+    try {
+      var data = await FirebaseFirestore.instance
+          .collection('chats')
+          .doc("${chatId}")
+          .collection('messages')
+          .orderBy('dateSent').get();
+      MessageModel lastMessage = MessageModel.fromJson(data.docs[data.docs.length - 1].data());
+      if (lastMessage.fromUserId == authProvider.currentUserModel!.uid) {
+        return true;
+      }
+      return lastMessage.isRead;
+    } catch (e) {
+      return false;
+    }
   }
 }

@@ -66,7 +66,7 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
                       ChatModel.fromJson(e.data() as Map<String, dynamic>);
                    if (chatModel.uid1 == authProvider.currentUserModel!.uid ||
                        chatModel.uid2 == authProvider.currentUserModel!.uid) {
-                    return ChatTileWidget(chatModel: chatModel);
+                    return ChatTileWidget(chatModel: chatModel, chatId: e.id,);
                   }
                   return Container();
                 }).toList());

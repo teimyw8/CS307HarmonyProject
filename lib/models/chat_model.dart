@@ -9,24 +9,25 @@ class ChatModel {
   DateTime lastEdited;
   String lastMessageSentFromUID;
 
-
   ChatModel(
-      {
-      required this.uid1,
+      {required this.uid1,
       required this.uid2,
       required this.chatId,
-        required this.lastMessage,
-        required this.lastEdited,
-        required this.lastMessageSentFromUID
-      });
+      required this.lastMessage,
+      required this.lastEdited,
+      required this.lastMessageSentFromUID,
+     });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
       uid1: json['uid1'] ?? "",
       uid2: json['uid2'] ?? "",
       chatId: json['chatId'] ?? "",
       lastMessage: json['lastMessage'] ?? '',
-      lastEdited: (json["lastEdited"] == null) ? dateTimeToEST(DateTime.now()) : json["lastEdited"].toDate(),
-      lastMessageSentFromUID: json['lastMessageSentFromUID'] ?? '',);
+      lastEdited: (json["lastEdited"] == null)
+          ? dateTimeToEST(DateTime.now())
+          : json["lastEdited"].toDate(),
+      lastMessageSentFromUID: json['lastMessageSentFromUID'] ?? '',
+      );
 
   Map<String, dynamic> toJson() => {
         "uid1": uid1,
@@ -38,6 +39,6 @@ class ChatModel {
 
   @override
   String toString() {
-    return 'ChatModel{uid1: $uid1, uid2: $uid2, chatId: $chatId}';
+    return 'ChatModel{uid1: $uid1, uid2: $uid2, chatId: $chatId, lastMessage: $lastMessage, lastEdited: $lastEdited, lastMessageSentFromUID: $lastMessageSentFromUID}';
   }
 }
