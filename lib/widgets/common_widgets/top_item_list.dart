@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
@@ -102,10 +103,10 @@ class TopItemList extends StatelessWidget {
                 child: Row(
                   children: [
                     Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
-                    Image(
+                    CachedNetworkImage(
+                      errorWidget: (context, url, error) => new Icon(Icons.download),
                       height: height,
-                      image: NetworkImage(
-                          image1),
+                      imageUrl: image1
                     ),
                     Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
                     Expanded(
@@ -120,6 +121,10 @@ class TopItemList extends StatelessWidget {
                   ],
                 )),
           ),
+          const SizedBox(
+            height: 5,
+          ),
+
 
           //Item 2
           Padding(
@@ -131,10 +136,10 @@ class TopItemList extends StatelessWidget {
                 child: Row(
                   children: [
                     Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
-                    Image(
-                      height: height,
-                      image: NetworkImage(
-                          image2 ),
+                    CachedNetworkImage(
+                        errorWidget: (context, url, error) => new Icon(Icons.download),
+                        height: height,
+                        imageUrl: image2
                     ),
                     Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
                     Expanded(
@@ -149,6 +154,9 @@ class TopItemList extends StatelessWidget {
                   ],
                 )),
           ),
+          const SizedBox(
+            height: 5,
+          ),
 
           //Item 3
           Padding(
@@ -160,10 +168,10 @@ class TopItemList extends StatelessWidget {
                 child: Row(
                   children: [
                     Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
-                    Image(
-                      height: height,
-                      image: NetworkImage(
-                          image3),
+                    CachedNetworkImage(
+                        errorWidget: (context, url, error) => new Icon(Icons.download),
+                        height: height,
+                        imageUrl: image3
                     ),
                     Padding(padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 5)),
                     Expanded(
@@ -219,6 +227,9 @@ class TopItemList extends StatelessWidget {
                   ),
                 )),
           ),
+          const SizedBox(
+            height: 5,
+          ),
 
           //Item 2
           Padding(
@@ -237,6 +248,9 @@ class TopItemList extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+          const SizedBox(
+            height: 5,
           ),
 
           //Item 3
