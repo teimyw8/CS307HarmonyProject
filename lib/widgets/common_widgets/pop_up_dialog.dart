@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_text_field.dart';
 import 'custom_app_button.dart';
 
 class PopUpDialog {
@@ -332,4 +333,85 @@ class PopUpDialog {
           );
         });
   }
+
+
+  static void showTextFieldPopUpDialog(
+      {required String title,
+        required String message,
+        required Function(String value) onSendClick,
+        bool isBarrierDismissible = true}) {
+    TextEditingController textEditingController = TextEditingController();
+    showDialog(
+        barrierDismissible: isBarrierDismissible,
+        context: Get.context!,
+        builder: (BuildContext context) {
+          return Dialog(
+            insetPadding: EdgeInsets.only(
+              left: 0.h,
+              right: 0.h,
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            child: SizedBox(
+              width: 275.w,
+              child: SingleChildScrollView(
+                child: Container(
+                    padding:
+                    EdgeInsets.symmetric(vertical: 20.h, horizontal: 12.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.r),
+                      color: AppColors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          title,
+                          style: AppTextStyles.headline(),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Text(
+                            message,
+                            style: AppTextStyles.footNote()
+                                .copyWith(color: AppColors.grey80),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        CustomTextField(
+                          hintText: "Your message...",
+                          controller: textEditingController,
+                          onChanged: (value) {
+                            //setState(() {});
+                          },
+                          maxLines: 5,
+                        ),
+                        SizedBox(
+                          height: 20.h,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 44.h,
+                          child: CustomAppButton(
+                            buttonColor: AppColors.green,
+                            onTap: () {
+                              onSendClick(textEditingController.text);
+                            },
+                            widget: Text(
+                              "Send",
+                              style: AppTextStyles.button(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            ),
+          );
+        });
+  }
+
 }

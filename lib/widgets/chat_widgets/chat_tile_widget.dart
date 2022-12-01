@@ -122,6 +122,7 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
                                     chatId: widget.chatModel.chatId),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
+                                    print(snapshot.data);
                                     if (snapshot.data == false) {
                                       return Container(
                                         margin: EdgeInsets.only(right: 10.w),

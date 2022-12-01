@@ -10,6 +10,7 @@ import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/chat_provider.dart';
 import 'package:harmony_app/services/chat_service.dart';
+import 'package:harmony_app/widgets/chat_widgets/chat_post_response_widget.dart';
 import 'package:harmony_app/widgets/chat_widgets/message_widget.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_loader.dart';
 import 'package:provider/provider.dart';
@@ -165,11 +166,22 @@ class _ChatScreenState extends State<ChatScreen> {
                 (authProvider.currentUserModel!.uid == messageModel.fromUserId)
                     ? widget.myUserModel
                     : widget.partnerUserModel;
-            return MessageWidget(
-              messageModel: messageModel,
-              sentByMe: widget.myUserModel.uid == messageModel.fromUserId,
-              userModel: userModel,
-            );
+            print("messageModel: ${messageModel.toString()}");
+            if (messageModel.messageType == "message") {
+              return MessageWidget(
+                messageModel: messageModel,
+                sentByMe: widget.myUserModel.uid == messageModel.fromUserId,
+                userModel: userModel,
+              );
+            } else if (messageModel.messageType == "postResponse") {
+              return ChatPostResponseWidget(
+                messageModel: messageModel,
+                sentByMe: widget.myUserModel.uid == messageModel.fromUserId,
+                userModel: userModel, postModel: messageModel.postModel!,
+              );
+            }
+            return Container();
+
           }).toList(),
         );
       },
