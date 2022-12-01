@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../models/user_model.dart';
 import 'package:harmony_app/screens/friends_list_screen.dart';
+
+import '../providers/auth_provider.dart';
 
 class FirestoreService {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -160,7 +163,15 @@ class FirestoreService {
             .doc(sendFromUID)
             .update({'friendRequestsSent': friendRequestsSent});
       }
-      sendNotificationToOtherUser(body: '${myUserModel.username} sent you a friend request', title: 'New Friend Request', dateTime: DateTime.now(), tokenId: userModelToRequest.tokenId);
+      AuthProvider authProvider =
+      Provider.of<AuthProvider>(Get.context!, listen: false);
+      if(authProvider.currentUserModel!.FRNotifStatus) {
+        sendNotificationToOtherUser(
+            body: '${myUserModel.username} sent you a friend request',
+            title: 'New Friend Request',
+            dateTime: DateTime.now(),
+            tokenId: userModelToRequest.tokenId);
+      }
     } catch (e) {
       print(e);
       throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
