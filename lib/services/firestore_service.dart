@@ -39,11 +39,12 @@ class FirestoreService {
       required bool dailyNotifStatus,
       required String profilepic,
       required String tokenId,
-        required bool chatNotifStatus}) async {
+        required bool chatNotifStatus, required bool FRNotifStatus}) async {
     try {
       var usersDocRef = firebaseFirestore.collection('users').doc(uid);
       await usersDocRef.set({
         "email": email,
+        "FRNotifStatus": FRNotifStatus,
         "firstName": firstName,
         "lastName": lastName,
         "username": userName,
@@ -340,6 +341,28 @@ class FirestoreService {
         .collection("users")
         .doc(uid)
         .update({'chatNotifStatus': !b});
+  }
+
+  void swapFRNotification(String uid, bool b) async{
+    print(uid);
+    await firebaseFirestore
+        .collection("users")
+        .doc(uid)
+        .update({'FRNotifStatus': !b});
+  }
+
+  Future<bool> getFRNotifStatus(String uid) async {
+    var userDoc = await firebaseFirestore
+        .collection("users")
+        .doc(uid).get();
+    var userDocData = userDoc.data()!;
+    if (!userDoc.exists) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+    print(userDocData["FRNotifStatus"]);
+    print("^");
+    return userDocData["FRNotifStatus"];
+
   }
 
 }

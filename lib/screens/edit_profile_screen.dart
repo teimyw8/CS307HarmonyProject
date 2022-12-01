@@ -312,6 +312,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     )
                                   ]
                               ),
+                              Row(
+                                  children: [
+                                    Text("Enable Friend Request Notifications                "),
+                                    FutureBuilder(
+                                      future: _editProfileProvider.getFRNotifStatus(),
+                                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                        if(snapshot.hasData) {
+                                          bool b = snapshot.data == 'true';
+                                          return Switch(
+                                            value: b,
+                                            activeColor: Colors.green,
+                                            onChanged: (bool value) {
+                                              _authProvider.swapFRNotification(b);
+                                              setState(() {});
+                                            },
+                                          );
+                                        }
+                                        return Text("Error", style: TextStyle(fontSize: 20));
+                                      },
+                                    )
+                                  ]
+                              ),
                               SizedBox(
                                 height: 10.h,
                               ),

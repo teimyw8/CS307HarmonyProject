@@ -297,4 +297,9 @@ class EditProfileProvider with ChangeNotifier {
     var test =  await _firestoreService.getChatNotifStatus(currentUserModel!.uid);
     return test.toString();
   }
+
+  Future<String> getFRNotifStatus() async{
+    var test =  await _firestoreService.getFRNotifStatus(currentUserModel!.uid);
+    return test.toString();
+  }
 }

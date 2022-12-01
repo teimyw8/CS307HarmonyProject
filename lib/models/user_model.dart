@@ -16,6 +16,7 @@ class UserModel {
   List<dynamic> friendRequestsReceived;
   List<dynamic> blockedUsers;
   String tokenId;
+  bool FRNotifStatus;
 
   UserModel(
       {required this.email,
@@ -25,6 +26,7 @@ class UserModel {
       required this.lastName,
       required this.uid,
       required this.username,
+      required this.FRNotifStatus,
       required this.bio,
       required this.friends,
       required this.displayProfileTo,
@@ -44,6 +46,7 @@ class UserModel {
       dailyNotifStatus: json["dailyNotifStatus"] ?? true,
       friends: json["friends"] ?? [],
       uid: json["uid"] ?? "",
+      FRNotifStatus: json["FRNotifStatus"] ?? true,
       profilepic: json["profilepic"] ?? "",
       username: json["username"] ?? "",
       displayProfileTo: json["displayProfileTo"] ?? 0,
@@ -63,6 +66,7 @@ class UserModel {
         "friends": friends,
         "dailyNotifStatus": dailyNotifStatus,
         "uid": uid,
+        "FRNotifStatus": FRNotifStatus,
         "profilepic": profilepic,
         "username": username,
         "chatNotifStatus": chatNotifStatus,
