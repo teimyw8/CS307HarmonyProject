@@ -143,12 +143,18 @@ class ChatService {
       AuthProvider authProvider =
           Provider.of<AuthProvider>(Get.context!, listen: false);
       //sending a notification to the other user with the contents of this message
-      sendNotificationToOtherUser(
-          body: messageModel.message,
-          title:
-              "${authProvider.currentUserModel!.firstName} ${authProvider.currentUserModel!.lastName}",
-          dateTime: messageModel.dateSent,
-          tokenId: tokenId);
+
+      //TODO update tokenId
+      if(authProvider.currentUserModel!.chatNotifStatus) {
+        sendNotificationToOtherUser(
+            body: messageModel.message,
+            title:
+            "${authProvider.currentUserModel!.firstName} ${authProvider
+                .currentUserModel!.lastName}",
+            dateTime: messageModel.dateSent,
+            tokenId: tokenId);
+      }
+
     } catch (e) {
       //throw FirestoreException("Could not send a message!");
     }

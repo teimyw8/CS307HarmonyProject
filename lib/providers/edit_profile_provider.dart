@@ -287,4 +287,19 @@ class EditProfileProvider with ChangeNotifier {
     }
     _authProvider.stopLoading();
   }
+
+  Future<String> getDailyNotifStatus() async {
+    var test =  await _firestoreService.getDailyNotifStatus(currentUserModel!.uid);
+    return test.toString();
+  }
+
+  Future<String> getChatNotifStatus() async{
+    var test =  await _firestoreService.getChatNotifStatus(currentUserModel!.uid);
+    return test.toString();
+  }
+
+  Future<String> getFRNotifStatus() async{
+    var test =  await _firestoreService.getFRNotifStatus(currentUserModel!.uid);
+    return test.toString();
+  }
 }

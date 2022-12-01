@@ -171,6 +171,8 @@ class AuthProvider with ChangeNotifier {
           String tokenId = await _firebaseMessaging.getToken() ?? "";
           await _firestoreService.addUserToFirestore(
               uid: uid,
+              chatNotifStatus: true,
+              FRNotifStatus: true,
               email: signUpEmailTextEditingController!.text,
               firstName: signUpFirstNameTextEditingController!.text,
               lastName: signUpLastNameTextEditingController!.text,
@@ -181,7 +183,8 @@ class AuthProvider with ChangeNotifier {
               friends: [],
               password: signUpPasswordTextEditingController!.text,
               profilepic: "hello",
-              tokenId: tokenId
+              tokenId: tokenId,
+              dailyNotifStatus: true
           );
 
           var userDocData =
@@ -283,5 +286,17 @@ class AuthProvider with ChangeNotifier {
   void setCurrentUserModel(UserModel newUserModel) async {
     currentUserModel = newUserModel;
     notifyListeners();
+  }
+
+  void swapDailyNotification(bool b) {
+    _firestoreService.swapDailyNotification(currentUserModel!.uid,b);
+  }
+
+  void swapChatNotification(bool b) {
+    _firestoreService.swapChatNotification(currentUserModel!.uid,b);
+  }
+
+  void swapFRNotification(bool b) {
+    _firestoreService.swapFRNotification(currentUserModel!.uid,b);
   }
 }
