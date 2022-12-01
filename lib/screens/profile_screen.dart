@@ -162,9 +162,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void setArtists() async {
-    List<TopArtistModel> test = await SpotifyService.searchArtist("Lucki");
-
-    print("Artist: " + test[0].name);
 
     List<TopArtistModel> topArtists = await SpotifyService.getTopArtists();
     Set<String> genreSet = Set();
@@ -289,6 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         titles[1] = "Top Genres";
         titles[2] = "Top Artists";
         setArtists();
+        sleep(Duration(seconds: 1));
         setSongs();
       }
     }

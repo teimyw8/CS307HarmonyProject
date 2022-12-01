@@ -63,7 +63,7 @@ class SpotifyService {
     if(secret == ""){
       secret = await SpotifySdk.getAccessToken(clientId: clientID, redirectUrl: 'http://localhost:8080', scope: "user-top-read");
     }
-    print("Secret: " + secret);
+
     final test = await http.get(Uri.parse(PathService.requestAuthorization(clientID, 'http://localhost:8080','good12')));
 
 
@@ -89,7 +89,7 @@ class SpotifyService {
     if(secret == ""){
       secret = await SpotifySdk.getAccessToken(clientId: clientID, redirectUrl: 'http://localhost:8080', scope: "user-top-read");
     }
-    print("Secret:" + secret);
+
     final test = await http.get(Uri.parse(PathService.requestAuthorization(clientID, 'http://localhost:8080','good12')));
 
 
@@ -101,9 +101,9 @@ class SpotifyService {
 //    print(jsonDecode(response.body)['artists']['items']);
 
     List testList = jsonDecode(response.body)['artists']['items'];
-    print(testList[1].toString());
+
     List<TopArtistModel> artistList = testList.map( (i) => TopArtistModel.fromJson(i)).toList();
-    print(testList[0].toString());
+
     return artistList;
 
   }
