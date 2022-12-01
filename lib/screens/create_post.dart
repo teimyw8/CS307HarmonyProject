@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/post_model.dart';
+import 'package:harmony_app/models/top_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/friends_list_screen.dart';
@@ -96,10 +97,10 @@ class _CreatePostState extends State<CreatePost> {
                         SizedBox(width: 10.w,),
                         Expanded(
                           child: CustomTextField(
-                            hintText: "Song/Artist/Album",
+                            hintText: "Song/Artist/Album/Playlist",
                             controller: _feedProvider.spotifyTextEditingController,
                             onChanged: (value) {
-                              //setState(() {});
+                              setState(() {});
                             },
                           ),
                         ),
@@ -122,49 +123,118 @@ class _CreatePostState extends State<CreatePost> {
                         ),
                         SizedBox(width: 10.w,),
                       ],),
-                if (_feedProvider.spotifyTextEditingController.text.trim().isNotEmpty)
-                  StreamBuilder(
-                      stream: _firestoreService.firebaseFirestore
-                          .collection('users').snapshots(),
-
-                      builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError) // TODO: show alert
-                          return Text('Something went wrong');
-
-                          var len = snapshot.data?.docs.length ?? 0;
-                          if (len == 0) {
-                            return Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text("No users found",
-                                  style: TextStyle(
-                                  fontSize: 20, color: Colors.grey))
-                                ],
-                            ),
-                          );
-                          }
-
-                          return Expanded(
-                              child: ListView.builder(
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: 10,
-                                  itemBuilder: (context, index) {
-                                    return SearchSongWidgetTile(
-
-                                    );
-                                  }
-                              ),
-                          );
+                (_feedProvider.spotifyTextEditingController.text.trim().isNotEmpty)
+                  ? FutureBuilder <Widget>(
+                    future: searchSpotifyResults(option, _feedProvider.spotifyTextEditingController.text.trim()),
+                    builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                      if (snapshot.hasData) {
+                        return snapshot.data!;
+                      } else {
+                        return const SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: CircularProgressIndicator(),
+                        );
                       }
-                  )
+                    }
+                    )
+                    : const SizedBox.shrink()
               ],),
           ),
         ],
       ),
     );
   }
+
+ Future<Widget> searchSpotifyResults(String option, String query) async{
+
+    if (option == "Artist" && query.isNotEmpty) {
+      print("before spotify call");
+      List<TopArtistModel> list = await  SpotifyService.searchArtist(query);
+      print("after spotify call");
+      return ListView.builder(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: Row(
+                children: [
+                  //Image(image: NetworkImage(list[index].image.),)
+                  Text(list[index].name)
+                ],
+              )
+            );
+          }
+      );
+
+    } else if (option == "Song" && query.isNotEmpty) {
+
+      List<TopArtistModel> list = await  SpotifyService.searchArtist(query);
+
+      return ListView.builder(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return Card(
+                child: Row(
+                  children: [
+                    //Image(image: NetworkImage(list[index].image.),)
+                    Text(list[index].name)
+                  ],
+                )
+            );
+          }
+      );
+
+    } else if (option == "Album" && query.isNotEmpty) {
+
+      List<TopArtistModel> list = await  SpotifyService.searchArtist(query);
+
+      return ListView.builder(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return Card(
+                child: Row(
+                  children: [
+                    //Image(image: NetworkImage(list[index].image.),)
+                    Text(list[index].name)
+                  ],
+                )
+            );
+          }
+      );
+
+    } else if (option == "Playlist" && query.isNotEmpty) {
+
+      List<TopArtistModel> list = await  SpotifyService.searchArtist(query);
+
+      return ListView.builder(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return Card(
+                child: Row(
+                  children: [
+                    //Image(image: NetworkImage(list[index].image.),)
+                    Text(list[index].name)
+                  ],
+                )
+            );
+          }
+      );
+
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
 }
