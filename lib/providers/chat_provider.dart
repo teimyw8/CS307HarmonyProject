@@ -251,7 +251,7 @@ class ChatProvider with ChangeNotifier {
   }
 
   ///this function checks if the user's last message is read
-  Future<bool> isLastMessageRead({required String chatId}) async {
+  Future<MessageModel?> retrieveLastMessage({required String chatId}) async {
     try {
       var data = await FirebaseFirestore.instance
           .collection('chats')
@@ -259,18 +259,11 @@ class ChatProvider with ChangeNotifier {
           .collection('messages')
           .orderBy('dateSent')
           .get();
-      List<MessageModel> messages = [];
-      for (dynamic doc in data.docs) {
-        messages.add(MessageModel.fromJson(doc.data()));
-      }
       MessageModel lastMessage =
           MessageModel.fromJson(data.docs[data.docs.length - 1].data());
-      if (lastMessage.fromUserId == authProvider.currentUserModel!.uid) {
-        return true;
-      }
-      return lastMessage.isRead;
+      return lastMessage;
     } catch (e) {
-      return false;
+      return null;
     }
   }
 }

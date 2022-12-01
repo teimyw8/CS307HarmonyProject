@@ -60,7 +60,7 @@ class _ChatPostResponseWidgetState extends State<ChatPostResponseWidget> {
                 ),
                 color: widget.sentByMe
                     ? AppColors.green
-                    : AppColors.grey70),
+                    : AppColors.grey60),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/chat_model.dart';
+import 'package:harmony_app/models/message_model.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/chat_provider.dart';
@@ -102,44 +103,52 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 8.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "${widget.chatModel.lastMessage}",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.footNote()
-                                .copyWith(color: AppColors.greyText),
-                          ),
-                        ),
-                        StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance.collection('chats').doc(widget.chatModel.chatId).collection('messages').snapshots(),
-                          builder: (context, snapshot) {
-                            return FutureBuilder<dynamic>(
-                                future: chatProvider.isLastMessageRead(
-                                    chatId: widget.chatModel.chatId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    print(snapshot.data);
-                                    if (snapshot.data == false) {
-                                      return Container(
-                                        margin: EdgeInsets.only(right: 10.w),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: AppColors.redError),
-                                        height: 10.h,
-                                        width: 10.h,
-                                      );
-                                    }
-                                  }
-                                  return Container();
-                                });
-                          }
-                        )
-                      ],
-                    ),
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('chats')
+                            .doc(widget.chatModel.chatId)
+                            .collection('messages')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          return FutureBuilder<dynamic>(
+                              future: chatProvider.retrieveLastMessage(
+                                  chatId: widget.chatModel.chatId),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  MessageModel? messageModel = snapshot.data;
+                                  print(messageModel);
+                                  bool isLastMessageRead =
+                                      (messageModel == null)
+                                          ? true
+                                          : messageModel.isRead;
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          (messageModel!.messageType == 'postResponse') ? "Post Response: ${widget.chatModel.lastMessage}" : "${widget.chatModel.lastMessage}",
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: AppTextStyles.footNote()
+                                              .copyWith(
+                                                  color: AppColors.greyText),
+                                        ),
+                                      ),
+                                      if (!isLastMessageRead)
+                                        Container(
+                                          margin: EdgeInsets.only(right: 10.w),
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: AppColors.redError),
+                                          height: 10.h,
+                                          width: 10.h,
+                                        ),
+                                    ],
+                                  );
+                                }
+                                return Container();
+                              });
+                        }),
                   ),
                 ],
               ),
