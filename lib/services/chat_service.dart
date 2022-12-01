@@ -96,6 +96,35 @@ class ChatService {
     }
   }
 
+  ///this function receives chat id from Firebase Firestore
+  Future<dynamic> fetchChatIdFromFirestore(
+      {required String uid1, required String uid2}) async {
+    try {
+      var chatReference1 = await firebaseFirestore
+          .collection('chats')
+          .where('uid1', isEqualTo: uid1)
+          .where('uid2', isEqualTo: uid2)
+          .limit(1)
+          .get();
+      var chatReference2 = await firebaseFirestore
+          .collection('chats')
+          .where('uid2', isEqualTo: uid1)
+          .where('uid1', isEqualTo: uid2)
+          .limit(1)
+          .get();
+      final List<DocumentSnapshot> chatDocuments1 = chatReference1.docs;
+      final List<DocumentSnapshot> chatDocuments2 = chatReference2.docs;
+      if (chatDocuments1.length == 1) {
+        return chatDocuments1[0].id;
+      }
+      if (chatDocuments2.length == 1) {
+        return chatDocuments2[0].id;
+      }
+    } catch (e) {
+      throw FirestoreException("Could not get messages!");
+    }
+  }
+
   ///this function sends a chat message to Firebase Firestore chat
   Future<void> sendMessageToChat(
       {required String chatId, required MessageModel messageModel, required String tokenId}) async {

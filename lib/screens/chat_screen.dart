@@ -20,19 +20,20 @@ class ChatScreen extends StatefulWidget {
   final UserModel partnerUserModel;
   final UserModel myUserModel;
   final bool doesChatExistInFirestore;
+  final String chatId;
 
   const ChatScreen(
       {Key? key,
       required this.chatModel,
       required this.partnerUserModel,
       required this.myUserModel,
-      required this.doesChatExistInFirestore})
+      required this.doesChatExistInFirestore,
+      required this.chatId})
       : super(key: key);
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
-
 
 class _ChatScreenState extends State<ChatScreen> {
   ChatService get firestoreService => GetIt.instance<ChatService>();
@@ -42,7 +43,6 @@ class _ChatScreenState extends State<ChatScreen> {
       Provider.of<ChatProvider>(Get.context!, listen: false);
   ScrollController _scrollController = new ScrollController();
 
-
   Stream<QuerySnapshot>? chats;
   TextEditingController messageController = TextEditingController();
   String admin = "";
@@ -50,7 +50,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     Future.delayed(Duration(seconds: 0), () {
-      chatProvider.initializeVariables(doesChatExist: widget.doesChatExistInFirestore);
+      chatProvider.initializeVariables(
+          doesChatExist: widget.doesChatExistInFirestore);
     });
     super.initState();
   }
@@ -80,7 +81,8 @@ class _ChatScreenState extends State<ChatScreen> {
           onHomeClicked: () {},
         ),
         body: Consumer<ChatProvider>(
-          builder: (BuildContext context, ChatProvider myChatProvider, Widget? child) {
+          builder: (BuildContext context, ChatProvider myChatProvider,
+              Widget? child) {
             if (!myChatProvider.areVariablesInitialized) return Container();
             return Stack(
               children: <Widget>[
@@ -91,20 +93,21 @@ class _ChatScreenState extends State<ChatScreen> {
                   width: MediaQuery.of(context).size.width,
                   child: Container(
                     padding:
-                    EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                     width: MediaQuery.of(context).size.width,
                     color: AppColors.grey70.withOpacity(0.5),
                     child: Row(children: [
                       Expanded(
                           child: TextFormField(
-                            controller: messageController,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: const InputDecoration(
-                              hintText: "Send a message...",
-                              hintStyle: TextStyle(color: Colors.white, fontSize: 16),
-                              border: InputBorder.none,
-                            ),
-                          )),
+                        controller: messageController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          hintText: "Send a message...",
+                          hintStyle:
+                              TextStyle(color: Colors.white, fontSize: 16),
+                          border: InputBorder.none,
+                        ),
+                      )),
                       const SizedBox(
                         width: 12,
                       ),
@@ -122,9 +125,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                           child: const Center(
                               child: Icon(
-                                Icons.send,
-                                color: Colors.white,
-                              )),
+                            Icons.send,
+                            color: Colors.white,
+                          )),
                         ),
                       )
                     ]),
@@ -147,12 +150,15 @@ class _ChatScreenState extends State<ChatScreen> {
           .orderBy('dateSent')
           .snapshots(),
       builder: (context, AsyncSnapshot snapshot) {
+        //reading all messages
         if (!snapshot.hasData) return CustomAppLoader();
         if (snapshot.hasError) return Text(snapshot.error.toString());
+        readAllMessages(snapshot.data.docs);
         return ListView(
           reverse: true,
           padding: EdgeInsets.only(bottom: 150.h),
-          children: snapshot.data.docs.reversed.map<Widget>((DocumentSnapshot document) {
+          children: snapshot.data.docs.reversed
+              .map<Widget>((DocumentSnapshot document) {
             MessageModel messageModel =
                 MessageModel.fromJson(document.data() as Map<String, dynamic>);
             UserModel userModel =
@@ -173,11 +179,42 @@ class _ChatScreenState extends State<ChatScreen> {
   sendMessage() {
     if (messageController.text.isNotEmpty) {
       chatProvider.sendMessageToChat(
-          chatModel: widget.chatModel, message: messageController.text, tokenId: widget.partnerUserModel.tokenId);
+          chatModel: widget.chatModel,
+          message: messageController.text,
+          tokenId: widget.partnerUserModel.tokenId);
       setState(() {
         messageController.clear();
         FocusManager.instance.primaryFocus?.unfocus();
       });
+    }
+  }
+
+  readAllMessages(dynamic documents) async {
+    int i = 0;
+    for (dynamic document in documents) {
+      MessageModel messageModel =
+          MessageModel.fromJson(document.data() as Map<String, dynamic>);
+      if (messageModel.fromUserId != authProvider.currentUserModel!.uid) {
+        var messageDocRef = FirebaseFirestore.instance
+            .collection('chats')
+            .doc(widget.chatModel.chatId)
+            .collection('messages')
+            .doc(document.id);
+        await messageDocRef.update({
+          'isRead': true,
+        });
+      }
+      if (i == documents.length - 1) {
+        if (messageModel.fromUserId != authProvider.currentUserModel!.uid) {
+          var chatDocRef = FirebaseFirestore.instance
+              .collection('chats')
+              .doc(widget.chatId);
+          await chatDocRef.update({
+            'isLastMessageRead': true,
+          });
+        }
+      }
+      i++;
     }
   }
 }

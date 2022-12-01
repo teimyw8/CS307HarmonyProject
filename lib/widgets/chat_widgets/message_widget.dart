@@ -77,7 +77,15 @@ class _MessageWidgetState extends State<MessageWidget> {
               ],
             ),
           ),
-          Text("${DateFormat("dd MMM HH:mm").format(widget.messageModel.dateSent)}")
+          Text("${DateFormat("dd MMM HH:mm").format(widget.messageModel.dateSent)}"),
+          Row(
+            mainAxisAlignment: (widget.sentByMe) ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children: [
+              Icon(Icons.library_add_check_outlined, size: 20.h, color: (widget.messageModel.isRead) ? AppColors.green : AppColors.grey60,),
+              SizedBox(width: 5.w,),
+              Text((widget.messageModel.isRead) ? "Read" : "Not read")
+            ],
+          ),
         ],
       ),
     );
