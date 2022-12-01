@@ -9,6 +9,7 @@ import 'package:harmony_app/helpers/colors.dart';
 import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/post_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/providers/chat_provider.dart';
 import 'package:harmony_app/screens/all_chats_screen.dart';
 import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
@@ -32,9 +33,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final FeedProvider _feedProvider =
+
       Provider.of<FeedProvider>(Get.context!, listen: false);
   final AuthProvider _authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
+
 
   @override
   void initState() {
@@ -51,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _feedProvider.initializeVariables();
     });
     super.initState();
+
     if(_authProvider.currentUserModel!.dailyNotifStatus){
       _feedProvider.scheduleNotification();
     }
@@ -67,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         alignment: AlignmentDirectional.topStart,
         children: [
           Scaffold(
+            resizeToAvoidBottomInset: true,
             appBar: CustomAppBar(
               title: "Harmony",
               needBackArrow: false,
@@ -85,21 +90,25 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: AppColors.white,
             body: Column(
               children: [
-                Container(
-                    height: 837.h, width: double.infinity, child: getFeed()),
+                Expanded(
+                  child: Container(
+                       width: double.infinity, child: getFeed()),
+                ),
               ],
             ),
             floatingActionButton: SpeedDial(
-              buttonSize: Size(75.0,75.0),
-              childrenButtonSize: Size(75.0,75.0),
+              buttonSize: Size(75.0, 75.0),
+              childrenButtonSize: Size(75.0, 75.0),
               animatedIcon: AnimatedIcons.menu_close,
               animatedIconTheme: IconThemeData(size: 25.0),
               children: [
                 SpeedDialChild(
                     child: Icon(Icons.add, color: Colors.green),
                     label: "Create Post",
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CreatePost()))
+                    onTap: () =>
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => CreatePost()))
                 ),
                 SpeedDialChild(
                     child: Icon(Icons.music_note, color: Colors.green),
@@ -109,8 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 SpeedDialChild(
                     child: Icon(Icons.chat, color: Colors.green),
                     label: "Chats",
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AllChatsScreen()))
+                    onTap: () =>
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => AllChatsScreen()))
                 ),
               ],
             ),
@@ -124,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer2<FeedProvider, AuthProvider>(
       builder: (BuildContext context, FeedProvider myFeedProvider,
           AuthProvider myAuthProvider, Widget? child) {
-
         //add your UID to friends list locally for the querry
         //limitation of firestore querying, this is a work around
         List<dynamic> uidList = myFeedProvider.listOfUsers();
@@ -143,7 +153,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
-
                   if (snapshot.hasError) {
                     return Text('Something went wrong');
                   }
@@ -156,7 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   List<PostModel> posts = snapshot.data!.docs
-                      .map((doc) => PostModel.fromJson(
+                      .map((doc) =>
+                      PostModel.fromJson(
                           doc.data() as Map<String, dynamic>)).toList();
                   //sort the List in order to get chronological order
                   //posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
@@ -169,109 +179,150 @@ class _HomeScreenState extends State<HomeScreen> {
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         children: postsFiltered
-                            .map((e) => Card(
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                      color: AppColors.grey40,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                            .map((e) =>
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: AppColors.grey40,
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
                                     children: [
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          SizedBox(
-                                            width: 8.w,
-                                          ),
-                                          Text(
-                                            e.username,
-                                            style: AppTextStyles.headline(),
-                                            textScaleFactor: 1.3,
-                                          ),
-                                          Spacer(),
-                                          Text(
-                                            "${DateTime.parse(e.dateTime
-                                                        .toDate()
-                                                        .toString())
-                                                    .year}-${DateTime.parse(e.dateTime
-                                                        .toDate()
-                                                        .toString())
-                                                    .month}-${DateTime.parse(e.dateTime
-                                                        .toDate()
-                                                        .toString())
-                                                    .day}  ${DateTime.parse(e.dateTime
-                                                        .toDate()
-                                                        .toString())
-                                                    .hour}:${DateTime.parse(e.dateTime.toDate().toString()).minute}",
-                                            style: AppTextStyles.footNote(),
-                                          ),
-                                          SizedBox(
-                                            width: 4.w,
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        width: 8.w,
                                       ),
-                                      mainDisplay(e),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          FutureBuilder(
-                                              future: _feedProvider.isLiked(e.uid,e.dateTime),
-                                              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                                                if(snapshot.connectionState == "waiting") {
-                                                  return IconButton(
-                                                    icon: Icon(Icons.thumb_up_alt_outlined),
-                                                    onPressed: () {
-                                                      _feedProvider.handleLikes(e.uid, e.dateTime);
-                                                      setState(() {});
-                                                    },
-                                                  );
-                                                }
-                                                else {
-                                                  if (snapshot.data ?? false == true) {
-                                                    return IconButton(
-                                                      icon: Icon(Icons.thumb_up),
-                                                      iconSize: 19.0,
-                                                      onPressed: () {
-                                                        _feedProvider.handleLikes(e.uid, e.dateTime);
-                                                        setState(() {});
-                                                      },
-                                                    );
-                                                  }
-                                                  else {
-                                                    return IconButton(
-                                                      icon: Icon(Icons.thumb_up_alt_outlined),
-                                                      onPressed: () {
-                                                        _feedProvider.handleLikes(e.uid, e.dateTime);
-                                                        setState(() {});
-                                                      },
-                                                    );
-                                                  }
-                                                }
-                                              }
-                                          ),
-                                          FutureBuilder(
-                                            future: _feedProvider.getLikes(e.uid, e.dateTime),
-                                            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                                              if(snapshot.connectionState == ConnectionState.done) {
-                                                print("done");
-                                                return Text(snapshot.data ?? "", style: TextStyle(fontSize: 20));
-                                              }
-                                              return Text("", style: TextStyle(fontSize: 20));
-                                            },
-                                          )
-                                        ],
+                                      Text(
+                                        e.username,
+                                        style: AppTextStyles.headline(),
+                                        textScaleFactor: 1.3,
                                       ),
-                                      const Divider(
-                                        color: Colors.grey,
+                                      Spacer(),
+                                      Text(
+                                        "${DateTime
+                                            .parse(e.dateTime
+                                            .toDate()
+                                            .toString())
+                                            .year}-${DateTime
+                                            .parse(e.dateTime
+                                            .toDate()
+                                            .toString())
+                                            .month}-${DateTime
+                                            .parse(e.dateTime
+                                            .toDate()
+                                            .toString())
+                                            .day}  ${DateTime
+                                            .parse(e.dateTime
+                                            .toDate()
+                                            .toString())
+                                            .hour}:${DateTime
+                                            .parse(
+                                            e.dateTime.toDate().toString())
+                                            .minute}",
+                                        style: AppTextStyles.footNote(),
                                       ),
-                                      Center(
-                                        child: handleBottomText(e)
+                                      SizedBox(
+                                        width: 4.w,
                                       ),
                                     ],
                                   ),
-                                ))
+                                  mainDisplay(e),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      FutureBuilder(
+                                          future: _feedProvider.isLiked(
+                                              e.uid, e.dateTime),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<
+                                                  bool> snapshot) {
+                                            if (snapshot.connectionState ==
+                                                "waiting") {
+                                              return IconButton(
+                                                icon: Icon(Icons
+                                                    .thumb_up_alt_outlined),
+                                                onPressed: () {
+                                                  _feedProvider.handleLikes(
+                                                      e.uid, e.dateTime);
+                                                  setState(() {});
+                                                },
+                                              );
+                                            }
+                                            else {
+                                              if (snapshot.data ??
+                                                  false == true) {
+                                                return IconButton(
+                                                  icon: Icon(
+                                                      Icons.thumb_up),
+                                                  iconSize: 19.0,
+                                                  onPressed: () {
+                                                    _feedProvider
+                                                        .handleLikes(
+                                                        e.uid, e.dateTime);
+                                                    //setState(() {});
+                                                  },
+                                                );
+                                              }
+                                              else {
+                                                return IconButton(
+                                                  icon: Icon(Icons
+                                                      .thumb_up_alt_outlined),
+                                                  onPressed: () {
+                                                    _feedProvider
+                                                        .handleLikes(
+                                                        e.uid, e.dateTime);
+                                                    //setState(() {});
+                                                  },
+                                                );
+                                              }
+                                            }
+                                          }
+                                      ),
+                                      FutureBuilder(
+                                        future: _feedProvider.getLikes(
+                                            e.uid, e.dateTime),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<
+                                                String> snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.done) {
+                                            print("done");
+                                            return Text(snapshot.data ?? "",
+                                                style: TextStyle(
+                                                    fontSize: 20));
+                                          }
+                                          return Text("", style: TextStyle(
+                                              fontSize: 20));
+                                        },
+                                      ),
+                                      Spacer(),
+                                      if (myAuthProvider.currentUserModel!.uid != e.uid)
+                                      GestureDetector(
+                                          onTap: () {
+                                            print(e);
+                                            ChatProvider chatProvider = Provider
+                                                .of<ChatProvider>(
+                                                Get.context!, listen: false);
+                                            chatProvider.showPostResponseDialog(postModel: e);
+                                          },
+                                          child: Icon(Icons.message)),
+                                      SizedBox(width: 10.w,)
+
+                                    ],
+                                  ),
+                                  const Divider(
+                                    color: Colors.grey,
+                                  ),
+                                  Center(
+                                      child: handleBottomText(e)
+                                  ),
+                                ],
+                              ),
+                            ))
                             .toList()),
                   );
                 }),

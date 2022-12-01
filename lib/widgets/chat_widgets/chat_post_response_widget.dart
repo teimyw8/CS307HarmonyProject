@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:harmony_app/helpers/colors.dart';
+import 'package:harmony_app/helpers/text_styles.dart';
 import 'package:harmony_app/models/message_model.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:intl/intl.dart';
 
-class MessageWidget extends StatefulWidget {
+import '../../models/post_model.dart';
+
+class ChatPostResponseWidget extends StatefulWidget {
   final MessageModel messageModel;
   final bool sentByMe;
   final UserModel userModel;
+  final PostModel postModel;
 
-  const MessageWidget(
+  const ChatPostResponseWidget(
       {Key? key,
         required this.messageModel,
         required this.sentByMe,
-        required this.userModel
+        required this.userModel,
+        required this.postModel
       })
       : super(key: key);
 
   @override
-  State<MessageWidget> createState() => _MessageWidgetState();
+  State<ChatPostResponseWidget> createState() => _ChatPostResponseWidgetState();
 }
 
-class _MessageWidgetState extends State<MessageWidget> {
+class _ChatPostResponseWidgetState extends State<ChatPostResponseWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,6 +76,7 @@ class _MessageWidgetState extends State<MessageWidget> {
                 SizedBox(
                   height: 5.h,
                 ),
+                postWidget(),
                 Text(widget.messageModel.message,
                     textAlign: TextAlign.start,
                     style: const TextStyle(fontSize: 16, color: Colors.black))
@@ -90,4 +96,96 @@ class _MessageWidgetState extends State<MessageWidget> {
       ),
     );
   }
+
+  Widget postWidget() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: AppColors.grey40,
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              SizedBox(
+                width: 8.w,
+              ),
+              Text(
+                widget.postModel.username,
+                style: AppTextStyles.headline(),
+                textScaleFactor: 1.3,
+              ),
+              Spacer(),
+              Text(
+                "${DateTime
+                    .parse(widget.postModel.dateTime
+                    .toDate()
+                    .toString())
+                    .year}-${DateTime
+                    .parse(widget.postModel.dateTime
+                    .toDate()
+                    .toString())
+                    .month}-${DateTime
+                    .parse(widget.postModel.dateTime
+                    .toDate()
+                    .toString())
+                    .day}  ${DateTime
+                    .parse(widget.postModel.dateTime
+                    .toDate()
+                    .toString())
+                    .hour}:${DateTime
+                    .parse(
+                    widget.postModel.dateTime.toDate().toString())
+                    .minute}",
+                style: AppTextStyles.footNote(),
+              ),
+              SizedBox(
+                width: 4.w,
+              ),
+            ],
+          ),
+          mainDisplay(widget.postModel),
+          const Divider(
+            color: Colors.grey,
+          ),
+          Center(
+              child: handleBottomText(widget.postModel)
+          ),
+        ],
+      ),
+    );
+  }
+  mainDisplay(e) {
+    if (e.isPost == "false") {
+      return Container(
+        child: ListTile(
+          leading: Icon(Icons.album),
+          title: Text(e.song),
+          subtitle: Text(e.artist),
+        ),
+      );
+    }
+    else {
+      return Container(
+        child: ListTile(
+          title: Text(e.text, textScaleFactor: 1.2,),
+        ),
+      );
+    }
+  }
+  handleBottomText(e) {
+    if (e.isPost == 'false') {
+      return Text(e.text,
+          style: AppTextStyles.headline());
+    }
+    else {
+      return Text("",
+          style: AppTextStyles.headline());
+    }
+  }
 }
+

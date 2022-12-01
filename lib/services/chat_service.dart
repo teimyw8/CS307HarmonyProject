@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/models/chat_model.dart';
 import 'package:harmony_app/models/message_model.dart';
+import 'package:harmony_app/models/post_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -142,6 +143,7 @@ class ChatService {
       AuthProvider authProvider =
           Provider.of<AuthProvider>(Get.context!, listen: false);
       //sending a notification to the other user with the contents of this message
+
       //TODO update tokenId
       if(authProvider.currentUserModel!.chatNotifStatus) {
         sendNotificationToOtherUser(
@@ -152,6 +154,38 @@ class ChatService {
             dateTime: messageModel.dateSent,
             tokenId: tokenId);
       }
+
+    } catch (e) {
+      //throw FirestoreException("Could not send a message!");
+    }
+  }
+
+  ///this function sends a chat message to Firebase Firestore chat
+  Future<void> sendPostResponseToChat(
+      {required String chatId, required MessageModel messageModel, required String tokenId,}) async {
+    try {
+      var messagesReference = await firebaseFirestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages');
+      messagesReference.add(messageModel.toJson());
+      print("HERE 1");
+      var chatDocRef = firebaseFirestore.collection('chats').doc(chatId);
+      print(chatDocRef);
+      await chatDocRef.update({
+        'lastMessage': messageModel.message,
+        'lastEdited': messageModel.dateSent
+      });
+      print("HERE 2");
+      AuthProvider authProvider =
+      Provider.of<AuthProvider>(Get.context!, listen: false);
+      //sending a notification to the other user with the contents of this message
+      sendNotificationToOtherUser(
+          body: "Reacted to your post: ${messageModel.message}",
+          title:
+          "${authProvider.currentUserModel!.firstName} ${authProvider.currentUserModel!.lastName}",
+          dateTime: messageModel.dateSent,
+          tokenId: tokenId);
     } catch (e) {
       //throw FirestoreException("Could not send a message!");
     }

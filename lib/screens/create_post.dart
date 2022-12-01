@@ -10,6 +10,7 @@ import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
 import '../services/firestore_service.dart';
@@ -46,18 +47,16 @@ class _CreatePostState extends State<CreatePost> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Text',
-                    ),
+                  child: CustomTextField(
+                    hintText: "Your post content...",
+                    maxLines: 5,
                     controller: _feedProvider.textEditingController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a valid submission';
                       }
                     },
-                  ),
+                  )
                 ),
                 Padding(
                   padding:
