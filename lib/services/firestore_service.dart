@@ -6,6 +6,7 @@ import 'package:harmony_app/helpers/service_constants.dart';
 import 'package:intl/intl.dart';
 
 import '../models/user_model.dart';
+import 'package:harmony_app/screens/friends_list_screen.dart';
 
 class FirestoreService {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -40,19 +41,24 @@ class FirestoreService {
       required bool displayName,
       required List<String> friends,
       required String password,
+      required bool dailyNotifStatus,
       required String profilepic,
-      required String tokenId}) async {
+      required String tokenId,
+        required bool chatNotifStatus, required bool FRNotifStatus}) async {
     try {
       var usersDocRef = firebaseFirestore.collection('users').doc(uid);
       await usersDocRef.set({
         "email": email,
+        "FRNotifStatus": FRNotifStatus,
         "firstName": firstName,
         "lastName": lastName,
         "username": userName,
         "bio": bio,
+        "dailyNotifStatus": dailyNotifStatus,
         "displayProfileTo": displayProfileTo,
         "displayName": displayName,
         "friends": [],
+        "chatNotifStatus": chatNotifStatus,
         "uid": uid,
         "password": password,
         "profilepic":
@@ -316,4 +322,71 @@ class FirestoreService {
       print(e);
     }
   }
+
+  Future<bool> getDailyNotifStatus(String uid) async {
+    var userDoc = await firebaseFirestore
+        .collection("users")
+        .doc(uid).get();
+    var userDocData = userDoc.data()!;
+    if (!userDoc.exists) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+    print(userDocData["dailyNotifStatus"]);
+    print("^");
+    return userDocData["dailyNotifStatus"];
+
+  }
+
+  Future<bool> getChatNotifStatus(String uid) async {
+    var userDoc = await firebaseFirestore
+        .collection("users")
+        .doc(uid).get();
+    var userDocData = userDoc.data()!;
+    if (!userDoc.exists) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+    print(userDocData["chatNotifStatus"]);
+    print("^");
+    return userDocData["chatNotifStatus"];
+
+  }
+
+  Future<void> swapDailyNotification(String uid, bool b) async {
+    print(uid);
+    await firebaseFirestore
+        .collection("users")
+        .doc(uid)
+        .update({'dailyNotifStatus': !b});
+  }
+
+  void swapChatNotification(String uid, bool b) async{
+    print(uid);
+    await firebaseFirestore
+        .collection("users")
+        .doc(uid)
+        .update({'chatNotifStatus': !b});
+  }
+
+  void swapFRNotification(String uid, bool b) async{
+    print(uid);
+    await firebaseFirestore
+        .collection("users")
+        .doc(uid)
+        .update({'FRNotifStatus': !b});
+  }
+
+  Future<bool> getFRNotifStatus(String uid) async {
+    var userDoc = await firebaseFirestore
+        .collection("users")
+        .doc(uid).get();
+    var userDocData = userDoc.data()!;
+    if (!userDoc.exists) {
+      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+    }
+    print(userDocData["FRNotifStatus"]);
+    print("^");
+    return userDocData["FRNotifStatus"];
+
+  }
+
 }
