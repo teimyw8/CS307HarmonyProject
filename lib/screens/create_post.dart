@@ -156,13 +156,19 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: list.length,
+          itemCount: 10,
           itemBuilder: (context, index) {
             return Card(
               child: Row(
                 children: [
-                  //Image(image: NetworkImage(list[index].image.),)
-                  Text(list[index].name)
+                  //Image(image: NetworkImage(list[index].image.toString()),),
+                  InkWell(
+                    child: Text(list[index].name),
+                    onTap: () {
+                      _feedProvider.spotifyTextEditingController.text = list[index].name;
+                    }
+                  ),
+                  const SizedBox(height: 25),
                 ],
               )
             );
