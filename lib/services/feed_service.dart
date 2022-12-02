@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -48,11 +49,18 @@ class FeedService {
    Future<String> countLikes(uid, dateTime) async {
     try {
       var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("dateTime", isEqualTo: dateTime).get();
-      var len =  userDoc.docs[0].get('likes').length;
-      return len.toString();
+      if (userDoc.docs[0].data()['likes'] != null) {
+        var len = userDoc.docs[0].data()['likes'].length;
+        return len.toString();
+      } else {
+        return "0";
+      }
+
     }
     catch (e) {
-      throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
+
+      return "0";
+      //throw FirestoreException(ServiceConstants.SOMETHINGWENTWRONG);
     }
   }
 
