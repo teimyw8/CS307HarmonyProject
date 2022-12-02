@@ -211,12 +211,18 @@ class _PublicRatingState extends State<PublicRating> {
                         ),
 
                       const SizedBox(width: 20),
-                      InkWell(
-                          child: Text(list[index].name),
-                          onTap: () {
-                            image = list[index].image[0]['url'];
-                            _feedProvider.spotifyTextEditingController.text = list[index].name;
-                          }
+                      Expanded(
+                        child: InkWell(
+                            child: Text(
+                                list[index].name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            onTap: () {
+                              image = list[index].image[0]['url'];
+                              _feedProvider.spotifyTextEditingController.text = list[index].name;
+                            }
+                        ),
                       ),
                       const SizedBox(height: 50),
                     ],
@@ -264,12 +270,17 @@ class _PublicRatingState extends State<PublicRating> {
                           ),
                         ),
                       const SizedBox(width: 20),
-                      InkWell(
-                          child: Text(list[index].name),
-                          onTap: () {
-                            image = list[index].image;
-                            _feedProvider.spotifyTextEditingController.text = list[index].name;
-                          }
+                      Expanded(
+                        child: InkWell(
+                            child: Text(list[index].name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            onTap: () {
+                              image = list[index].image;
+                              _feedProvider.spotifyTextEditingController.text = list[index].name;
+                            }
+                        ),
                       ),
                       const SizedBox(height: 50),
                     ],
@@ -317,15 +328,18 @@ class _PublicRatingState extends State<PublicRating> {
                           ),
                         ),
                       const SizedBox(width: 20),
-                      InkWell(
-                          child: Text(
-                            list[index].name,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          onTap: () {
-                            image = list[index].image[0]['url'];
-                            _feedProvider.spotifyTextEditingController.text = list[index].name;
-                          }
+                      Expanded(
+                        child: InkWell(
+                            child: Text(
+                              list[index].name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            onTap: () {
+                              image = list[index].image[0]['url'];
+                              _feedProvider.spotifyTextEditingController.text = list[index].name;
+                            }
+                        ),
                       ),
                       const SizedBox(height: 50),
                     ],
