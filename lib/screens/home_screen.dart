@@ -214,9 +214,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         const SizedBox(width: 20,),
+
         ///This is for when the post is for a song
-        if (!(e.song == null))
+        if ((e.song != null) && (e.artist != null) && (e.album == null || e.album == ""))
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
           Text(
               e.song,
@@ -230,8 +232,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
         ///Sharing an artist
-        if (!(e.artist == null) && (e.song == null) && (e.album == null))
+        if ((e.artist != null) && (e.song == null || e.song == "") && (e.album == null || e.album == ""))
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 e.artist,
@@ -241,18 +244,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
         ///sharing an album
-        if (!(e.artist == null) && (e.song == null) && !(e.album == null))
+        if ((e.artist != null) && (e.song == null || e.song == "") && (e.album != null))
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 e.album,
                 style: AppTextStyles.headline(),
               ),
+              Text(
+                e.artist,
+                style: AppTextStyles.footNote(),
+              ),
             ],
           ),
 
         ///This is for when the post is for a playlist
-        if (!(e.playlist == null))
+        if ((e.playlist != null))
           Column(
             children: [
               Text(e.playlist),
