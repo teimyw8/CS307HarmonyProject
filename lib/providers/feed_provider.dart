@@ -147,8 +147,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true", likes: []);
-              isPost: "true", rating: 0.0);
+              isPost: "true", likes: [], rating: 0.0);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -174,7 +173,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true");
+              isPost: "true", likes: []);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -194,7 +193,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true", rating: 10.0);
+              isPost: "true", rating: 10.0, likes: []);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -214,7 +213,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true", rating: 10.0,);
+              isPost: "true", rating: 10.0, likes: []);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -234,7 +233,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true", rating: 10.0);
+              isPost: "true", rating: 10.0, likes: []);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
