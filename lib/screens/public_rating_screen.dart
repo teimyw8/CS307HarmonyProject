@@ -45,6 +45,7 @@ class _PublicRatingState extends State<PublicRating> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(
         title: "Music Ratings",
         needBackArrow: true,
