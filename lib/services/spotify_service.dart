@@ -19,6 +19,7 @@ class SpotifyService {
 
     String userToken = '';
     try {
+      final test = await http.get(Uri.parse(PathService.requestAuthorization(clientID, 'http://localhost:8080','good12')));
       bool apiReturn = await SpotifySdk.connectToSpotifyRemote(clientId: clientID, redirectUrl: 'http://localhost:8080');
       String userToken = await SpotifySdk.getAccessToken(clientId: clientID, redirectUrl: 'http://localhost:8080');
 
@@ -103,6 +104,32 @@ class SpotifyService {
     List testList = jsonDecode(response.body)['artists']['items'];
 
     List<TopArtistModel> artistList = testList.map( (i) => TopArtistModel.fromJson(i)).toList();
+
+    return artistList;
+
+  }
+
+  static Future<List<TopSongModel>> searchSong(String query) async{
+    String url = "https://api.spotify.com/v1/search?q=$query&type=track";
+
+
+    if(secret == ""){
+      secret = await SpotifySdk.getAccessToken(clientId: clientID, redirectUrl: 'http://localhost:8080', scope: "user-top-read");
+    }
+
+    final test = await http.get(Uri.parse(PathService.requestAuthorization(clientID, 'http://localhost:8080','good12')));
+
+
+    final response = await http.get(Uri.parse('https://api.spotify.com/v1/search?q=$query&type=artist'),
+        headers: {'Authorization': 'Bearer $secret'}
+    );
+
+
+//    print(jsonDecode(response.body)['artists']['items']);
+
+    List testList = jsonDecode(response.body)['artists']['items'];
+
+    List<TopSongModel> artistList = testList.map( (i) => TopSongModel.fromJson(i)).toList();
 
     return artistList;
 
