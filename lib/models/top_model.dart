@@ -78,24 +78,57 @@ class TopData {
 
   */
 }
-class ImageModel {
-  String image;
+class PlaylistModel {
+  String name;
+  // String iconPic;
+  List<dynamic> image;
 
 
-  ImageModel(
-      {  required this.image
+  PlaylistModel(
+      {required this.name,
+        required this.image
       });
 
-  factory ImageModel.fromJson(Map<String, dynamic> json) => ImageModel(
-    image: json["url"],
+  factory PlaylistModel.fromJson(Map<String, dynamic> json) => PlaylistModel(
+     image: json['images'], name: json["name"],
+
   );
 
   Map<String, dynamic> toJson() => {
-    "url": image
+    "name": name,
+
+    "images": image
   };
 
   @override
   String toString() {
-    return 'UserModel{name: $image}';
+    return 'UserModel{name: $name}';
+  }
+}
+class AlbumModel {
+  String name;
+  // String iconPic;
+  List<dynamic> image;
+
+
+  AlbumModel(
+      {required this.name,
+        required this.image
+      });
+
+  factory AlbumModel.fromJson(Map<String, dynamic> json) => AlbumModel(
+    image: json['images'], name: json["name"],
+
+  );
+
+  Map<String, dynamic> toJson() => {
+    "name": name,
+
+    "images": image
+  };
+
+  @override
+  String toString() {
+    return 'UserModel{name: $name}';
   }
 }
