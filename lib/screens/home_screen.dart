@@ -314,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   DailyDisplay(e) {
-    if (e.isPost == "false") {
+    if (e.isPost == "true") {
       return Container(
         child: ListTile(
           leading: Icon(Icons.album),
