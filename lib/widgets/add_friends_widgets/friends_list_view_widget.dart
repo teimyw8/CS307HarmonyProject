@@ -52,7 +52,6 @@ class _FriendsListViewWidgetState extends State<FriendsListViewWidget> {
           style: AppTextStyles.headline(),
         );
       }
-
       return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
