@@ -292,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
   displayRatings(e) {
     if (e.rating <= 5.0) {
       return  Row(
-        children: [Text("My Rating:", textScaleFactor: 1.5,),RatingBar.builder(
+        children: [Text("My Rating:", textScaleFactor: 1.5,), RatingBar.builder(
         initialRating: e.rating,
         minRating: 0,
         ignoreGestures: true,
