@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart';
 import 'package:harmony_app/screens/list_of_friends_simple.dart';
 import 'package:harmony_app/screens/shared_songs_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+import 'package:harmony_app/widgets/common_widgets/top_item_list.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:harmony_app/models/top_model.dart';
@@ -26,8 +27,6 @@ import '../providers/edit_profile_provider.dart';
 import '../services/firestore_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
-
-
 
 class ProfileScreen extends StatefulWidget {
   UserModel userModel;
@@ -43,7 +42,15 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final EditProfileProvider _editProfileProvider =
       Provider.of<EditProfileProvider>(Get.context!, listen: false);
+
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
+
+  //Design constants
+  TextStyle primaryTextStyle = TextStyle();
+  TextStyle secondaryTextStyle = TextStyle();
+
+  Color primaryColor = AppColors.white;
+  Color secondaryColor = AppColors.green;
 
   List<String> songs = List.filled(5, '');
 
@@ -53,17 +60,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   List<String> titles = List.filled(3, '');
 
+  List<String> songImages = List.filled(3, '');
+
+  List<String> songArtists = List.filled(3, '');
+
+  List<String> artistImages = List.filled(3, '');
+
   GlobalKey _globalKey = new GlobalKey();
 
   Future<Uint8List> _capturePng() async {
     try {
       print('inside');
       print(_globalKey.currentContext);
-      RenderRepaintBoundary boundary =
-      _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
+          await image.toByteData(format: ui.ImageByteFormat.png);
       print('byte data: $byteData');
       var pngBytes = byteData?.buffer.asUint8List();
       var bs64 = base64Encode(pngBytes!);
@@ -77,6 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  List<int> syncStates = List.filled(3, 0);
+  bool synced = false;
+
   void setFriendsData() async {
     var dataTemp = await _firestoreService.retrieveUserFromFirestore(
         uid: widget.userModel.uid);
@@ -84,30 +100,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
       TopData test = TopData.fromJson(dataTemp!);
       int length;
 
-      if (test.songs.length < 5) {
+      if (test.songs.length < 3) {
         length = test.songs.length;
       } else {
-        length = 5;
+        length = 3;
       }
 
       for (int i = 0; i < length; i++) {
         songs[i] = test.songs[i];
       }
 
-      if (test.artists.length < 5) {
+      for (int i = 0; i < length; i++) {
+        songImages[i] = test.songImages[i];
+      }
+      for (int i = 0; i < length; i++) {
+        songArtists[i] = test.songArtists[i];
+      }
+
+      if (test.artists.length < 3) {
         length = test.artists.length;
       } else {
-        length = 5;
+        length = 3;
       }
 
       for (int i = 0; i < length; i++) {
         artists[i] = test.artists[i];
       }
 
-      if (test.genres.length < 5) {
+      for (int i = 0; i < length; i++) {
+        artistImages[i] = test.artistImages[i];
+      }
+
+      if (test.genres.length < 3) {
         length = test.genres.length;
       } else {
-        length = 5;
+        length = 3;
       }
 
       for (int i = 0; i < length; i++) {
@@ -117,18 +144,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void setSongs() async {
+
     List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
 
+    print("test" + topSongs[0].artist);
     int length;
 
-    if (topSongs.length < 5) {
+    if (topSongs.length < 3) {
       length = topSongs.length;
     } else {
-      length = 5;
+      length = 3;
     }
     setState(() {
       for (int i = 0; i < length; i++) {
         songs[i] = topSongs[i].name;
+      }
+      for (int i = 0; i < length; i++) {
+        songImages[i] = topSongs[i].image;
+      }
+      for (int i = 0; i < length; i++) {
+        songArtists[i] = topSongs[i].artist;
       }
     });
 
@@ -136,9 +171,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection('users')
         .doc(_editProfileProvider.currentUserModel!.uid)
         .update({'topSongs': songs});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'songImages': songImages});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'songArtists': songArtists});
   }
 
   void setArtists() async {
+
     List<TopArtistModel> topArtists = await SpotifyService.getTopArtists();
     Set<String> genreSet = Set();
     int found = 0;
@@ -152,10 +198,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     int length;
 
-    if (genreSet.length < 5) {
+    if (genreSet.length < 3) {
       length = topArtists.length;
     } else {
-      length = 5;
+      length = 3;
     }
     setState(() {
       for (int i = 0; i < length; i++) {
@@ -163,14 +209,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     });
 
-    if (topArtists.length < 5) {
+    if (topArtists.length < 3) {
       length = topArtists.length;
     } else {
-      length = 5;
+      length = 3;
     }
     setState(() {
       for (int i = 0; i < length; i++) {
         artists[i] = topArtists[i].name;
+      }
+      for (int i = 0; i < length; i++) {
+        artistImages[i] = topArtists[i].toJson()['images'][0]['url'];
       }
     });
 
@@ -183,13 +232,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection('users')
         .doc(_editProfileProvider.currentUserModel!.uid)
         .update({'topArtists': artists});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'artistImages': artistImages});
   }
 
   @override
   void initState() {
+
+
     super.initState();
-    print(widget.userModel.uid);
-    print('\n$_editProfileProvider.currentUserModel!.uid');
+
     if (_editProfileProvider.currentUserModel!.uid != widget.userModel.uid) {
       if (widget.userModel.spotifyToken == "") {
         for (String s in songs) {
@@ -207,10 +262,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         titles[0] =
             "Your friend must have their spotify account synced to see their analytics";
+
+        setState(() {
+          syncStates[0] = 2;
+          syncStates[1] = 0;
+          syncStates[2] = 0;
+        });
       } else {
+        setState(() {
+          syncStates[0] = 1;
+          syncStates[1] = 1;
+          syncStates[2] = 1;
+        });
         titles[0] = "Top Songs";
-        titles[1] = "Top Artists";
-        titles[2] = "Top Genres";
+        titles[1] = "Top Genres";
+        titles[2] = "Top Artists";
         setFriendsData();
       }
     } else {
@@ -230,22 +296,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         titles[0] =
             "You must have your spotify account synced to see your analytics";
+
+        setState(() {
+          syncStates[0] = 2;
+          syncStates[1] = 0;
+          syncStates[2] = 0;
+        });
       } else {
+        setState(() {
+          syncStates[0] = 1;
+          syncStates[1] = 1;
+          syncStates[2] = 1;
+        });
+
         titles[0] = "Top Songs";
-        titles[1] = "Top Artists";
-        titles[2] = "Top Genres";
+        titles[1] = "Top Genres";
+        titles[2] = "Top Artists";
         setArtists();
+        sleep(Duration(seconds: 1));
         setSongs();
       }
     }
   }
 
-  static Future<File> imageToFile({required String imageName, required String ext, required Uint8List pngBytes}) async {
+  static Future<File> imageToFile(
+      {required String imageName,
+      required String ext,
+      required Uint8List pngBytes}) async {
     //var bytes = await rootBundle.load('assets/$imageName.$ext');
     String tempPath = (await getTemporaryDirectory()).path;
     File file = File('$tempPath/profile.png');
-    await file.writeAsBytes(
-        pngBytes);
+    await file.writeAsBytes(pngBytes);
     return file;
   }
 
@@ -276,6 +357,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     print(widget.userModel.profilepic);
+
     if (widget.isPrivate) {
       return Scaffold(
         key: _globalKey,
@@ -285,7 +367,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           needSettings: true,
           needFriendsList: true,
         ),
-        backgroundColor: AppColors.green,
+        backgroundColor: secondaryColor,
         body: Column(
           children: [
             Row(
@@ -319,14 +401,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             needSettings: true,
             needFriendsList: true,
           ),
-          backgroundColor: AppColors.green,
+          backgroundColor: AppColors.white,
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
                   color: AppColors.green,
-                  padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 15.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 0.w, vertical: 15.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -340,7 +423,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _editProfileProvider.getPrimaryName(widget.userModel),
+                            _editProfileProvider
+                                .getPrimaryName(widget.userModel),
                             style: AppTextStyles.profileNames(),
                           ),
                           (widget.userModel.displayName
@@ -352,9 +436,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : SizedBox()),
                           Row(
                             children: [
-                              TextButton(
+
+                              if (widget.userModel.uid
+                                  .compareTo(_editProfileProvider.getUID()) != 0)
+
+                              ElevatedButton(
                                 style: TextButton.styleFrom(
                                   textStyle: AppTextStyles.button(),
+                                  primary: AppColors.white,
+                                  backgroundColor: Colors.blue,
+                                  onSurface: AppColors.grey40
                                 ),
                                 onPressed: () {
                                   Navigator.push(
@@ -365,9 +456,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 },
                                 child: const Text('Friends'),
                               ),
+
                               if (widget.userModel.uid
-                                      .compareTo(_editProfileProvider.getUID()) ==
-                                  0)
+                                      .compareTo(_editProfileProvider.getUID()) == 0)
+
                                 ElevatedButton.icon(
                                     onPressed: _shareContent,
                                     icon: const Icon(Icons.share),
@@ -387,8 +479,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             'Your friend is not synced with spotify'),
                                         actions: <Widget>[
                                           TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, 'Cancel'),
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
                                             child: const Text('Ok'),
                                           ),
                                         ],
@@ -405,8 +497,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             'You are not synced with spotify'),
                                         actions: <Widget>[
                                           TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, 'Cancel'),
+                                            onPressed: () => Navigator.pop(
+                                                context, 'Cancel'),
                                             child: const Text('Ok'),
                                           ),
                                         ],
@@ -423,280 +515,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 17, vertical: 0),
-                  child: Text(
-                    widget.userModel.bio,
-                    style: AppTextStyles.tileText().apply(color: AppColors.white),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Container(
-                    height: 60,
-                    width: 400,
+                Container(
+                  color: AppColors.green,
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 17,
+                      right: 17,
+                      bottom: 20,
+                    ),
                     child: Text(
-                      titles[0],
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
+                      widget.userModel.bio,
+                      style: AppTextStyles.tileText()
+                          .apply(color: AppColors.white),
                     ),
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      songs[0],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
+                //Analytics
+                Column(
+                  children: [
+                    //Songs
+                    TopItemList(
+                      fontSize: 15,
+                      iconBool: true,
+                      height: 40,
+                      syncState: syncStates[0],
+                      title: titles[0],
+                      item1: songs[0],
+                      item2: songs[1],
+                      item3: songs[2],
+                      image1: songImages[0],
+                      image2: songImages[1],
+                      image3: songImages[2],
+                      artist1: " - " + songArtists[0],
+                      artist2: " - " + songArtists[1],
+                      artist3: " - " + songArtists[2],
+
                     ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      songs[1],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
+                    //Genres
+                    TopItemList(
+                      fontSize: 18,
+                      syncState: syncStates[1],
+                      title: titles[1],
+                      item1: "  " + genres[0],
+                      item2: "  " + genres[1],
+                      item3: "  " + genres[2],
                     ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      songs[2],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
+                    //Artists
+                    TopItemList(
+                      fontSize: 15,
+                      iconBool: true,
+                      height: 40,
+                      syncState: syncStates[2],
+                      title: titles[2],
+                      item1: artists[0],
+                      item2: artists[1],
+                      item3: artists[2],
+                      image1: artistImages[0],
+                      image2: artistImages[1],
+                      image3: artistImages[2],
                     ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      songs[3],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      songs[4],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Container(
-                    height: 40,
-                    width: 300,
-                    child: Text(
-                      titles[1],
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      artists[0],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      artists[1],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      artists[2],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      artists[3],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      artists[4],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Container(
-                    height: 40,
-                    width: 300,
-                    child: Text(
-                      titles[2],
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      genres[0],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      genres[1],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      genres[2],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      genres[3],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  child: Container(
-                    height: 30,
-                    width: 400,
-                    color: const Color(0xDCDCDCCD),
-                    child: Text(
-                      genres[4],
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
               ],
             ),
