@@ -124,6 +124,8 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
                                                       .currentUserModel!.uid)
                                               ? true
                                               : messageModel.isRead;
+                                  print(messageModel);
+                                  print(isLastMessageRead);
                                   return Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
