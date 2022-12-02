@@ -1,6 +1,6 @@
 class TopArtistModel {
   String name;
- // String iconPic;
+  // String iconPic;
   List<dynamic> genres;
   List<dynamic> image;
 
@@ -11,7 +11,7 @@ class TopArtistModel {
       });
 
   factory TopArtistModel.fromJson(Map<String, dynamic> json) => TopArtistModel(
-      genres: json["genres"], image: json['images'], name: json["name"],
+    genres: json["genres"], image: json['images'], name: json["name"],
 
   );
 
@@ -37,7 +37,7 @@ class TopSongModel {
       {required this.name, required this.image, required this.artist});
 
   factory TopSongModel.fromJson(Map<String, dynamic> json) => TopSongModel(
-      name: json["name"], image: json['album']['images'][0]['url'], artist: json['album']['artists'][0]['name'],
+    name: json["name"], image: json['album']['images'][0]['url'], artist: json['album']['artists'][0]['name'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -52,21 +52,31 @@ class TopSongModel {
 class TopData {
   List<dynamic> genres;
   List<dynamic> artists;
+  List<dynamic> artistImages;
   List<dynamic> songs;
+  List<dynamic> songImages;
+  List<dynamic> songArtists;
 
 
 
   TopData(
       {required this.genres,
         required this.artists,
-        required this.songs,});
+        required this.artistImages,
+        required this.songs,
+        required this.songImages,
+        required this.songArtists,
+      });
 
   factory TopData.fromJson(Map<String, dynamic> json) => TopData(
-      genres: json["topGenres"] ?? [],
-      artists: json["topArtists"] ?? [],
-      songs: json["topSongs"] ?? [],
+    genres: json["topGenres"] ?? [],
+    artists: json["topArtists"] ?? [],
+    artistImages: json["artistImages"] ?? [],
+    songs: json["topSongs"] ?? [],
+    songImages: json["songImages"] ?? [],
+    songArtists: json["songArtists"] ?? [],
   );
- /*
+/*
   Map<String, dynamic> toJson() => {
     "names": names
   };
@@ -78,24 +88,59 @@ class TopData {
 
   */
 }
-class ImageModel {
-  String image;
+class PlaylistModel {
+  String name;
+  // String iconPic;
+  List<dynamic> image;
 
 
-  ImageModel(
-      {  required this.image
+  PlaylistModel(
+      {required this.name,
+        required this.image
       });
 
-  factory ImageModel.fromJson(Map<String, dynamic> json) => ImageModel(
-    image: json["url"],
+  factory PlaylistModel.fromJson(Map<String, dynamic> json) => PlaylistModel(
+    image: json['images'], name: json["name"],
+
   );
 
   Map<String, dynamic> toJson() => {
-    "url": image
+    "name": name,
+
+    "images": image
   };
 
   @override
   String toString() {
-    return 'UserModel{name: $image}';
+    return 'UserModel{name: $name}';
+  }
+}
+class AlbumModel {
+  String name;
+  // String iconPic;
+  List<dynamic> image;
+  String artist;
+
+
+  AlbumModel(
+      {required this.name,
+        required this.image,
+        required this.artist
+      });
+
+  factory AlbumModel.fromJson(Map<String, dynamic> json) => AlbumModel(
+    image: json['images'], name: json["name"], artist: json['artists'][0]['name'],
+
+  );
+
+  Map<String, dynamic> toJson() => {
+    "name": name,
+
+    "images": image
+  };
+
+  @override
+  String toString() {
+    return 'UserModel{name: $name}';
   }
 }
