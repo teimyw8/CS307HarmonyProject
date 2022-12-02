@@ -8,10 +8,12 @@ import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/helpers/service_constants.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/screens/home_screen.dart';
+import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/screens/profile_picture.dart';
 import 'package:harmony_app/screens/sign_up_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
+import 'package:harmony_app/services/shared_preferences_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import '../helpers/security_constants.dart';
 import '../screens/forgot_password_screen.dart';
@@ -20,6 +22,7 @@ class AuthProvider with ChangeNotifier {
   UserModel? currentUserModel;
 
   AuthService get _authService => GetIt.instance<AuthService>();
+  SharedPreferencesService get _sharedPreferencesService => GetIt.instance<SharedPreferencesService>();
 
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
 
@@ -132,13 +135,13 @@ class AuthProvider with ChangeNotifier {
         await FirebaseMessaging.instance.requestPermission();
         FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
         String tokenId = await _firebaseMessaging.getToken() ?? "";
-        print(tokenId);
         await _firestoreService.updateTokenIdInFirestore(
             uid: _authService.firebaseAuth.currentUser!.uid,
             tokenId: tokenId
         );
 
         currentUserModel = UserModel.fromJson(userDocData!);
+        await _sharedPreferencesService.logUserIn(uid: currentUserModel!.uid);
         goToHomeScreen();
       } on AuthException catch (e) {
         showErrorDialog(e.cause);
@@ -148,6 +151,17 @@ class AuthProvider with ChangeNotifier {
         showErrorDialog(ServiceConstants.SOMETHINGWENTWRONG);
       }
       stopLoading();
+    }
+  }
+
+  ///this function logs a user out
+  Future<void> logOutUser() async {
+    try {
+      currentUserModel = null;
+      _sharedPreferencesService.logUserOut();
+      goToLoginScreen();
+    } catch (e) {
+
     }
   }
 
@@ -191,6 +205,7 @@ class AuthProvider with ChangeNotifier {
               await _firestoreService.retrieveUserFromFirestore(uid: uid);
           currentUserModel = UserModel.fromJson(userDocData!);
         }
+        await _sharedPreferencesService.logUserIn(uid: currentUserModel!.uid);
         //we signed up user successfully and added the user to Firestore
         goToHomeScreen();
       } on AuthException catch (e) {
@@ -265,8 +280,14 @@ class AuthProvider with ChangeNotifier {
 
   ///this function pops all the AuthScreens and navigates user to the HomeScreen
   void goToHomeScreen() async {
-    Get.offAll(() => HomeScreen());
+    Get.offAll(() => const HomeScreen());
   }
+
+  ///this function pops all the Screens and navigates user to the LoginScreen
+  void goToLoginScreen() async {
+    Get.offAll(() => const LoginScreen());
+  }
+
   Future<void> updateCurrentUser() async {
     String uid = _authService.firebaseAuth.currentUser?.uid ?? "";
     var userDocData =
