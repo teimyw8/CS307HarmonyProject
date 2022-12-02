@@ -27,10 +27,6 @@ class FeedProvider with ChangeNotifier {
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   SharedPreferencesService get _sharedPreferencesService => GetIt.instance<SharedPreferencesService>();
-      Provider.of<AuthProvider>(Get.context!, listen: false);
-
-  Stream<QuerySnapshot<Object?>>? currentSnapshot;
-
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();

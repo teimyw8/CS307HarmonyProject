@@ -110,11 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       _authProvider.logOutUser();
                     }),
                 SpeedDialChild(
-                    child: Icon(Icons.logout, color: Colors.green),
-                    label: "Log Out",
-                    onTap: () {
-                      _authProvider.logOutUser();
-                    }),
+
                     child: const Icon(Icons.history, color: Colors.green),
                     label: "Your Posts",
                     onTap: () => Navigator.push(context,
