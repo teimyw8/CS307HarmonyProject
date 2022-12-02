@@ -259,13 +259,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
 
-        ///This is for when the post is for a playlist
-        if (!(e.playlist == null))
-          Column(
-            children: [
-              Text(e.playlist),
-            ]
-          )
       ],
     );
   }
@@ -297,10 +290,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   displayRatings(e) {
-    var l = 2.0;
-    if (l <= 5.0) {
-      return  RatingBar.builder(
-        initialRating: l,
+    if (e.rating <= 5.0) {
+      return  Row(
+        children: [Text("My Rating:", textScaleFactor: 1.5,),RatingBar.builder(
+        initialRating: e.rating,
         minRating: 0,
         ignoreGestures: true,
         direction: Axis.horizontal,
@@ -313,7 +306,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         onRatingUpdate: (rtg) {
         },
+      )
+    ]
       );
     }
+    return Text("");
   }
 }
