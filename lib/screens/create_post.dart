@@ -116,7 +116,7 @@ class _CreatePostState extends State<CreatePost> {
                             items: optionsSpotify.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                     d           child: Text(value),
+                                child: Text(value),
                               );
                             }).toList(),
                             onChanged:  (String? value) {
