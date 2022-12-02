@@ -192,7 +192,8 @@ class _ChatScreenState extends State<ChatScreen> {
       chatProvider.sendMessageToChat(
           chatModel: widget.chatModel,
           message: messageController.text,
-          tokenId: widget.partnerUserModel.tokenId);
+          tokenId: widget.partnerUserModel.tokenId,
+          recipientNotifStatus: widget.partnerUserModel.chatNotifStatus);
       setState(() {
         messageController.clear();
         FocusManager.instance.primaryFocus?.unfocus();

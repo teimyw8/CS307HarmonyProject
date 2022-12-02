@@ -38,14 +38,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     String connected = await SpotifyService.syncSpotify();
 
     if (connected != '') {
-      bool paused = await SpotifyService.getPlayerState();
       setState(() {
         _syncState = "Desync";
-        if (paused) {
-          _errorMessage = 'Paused';
-        } else {
-          _errorMessage = 'Playing';
-        }
+
       });
 
       await FirebaseFirestore.instance
@@ -115,7 +110,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         builder:
             (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
           return LoadingOverlay(
-            isLoading: myAuthProvider.isLoading,
+            isLoading: myAuthProvider.isLoading, //false
             progressIndicator: const CustomAppLoader(),
             child: Stack(alignment: AlignmentDirectional.topStart, children: [
               Scaffold(

@@ -116,7 +116,6 @@ class _FriendListTileWidgetState extends State<FriendListTileWidget> {
                     onPressed: () {
                       if (widget.friendModel.blockedUsers
                           .contains(authProvider.currentUserModel!.uid)) return;
-                      //debugPrint(e['uid']);
                       var collection =
                           FirebaseFirestore.instance.collection('users');
                       collection.doc(authProvider.currentUserModel!.uid).update({

@@ -55,45 +55,6 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
           isLoading: myFriendsListProvider.isLoading,
 
           child: Scaffold(
-            // appBar: AppBar(
-            //   backgroundColor: AppColors.green,
-            //   title: Text(
-            //     ''
-            //     'Harmony',
-            //     style: AppTextStyles.appBar(),
-            //   ),
-            //   actions: [
-            //     IconButton(
-            //         onPressed: () {
-            //           Navigator.push(
-            //               context,
-            //               MaterialPageRoute(
-            //                   builder: (context) => FriendRequestsScreen()));
-            //         },
-            //         icon: Icon(Icons.person_add)),
-            //     IconButton(
-            //         onPressed: () {
-            //           Navigator.push(
-            //               context,
-            //               MaterialPageRoute(
-            //                   builder: (context) => AddFriendsScreen()));
-            //         },
-            //         icon: Icon(Icons.search)),
-            //     IconButton(
-            //         onPressed: () {
-            //           setState(() {}); //refresh this page to show any changes
-            //         },
-            //         icon: Icon(Icons.refresh))
-            //   ],
-            // ),
-            // body: Column(children: <Widget>[
-            //   Consumer<AuthProvider>(builder: (BuildContext context,
-            //       AuthProvider myAuthProvider, Widget? child) {
-            //     myAuthProvider.updateCurrentUser();
-            //     currUser = (myAuthProvider.currentUserModel!);
-            //     friendsList = (myAuthProvider.currentUserModel?.friends)!;
-            //     return const Text("");
-            //   }),
             appBar: friendsListAppBar,
             body: Column(
               children: <Widget>[

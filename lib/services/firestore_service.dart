@@ -165,7 +165,7 @@ class FirestoreService {
       }
       AuthProvider authProvider =
       Provider.of<AuthProvider>(Get.context!, listen: false);
-      if(authProvider.currentUserModel!.FRNotifStatus) {
+      if(userModelToRequest.FRNotifStatus) {
         sendNotificationToOtherUser(
             body: '${myUserModel.username} sent you a friend request',
             title: 'New Friend Request',
