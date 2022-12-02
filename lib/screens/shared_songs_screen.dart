@@ -10,6 +10,7 @@ import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/screens/security_screen.dart';
 import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
+import 'package:harmony_app/widgets/common_widgets/top_item_list.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +42,8 @@ class SharedSongsScreenState extends State<SharedSongsScreen> {
 
   int empty = 0;
 
+  int length = 0;
+
   List commonElements = List.filled(10, '');
   List songs = List.filled(10, '');
 
@@ -58,9 +61,7 @@ class SharedSongsScreenState extends State<SharedSongsScreen> {
         .fold<Set>(lists.first.toSet(), (a, b) => a.intersection(b.toSet()))
         .toList();
 
-    int length;
-
-    if (commonElements.length < 5) {
+    if (commonElements.length < 10) {
       length = commonElements.length;
     } else {
       length = 10;
@@ -72,15 +73,15 @@ class SharedSongsScreenState extends State<SharedSongsScreen> {
   }
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
 
-     genList();
+    genList();
     if (songs[0] == "") {
       setState(() {
         songs[0] = "You have no shared songs";
+        length = 1;
       });
-
     }
   }
 
@@ -102,178 +103,21 @@ class SharedSongsScreenState extends State<SharedSongsScreen> {
               alignment: AlignmentDirectional.topStart,
               children: [
                 Scaffold(
-                  appBar: CustomAppBar(
-                    title: "Shared Songs",
-                    needBackArrow: true,
-                    needAvatar: false,
-                    needSettings: false,
-                    needHome: false,
-                  ),
-                  body: Column(
-                    children: [
-                      // Song 1
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[0],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 2
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[1],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 3
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[2],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 4
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[3],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 5
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[4],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 6
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[5],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 7
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[6],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 8
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[7],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 9
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[8],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Song 10
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                        child: Container(
-                          height: 30,
-                          width: 400,
-                          color: const Color(0xDCDCDCCD),
-                          child: Text(
-                            songs[9],
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
+                    appBar: CustomAppBar(
+                      title: "Shared Songs",
+                      needBackArrow: true,
+                      needAvatar: false,
+                      needSettings: false,
+                      needHome: false,
+                    ),
+                    body: ListView.builder(
+                      itemCount: length,
+                      itemBuilder: (context, index) => Card(
+                          child: ListTile(
+                              title: Text(
+                        songs[index],
+                      ))),
+                    )),
               ],
             ),
           );

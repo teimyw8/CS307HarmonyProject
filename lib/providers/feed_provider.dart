@@ -20,64 +20,128 @@ import '../screens/share_daily_activity_screen.dart';
 
 class FeedProvider with ChangeNotifier {
   AuthProvider _authProvider =
-  Provider.of<AuthProvider>(Get.context!, listen: false);
+      Provider.of<AuthProvider>(Get.context!, listen: false);
+
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   FeedService get _feedService => GetIt.instance<FeedService>();
 
-
-  bool isLoading = false;
+  bool isLoadingFeed = false;
   bool areVariablesInitialized = false;
-  final formKey = GlobalKey<FormState>();
+  final formKeyPosts = GlobalKey<FormState>();
+  final formKeyDaily = GlobalKey<FormState>();
 
-  TextEditingController? textEditingController =
-  TextEditingController();
+  ///this are for the regular posts
+  TextEditingController? textEditingController = TextEditingController();
+  TextEditingController spotifyTextEditingController = TextEditingController();
 
-  TextEditingController? songTextEditingController =
-  TextEditingController();
-
-  TextEditingController? artistTextEditingController =
-  TextEditingController();
+  ///this are for the daily activity
+  TextEditingController? songTextEditingController = TextEditingController();
+  TextEditingController? artistTextEditingController = TextEditingController();
 
   void initializeVariables() {
     areVariablesInitialized = false;
-    isLoading = false;
+    isLoadingFeed = false;
 
     areVariablesInitialized = true;
     notifyListeners();
   }
 
-  Future<void> createPost() async {
-    _authProvider.startLoading();
-    formKey.currentState!.save();
-
-    try {
-      if (formKey.currentState!.validate()) {
-        await _feedService.addPostToFirestore(
-            song: "",
-            artist: "",
-            text: textEditingController!.text,
-            username: _authProvider.currentUserModel!.username,
-            uid: _authProvider.currentUserModel!.uid,
-            dateTime: Timestamp.now(),
-            isPost: "true",
-            likes: []
-        );
+  Future<void> createPost(String option, String image, String album, String artist) async {
+    formKeyPosts.currentState!.save();
+    if (option == "Artist") {
+      try {
+        debugPrint(textEditingController!.text);
+        if (formKeyPosts.currentState!.validate()) {
+          await _feedService.addPostToFirestore(
+              image: image,
+              song: "",
+              artist: spotifyTextEditingController.text,
+              album: "",
+              playlist: "",
+              text: textEditingController!.text,
+              username: _authProvider.currentUserModel!.username,
+              uid: _authProvider.currentUserModel!.uid,
+              dateTime: Timestamp.now(),
+              isPost: "true",
+              likes: []);
+        }
+      } on FirestoreException catch (e) {
+        debugPrint('failed addPostoFirestore');
+        showErrorDialog(e.cause);
       }
-    } on FirestoreException catch (e) {
-      showErrorDialog(e.cause);
+    } else if (option == "Song") {
+      try {
+        debugPrint(textEditingController!.text);
+        if (formKeyPosts.currentState!.validate()) {
+          await _feedService.addPostToFirestore(
+              image: image,
+              song: spotifyTextEditingController.text,
+              artist: artist,
+              album: album,
+              playlist: "",
+              text: textEditingController!.text,
+              username: _authProvider.currentUserModel!.username,
+              uid: _authProvider.currentUserModel!.uid,
+              dateTime: Timestamp.now(),
+              isPost: "true", likes: []);
+        }
+      } on FirestoreException catch (e) {
+        debugPrint('failed addPostoFirestore');
+        showErrorDialog(e.cause);
+      }
+    } else if (option == "Album") {
+      try {
+        debugPrint(textEditingController!.text);
+        if (formKeyPosts.currentState!.validate()) {
+          await _feedService.addPostToFirestore(
+              image: image,
+              song: "",
+              artist: artist,
+              album: spotifyTextEditingController.text,
+              playlist: "",
+              text: textEditingController!.text,
+              username: _authProvider.currentUserModel!.username,
+              uid: _authProvider.currentUserModel!.uid,
+              dateTime: Timestamp.now(),
+              isPost: "true", likes: [],);
+        }
+      } on FirestoreException catch (e) {
+        debugPrint('failed addPostoFirestore');
+        showErrorDialog(e.cause);
+      }
+    } else if (option == "Playlist") {
+      try {
+        debugPrint(textEditingController!.text);
+        if (formKeyPosts.currentState!.validate()) {
+          await _feedService.addPostToFirestore(
+              image: image,
+              song: "",
+              artist: "",
+              album: "",
+              playlist: spotifyTextEditingController.text,
+              text: textEditingController!.text,
+              username: _authProvider.currentUserModel!.username,
+              uid: _authProvider.currentUserModel!.uid,
+              dateTime: Timestamp.now(),
+              isPost: "true", likes: []);
+        }
+      } on FirestoreException catch (e) {
+        debugPrint('failed addPostoFirestore');
+        showErrorDialog(e.cause);
+      }
     }
   }
 
   Future<void> createDailyPost() async {
-    _authProvider.startLoading();
-    formKey.currentState!.save();
+    formKeyDaily.currentState!.save();
 
     try {
       print(textEditingController!.text);
-      if (formKey.currentState!.validate()) {
+      if (formKeyDaily.currentState!.validate()) {
         await _feedService.addPostToFirestore(
             song: songTextEditingController!.text,
             artist: artistTextEditingController!.text,
@@ -86,7 +150,10 @@ class FeedProvider with ChangeNotifier {
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
             isPost: "false",
-            likes: []
+            likes: [],
+            album: "",
+            playlist: "",
+            image: "",
         );
       }
     } on FirestoreException catch (e) {
@@ -125,7 +192,8 @@ class FeedProvider with ChangeNotifier {
 
     //you can't remove items directy when using an iterator
     while (it.moveNext()) {
-      Duration difference = DateTime.now().difference(it.current.dateTime.toDate());
+      Duration difference =
+          DateTime.now().difference(it.current.dateTime.toDate());
       if (difference.inHours > 24) {
         //add this elements for removal after this while.
         toRemove.add(it.current);
@@ -135,16 +203,16 @@ class FeedProvider with ChangeNotifier {
     //remove the elements marked
     posts.removeWhere((e) => toRemove.contains(e));
 
-
     return posts;
   }
 
-  Future <void> scheduleNotification() async {
+  Future<void> scheduleNotification() async {
     final StreamController<String?> selectNotificationStream =
-    StreamController<String?>.broadcast();
+        StreamController<String?>.broadcast();
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
-    final InitializationSettings initializationSettings = InitializationSettings(
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
       android: initializationSettingsAndroid,
     );
     await flutterLocalNotificationsPlugin.initialize(
@@ -162,7 +230,6 @@ class FeedProvider with ChangeNotifier {
             break;
         }
       },
-
     );
     tz.initializeTimeZones();
     final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
@@ -189,15 +256,16 @@ class FeedProvider with ChangeNotifier {
                 fullScreenIntent: true)),
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime);
+            UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   activityTimeCheck(BuildContext context) async {
     if (await _feedService.checkTime()) {
-      return Navigator.push(context, MaterialPageRoute(builder: (context) => DailyActivity()));
-    }
-    else {
-      showErrorDialog("It is not time for the daily activity yet! Check back again soon!");
+      return Navigator.push(
+          context, MaterialPageRoute(builder: (context) => DailyActivity()));
+    } else {
+      showErrorDialog(
+          "It is not time for the daily activity yet! Check back again soon!");
     }
   }
 
@@ -209,7 +277,6 @@ class FeedProvider with ChangeNotifier {
 
 
 }
-
 
 ///this function shows an error dialog
 void showErrorDialog(String message) {

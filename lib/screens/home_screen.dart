@@ -22,6 +22,7 @@ import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_bar.dart';
 import 'create_post.dart';
 import 'friends_list_screen.dart';
+import 'history_posts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -66,14 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
               needAvatar: true,
               needSettings: true,
               needFriendsList: true,
-/*              onHomeClicked: () {
-                debugPrint(
-                    'Temporary, must be deleted when we finalize the home page');
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => (FriendsListScreen())));
-              },*/
             ),
             backgroundColor: AppColors.white,
             body: Column(
@@ -90,21 +83,26 @@ class _HomeScreenState extends State<HomeScreen> {
               animatedIconTheme: IconThemeData(size: 25.0),
               children: [
                 SpeedDialChild(
-                    child: Icon(Icons.add, color: Colors.green),
+                    child: const Icon(Icons.add, color: Colors.green),
                     label: "Create Post",
                     onTap: () => Navigator.push(context,
                         MaterialPageRoute(builder: (context) => CreatePost()))),
                 SpeedDialChild(
-                    child: Icon(Icons.music_note, color: Colors.green),
+                    child: const Icon(Icons.music_note, color: Colors.green),
                     label: "Share Daily Song",
                     onTap: () => _feedProvider.activityTimeCheck(context)),
                 SpeedDialChild(
-                    child: Icon(Icons.chat, color: Colors.green),
+                    child: const Icon(Icons.chat, color: Colors.green),
                     label: "Chats",
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => AllChatsScreen()))),
+                SpeedDialChild(
+                    child: const Icon(Icons.history, color: Colors.green),
+                    label: "Your Posts",
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HistoryPosts()))),
               ],
             ),
           ),
@@ -122,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
         List<dynamic> uidList = myFeedProvider.listOfUsers();
 
         //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
+        //print(uidList.toString());
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,18 +140,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Text("Loading");
                   }
 
-                  if (snapshot.data == null) {
-                    return Text('Waiting');
+                  if (snapshot.data.isBlank == 0) {
+                    return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text(
+                              'Nothing to see here....',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25, fontFamily: 'Inter'),
+                          ),
+                        ],
+                    );
                   }
 
                   List<PostModel> posts = snapshot.data!.docs
                       .map((doc) => PostModel.fromJson(
                           doc.data() as Map<String, dynamic>))
-                      .toList();
-                  //sort the List in order to get chronological order
-                  //posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
-                  //we want to remove all posts not from today
+                      .toList();
+
+                  //filter to only get the last days list of posts.
                   List postsFiltered = _feedProvider.lastDayOnly(posts);
 
                   return Expanded(
@@ -192,12 +199,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       ),
-                                      mainDisplay(e),
+                                      PostDisplaySpotify(e),
+                                      DailyDisplay(e),
+
+                                      //mainDisplay(e),
                                       showLikes(e, myAuthProvider),
                                       const Divider(
                                         color: Colors.grey,
                                       ),
-                                      Center(child: handleBottomText(e)),
+                                      Center(child: DailyBottomText(e)),
                                     ],
                                   ),
                                 ))
@@ -210,7 +220,79 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  mainDisplay(e) {
+  PostDisplaySpotify(e) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const SizedBox(width: 5,),
+        CircleAvatar(
+          radius: 50,
+          child: CircleAvatar(
+            radius: 45,
+            backgroundImage: NetworkImage(e.image),
+          ),
+        ),
+        const SizedBox(width: 20,),
+
+        ///This is for when the post is for a song
+        if ((e.song != null) && (e.artist != null) && (e.album == null || e.album == ""))
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+          Text(
+              e.song,
+            style: AppTextStyles.headline(),
+          ),
+          Text(
+              e.artist,
+            style: AppTextStyles.footNote(),
+          ),
+            ],
+          ),
+
+        ///Sharing an artist
+        if ((e.artist != null) && (e.song == null || e.song == "") && (e.album == null || e.album == ""))
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                e.artist,
+                style: AppTextStyles.headline(),
+              ),
+            ],
+          ),
+
+        ///sharing an album
+        if ((e.artist != null) && (e.song == null || e.song == "") && (e.album != null))
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                e.album,
+                style: AppTextStyles.headline(),
+              ),
+              Text(
+                e.artist,
+                style: AppTextStyles.footNote(),
+              ),
+            ],
+          ),
+
+        ///This is for when the post is for a playlist
+        if ((e.playlist != null))
+          Column(
+            children: [
+              Text(
+                  e.playlist,
+                  style: AppTextStyles.headline(),
+              ),
+            ]
+          )
+      ],
+    );
+  }
+
+  DailyDisplay(e) {
     if (e.isPost == "false") {
       return Container(
         child: ListTile(
@@ -231,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  handleBottomText(e) {
+  DailyBottomText(e) {
     if (e.isPost == 'false') {
       return Text(e.text, style: AppTextStyles.headline());
     } else {
