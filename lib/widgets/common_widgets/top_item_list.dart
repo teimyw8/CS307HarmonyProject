@@ -69,7 +69,7 @@ class TopItemList extends StatelessWidget {
       );
     }
     if (iconBool) {
-      print("RAHHHHH" + image1);
+
       return Column(
         children: [
           //Title

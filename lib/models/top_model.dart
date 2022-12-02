@@ -119,15 +119,17 @@ class AlbumModel {
   String name;
   // String iconPic;
   List<dynamic> image;
+  String artist;
 
 
   AlbumModel(
       {required this.name,
-        required this.image
+        required this.image,
+        required this.artist
       });
 
   factory AlbumModel.fromJson(Map<String, dynamic> json) => AlbumModel(
-    image: json['images'], name: json["name"],
+    image: json['images'], name: json["name"], artist: json['artists'][0]['name'],
 
   );
 
