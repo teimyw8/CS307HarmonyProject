@@ -282,6 +282,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       onChanged: (bool value) {
                                         _authProvider.swapDailyNotification(b);
                                         setState(() {});
+                                        _authProvider.updateCurrentUser();
                                       },
                                     );
                                   }
@@ -304,6 +305,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             onChanged: (bool value) {
                                               _authProvider.swapChatNotification(b);
                                               setState(() {});
+                                              _authProvider.updateCurrentUser();
                                             },
                                           );
                                         }
@@ -326,6 +328,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             onChanged: (bool value) {
                                               _authProvider.swapFRNotification(b);
                                               setState(() {});
+                                              _authProvider.updateCurrentUser();
                                             },
                                           );
                                         }
