@@ -29,6 +29,9 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
+  String image = "";
+  String album = "";
+  String artist = "";
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final FeedProvider _feedProvider =
       Provider.of<FeedProvider>(Get.context!, listen: false);
@@ -63,7 +66,10 @@ class _CreatePostState extends State<CreatePost> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Processing Data')),
                         );
-                        _feedProvider.createPost();
+                        //we need to send to createPost() the following
+                        //album,artist --> these are sent but not always have values
+                        //we always send image and the option
+                        _feedProvider.createPost(option, image, album, artist);
                         _feedProvider.spotifyTextEditingController.clear();
                         _feedProvider.textEditingController?.clear();
                         Navigator.push(
@@ -156,13 +162,20 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: list.length,
+          itemCount: 10,
           itemBuilder: (context, index) {
             return Card(
               child: Row(
                 children: [
-                  //Image(image: NetworkImage(list[index].image.),)
-                  Text(list[index].name)
+                  //Image(image: NetworkImage(list[index].image.toString()),),
+                  InkWell(
+                    child: Text(list[index].name),
+                    onTap: () {
+                      image = list[index].image.toString();
+                      _feedProvider.spotifyTextEditingController.text = list[index].name;
+                    }
+                  ),
+                  const SizedBox(height: 25),
                 ],
               )
             );
@@ -182,8 +195,17 @@ class _CreatePostState extends State<CreatePost> {
             return Card(
                 child: Row(
                   children: [
-                    //Image(image: NetworkImage(list[index].image.),)
-                    Text(list[index].name)
+                    //Image(image: NetworkImage(list[index].image.toString()),),
+                    InkWell(
+                        child: Text(list[index].name),
+                        onTap: () {
+                          //album = list[index].album;
+                          //artist = list[index].artist;
+                          image = list[index].image.toString();
+                          _feedProvider.spotifyTextEditingController.text = list[index].name;
+                        }
+                    ),
+                    const SizedBox(height: 25),
                   ],
                 )
             );
@@ -203,8 +225,16 @@ class _CreatePostState extends State<CreatePost> {
             return Card(
                 child: Row(
                   children: [
-                    //Image(image: NetworkImage(list[index].image.),)
-                    Text(list[index].name)
+                    //Image(image: NetworkImage(list[index].image.toString()),),
+                    InkWell(
+                        child: Text(list[index].name),
+                        onTap: () {
+                          //artist = list[index].artist;
+                          image = list[index].image.toString();
+                          _feedProvider.spotifyTextEditingController.text = list[index].name;
+                        }
+                    ),
+                    const SizedBox(height: 25),
                   ],
                 )
             );
@@ -224,8 +254,15 @@ class _CreatePostState extends State<CreatePost> {
             return Card(
                 child: Row(
                   children: [
-                    //Image(image: NetworkImage(list[index].image.),)
-                    Text(list[index].name)
+                    //Image(image: NetworkImage(list[index].image.toString()),),
+                    InkWell(
+                        child: Text(list[index].name),
+                        onTap: () {
+                          image = list[index].image.toString();
+                          _feedProvider.spotifyTextEditingController.text = list[index].name;
+                        }
+                    ),
+                    const SizedBox(height: 25),
                   ],
                 )
             );

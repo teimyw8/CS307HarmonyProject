@@ -229,6 +229,28 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
 
+        ///Sharing an artist
+        if (!(e.artist == null) && (e.song == null) && (e.album == null))
+          Column(
+            children: [
+              Text(
+                e.artist,
+                style: AppTextStyles.headline(),
+              ),
+            ],
+          ),
+
+        ///sharing an album
+        if (!(e.artist == null) && (e.song == null) && !(e.album == null))
+          Column(
+            children: [
+              Text(
+                e.album,
+                style: AppTextStyles.headline(),
+              ),
+            ],
+          ),
+
         ///This is for when the post is for a playlist
         if (!(e.playlist == null))
           Column(
@@ -236,8 +258,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Text(e.playlist),
             ]
           )
-
-        ///This is
       ],
     );
   }
