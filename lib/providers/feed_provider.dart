@@ -21,6 +21,7 @@ import '../screens/share_daily_activity_screen.dart';
 class FeedProvider with ChangeNotifier {
   AuthProvider _authProvider =
       Provider.of<AuthProvider>(Get.context!, listen: false);
+
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -28,7 +29,7 @@ class FeedProvider with ChangeNotifier {
 
   FeedService get _feedService => GetIt.instance<FeedService>();
 
-  bool isLoading = false;
+  bool isLoadingFeed = false;
   bool areVariablesInitialized = false;
   final formKeyPosts = GlobalKey<FormState>();
   final formKeyDaily = GlobalKey<FormState>();
@@ -43,14 +44,13 @@ class FeedProvider with ChangeNotifier {
 
   void initializeVariables() {
     areVariablesInitialized = false;
-    isLoading = false;
+    isLoadingFeed = false;
 
     areVariablesInitialized = true;
     notifyListeners();
   }
 
   Future<void> createPost(String option, String image, String album, String artist) async {
-    _authProvider.startLoading();
     formKeyPosts.currentState!.save();
     if (option == "Artist") {
       try {
@@ -136,7 +136,6 @@ class FeedProvider with ChangeNotifier {
   }
 
   Future<void> createDailyPost() async {
-    _authProvider.startLoading();
     formKeyDaily.currentState!.save();
 
     try {
