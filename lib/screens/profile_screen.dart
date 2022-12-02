@@ -144,9 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void setSongs() async {
-    List<TopSongModel> test = await SpotifyService.searchSong("alright");
 
-    print(test[0].name);
     List<TopSongModel> topSongs = await SpotifyService.getTopSongs();
 
     print("test" + topSongs[0].artist);
