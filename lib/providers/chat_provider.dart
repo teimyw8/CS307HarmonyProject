@@ -85,6 +85,7 @@ class ChatProvider with ChangeNotifier {
   ///this function shows a send post response dialog that user fills out to send his/her response
   void showPostResponseDialog({required PostModel postModel}) {
     PopUpDialog.showTextFieldPopUpDialog(title: 'Respond!', message: 'Send a message to your friend', onSendClick: (value) async {
+      if (value.isEmpty) return;
       final GlobalKey _LoaderDialog = new GlobalKey();
 
       LoaderDialog.showLoadingDialog(Get.context!, _LoaderDialog);

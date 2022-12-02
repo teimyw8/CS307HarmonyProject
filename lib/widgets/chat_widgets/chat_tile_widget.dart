@@ -116,17 +116,24 @@ class _ChatTileWidgetState extends State<ChatTileWidget> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   MessageModel? messageModel = snapshot.data;
-                                  print(messageModel);
                                   bool isLastMessageRead =
                                       (messageModel == null)
                                           ? true
-                                          : messageModel.isRead;
+                                          : (messageModel.fromUserId ==
+                                                  authProvider
+                                                      .currentUserModel!.uid)
+                                              ? true
+                                              : messageModel.isRead;
                                   return Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          (messageModel!.messageType == 'postResponse') ? "Post Response: ${widget.chatModel.lastMessage}" : "${widget.chatModel.lastMessage}",
+                                          (messageModel!.messageType ==
+                                                  'postResponse')
+                                              ? "Post Response: ${widget.chatModel.lastMessage}"
+                                              : "${widget.chatModel.lastMessage}",
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: AppTextStyles.footNote()

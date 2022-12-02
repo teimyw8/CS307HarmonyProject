@@ -166,7 +166,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 (authProvider.currentUserModel!.uid == messageModel.fromUserId)
                     ? widget.myUserModel
                     : widget.partnerUserModel;
-            print("messageModel: ${messageModel.toString()}");
             if (messageModel.messageType == "message") {
               return MessageWidget(
                 messageModel: messageModel,
