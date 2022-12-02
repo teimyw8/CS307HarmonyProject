@@ -128,7 +128,7 @@ class ChatService {
 
   ///this function sends a chat message to Firebase Firestore chat
   Future<void> sendMessageToChat(
-      {required String chatId, required MessageModel messageModel, required String tokenId}) async {
+      {required String chatId, required MessageModel messageModel, required String tokenId, required bool recipientNotifStatus}) async {
     try {
       var messagesReference = await firebaseFirestore
           .collection('chats')
@@ -145,7 +145,7 @@ class ChatService {
       //sending a notification to the other user with the contents of this message
 
       //TODO update tokenId
-      if(authProvider.currentUserModel!.chatNotifStatus) {
+      if(recipientNotifStatus) {
         sendNotificationToOtherUser(
             body: messageModel.message,
             title:

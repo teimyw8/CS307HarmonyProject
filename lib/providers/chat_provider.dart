@@ -55,7 +55,7 @@ class ChatProvider with ChangeNotifier {
   Future<void> sendMessageToChat(
       {required String message,
       required ChatModel chatModel,
-      required String tokenId}) async {
+      required String tokenId, required bool recipientNotifStatus}) async {
     try {
       // first checking if the chat exists.
       // If it doesn't, then we create it first and then send the message
@@ -74,7 +74,8 @@ class ChatProvider with ChangeNotifier {
       _chatService.sendMessageToChat(
           messageModel: messageModel,
           chatId: chatModel.chatId,
-          tokenId: tokenId);
+          tokenId: tokenId,
+          recipientNotifStatus: recipientNotifStatus);
     } on FirestoreException catch (e) {
       _showErrorDialog(e.cause);
     } catch (e) {
