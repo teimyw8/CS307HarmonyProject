@@ -52,19 +52,29 @@ class TopSongModel {
 class TopData {
   List<dynamic> genres;
   List<dynamic> artists;
+  List<dynamic> artistImages;
   List<dynamic> songs;
+  List<dynamic> songImages;
+  List<dynamic> songArtists;
 
 
 
   TopData(
       {required this.genres,
         required this.artists,
-        required this.songs,});
+        required this.artistImages,
+        required this.songs,
+        required this.songImages,
+        required this.songArtists,
+      });
 
   factory TopData.fromJson(Map<String, dynamic> json) => TopData(
       genres: json["topGenres"] ?? [],
       artists: json["topArtists"] ?? [],
+    artistImages: json["artistImages"] ?? [],
       songs: json["topSongs"] ?? [],
+    songImages: json["songImages"] ?? [],
+    songArtists: json["songArtists"] ?? [],
   );
  /*
   Map<String, dynamic> toJson() => {

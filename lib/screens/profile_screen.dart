@@ -100,30 +100,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
       TopData test = TopData.fromJson(dataTemp!);
       int length;
 
-      if (test.songs.length < 5) {
+      if (test.songs.length < 3) {
         length = test.songs.length;
       } else {
-        length = 5;
+        length = 3;
       }
 
       for (int i = 0; i < length; i++) {
         songs[i] = test.songs[i];
       }
 
-      if (test.artists.length < 5) {
+      for (int i = 0; i < length; i++) {
+        songImages[i] = test.songImages[i];
+      }
+      for (int i = 0; i < length; i++) {
+        songArtists[i] = test.songArtists[i];
+      }
+
+      if (test.artists.length < 3) {
         length = test.artists.length;
       } else {
-        length = 5;
+        length = 3;
       }
 
       for (int i = 0; i < length; i++) {
         artists[i] = test.artists[i];
       }
 
-      if (test.genres.length < 5) {
+      for (int i = 0; i < length; i++) {
+        artistImages[i] = test.artistImages[i];
+      }
+
+      if (test.genres.length < 3) {
         length = test.genres.length;
       } else {
-        length = 5;
+        length = 3;
       }
 
       for (int i = 0; i < length; i++) {
@@ -159,6 +170,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection('users')
         .doc(_editProfileProvider.currentUserModel!.uid)
         .update({'topSongs': songs});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'songImages': songImages});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'songArtists': songArtists});
   }
 
   void setArtists() async {
@@ -210,6 +231,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection('users')
         .doc(_editProfileProvider.currentUserModel!.uid)
         .update({'topArtists': artists});
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_editProfileProvider.currentUserModel!.uid)
+        .update({'artistImages': artistImages});
   }
 
   @override
