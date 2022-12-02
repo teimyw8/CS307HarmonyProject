@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -13,7 +13,6 @@ import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/services/spotify_service.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
-import 'package:harmony_app/widgets/common_widgets/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
 import '../services/firestore_service.dart';
@@ -23,35 +22,51 @@ import '../widgets/common_widgets/custom_text_field.dart';
 import 'create_post.dart';
 import 'home_screen.dart';
 
-class CreatePost extends StatefulWidget {
-  const CreatePost({Key? key}) : super(key: key);
+class PublicRating extends StatefulWidget {
+  const PublicRating({Key? key}) : super(key: key);
 
   @override
-  _CreatePostState createState() => _CreatePostState();
+  _PublicRatingState createState() => _PublicRatingState();
 }
 
-class _CreatePostState extends State<CreatePost> {
+class _PublicRatingState extends State<PublicRating> {
   String image = "";
   String album = "";
   String artist = "";
+  double rating = 0.0;
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final FeedProvider _feedProvider =
-      Provider.of<FeedProvider>(Get.context!, listen: false);
+  Provider.of<FeedProvider>(Get.context!, listen: false);
   //final SpotifyService _spotifyService = GetIt.instance<SpotifyService>();
 
-  List<String> optionsSpotify = <String>['Song', 'Artist', 'Album', 'Playlist'];
+  List<String> optionsSpotify = <String>['Song', 'Artist', 'Album'];
   late String option = optionsSpotify.first;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(
-        title: "Create post",
+        title: "Music Ratings",
         needBackArrow: true,
       ),
       body: Column(
         children: [
+          Text("Rating",textScaleFactor: 2.5),
+           RatingBar.builder(
+            initialRating: 0,
+             minRating: 0,
+            direction: Axis.horizontal,
+             allowHalfRating: true,
+             itemCount: 5,
+             itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+           itemBuilder: (context, _) => Icon(
+             Icons.star,
+              color: Colors.green,
+            ),
+            onRatingUpdate: (rtg) {
+              rating = rtg;
+            },
+          ),
           Form(
             key: _feedProvider.formKeyPosts,
             child: Column(
@@ -72,13 +87,14 @@ class _CreatePostState extends State<CreatePost> {
                         //we need to send to createPost() the following
                         //album,artist --> these are sent but not always have values
                         //we always send image and the option
-                        _feedProvider.createPost(option, image, album, artist, 10.0);
+                        _feedProvider.createRatingsPost(option, image, album, artist, rating);
                         _feedProvider.spotifyTextEditingController.clear();
                         _feedProvider.textEditingController?.clear();
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomeScreen()));
+
                       }
                     },
                     child: Text(
@@ -89,7 +105,7 @@ class _CreatePostState extends State<CreatePost> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
                   child: CustomTextField(
                     hintText: "Description",
                     controller: _feedProvider.textEditingController,
@@ -100,40 +116,40 @@ class _CreatePostState extends State<CreatePost> {
                     },
                   ),
                 ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(width: 10.w,),
-                        Expanded(
-                          child: CustomTextField(
-                            hintText: "Song/Artist/Album/Playlist",
-                            controller: _feedProvider.spotifyTextEditingController,
-                            onChanged: (value) {
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                        //Spacer(),
-                        DropdownButton<String>(
-                            value: option,
-                            items: optionsSpotify.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged:  (String? value) {
-                              // This is called when the user selects an item.
-                              print(value);
-                              setState(() {
-                                option = value!;
-                              });
-                            },
-                        ),
-                        SizedBox(width: 10.w,),
-                      ],),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(width: 10.w,),
+                    Expanded(
+                      child: CustomTextField(
+                        hintText: "Song/Artist/Album",
+                        controller: _feedProvider.spotifyTextEditingController,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    //Spacer(),
+                    DropdownButton<String>(
+                      value: option,
+                      items: optionsSpotify.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged:  (String? value) {
+                        // This is called when the user selects an item.
+                        print(value);
+                        setState(() {
+                          option = value!;
+                        });
+                      },
+                    ),
+                    SizedBox(width: 10.w,),
+                  ],),
                 (_feedProvider.spotifyTextEditingController.text.trim().isNotEmpty)
-                  ? FutureBuilder <Widget>(
+                    ? FutureBuilder <Widget>(
                     future: searchSpotifyResults(option, _feedProvider.spotifyTextEditingController.text.trim()),
                     builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                       if (snapshot.hasData) {
@@ -160,7 +176,7 @@ class _CreatePostState extends State<CreatePost> {
     );
   }
 
- Future<Widget> searchSpotifyResults(String option, String query) async{
+  Future<Widget> searchSpotifyResults(String option, String query) async{
 
     if (option == "Artist" && query.isNotEmpty) {
       List<TopArtistModel> list = await  SpotifyService.searchArtist(query);
@@ -168,47 +184,47 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: 7,
+          itemCount: 6,
           itemBuilder: (context, index) {
             return Card(
-              child: InkWell(
-                child: Row(
-                  children: [
-                    const SizedBox(width: 15),
-                    if (list[index].image.isNotEmpty)
-                      CircleAvatar(
-                        radius: 20,
-                        child: CircleAvatar(
+                child: InkWell(
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 15),
+                      if (list[index].image.isNotEmpty)
+                        CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          ),
                         ),
-                      ),
 
-                    if (list[index].image.isEmpty)
-                      CircleAvatar(
-                        radius: 20,
-                        child: CircleAvatar(
+                      if (list[index].image.isEmpty)
+                        CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                          ),
                         ),
-                      ),
 
-                    const SizedBox(width: 20),
-                    InkWell(
-                      child: Text(list[index].name),
-                      onTap: () {
-                        image = list[index].image[0]['url'];
-                        _feedProvider.spotifyTextEditingController.text = list[index].name;
-                      }
-                    ),
-                    const SizedBox(height: 50),
-                  ],
-                ),
-                onTap: () {
-                  image = list[index].image[0]['url'];
-                  _feedProvider.spotifyTextEditingController.text = list[index].name;
-                },
-              )
+                      const SizedBox(width: 20),
+                      InkWell(
+                          child: Text(list[index].name),
+                          onTap: () {
+                            image = list[index].image[0]['url'];
+                            _feedProvider.spotifyTextEditingController.text = list[index].name;
+                          }
+                      ),
+                      const SizedBox(height: 50),
+                    ],
+                  ),
+                  onTap: () {
+                    image = list[index].image[0]['url'];
+                    _feedProvider.spotifyTextEditingController.text = list[index].name;
+                  },
+                )
             );
           }
       );
@@ -221,7 +237,7 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: 7,
+          itemCount: 6,
           itemBuilder: (context, index) {
             return Card(
                 child: InkWell(
@@ -275,7 +291,7 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: 7,
+          itemCount: 6,
           itemBuilder: (context, index) {
             return Card(
                 child: InkWell(
@@ -302,7 +318,7 @@ class _CreatePostState extends State<CreatePost> {
                       const SizedBox(width: 20),
                       InkWell(
                           child: Text(
-                              list[index].name,
+                            list[index].name,
                             overflow: TextOverflow.ellipsis,
                           ),
                           onTap: () {
@@ -317,64 +333,6 @@ class _CreatePostState extends State<CreatePost> {
                     image = list[index].image[0]['url'];
                     _feedProvider.spotifyTextEditingController.text = list[index].name;
                     artist = list[index].artist;
-                  },
-                )
-            );
-          }
-      );
-
-    } else if (option == "Playlist" && query.isNotEmpty) {
-
-      List<PlaylistModel> list = await  SpotifyService.searchPlaylist(query);
-
-      return ListView.builder(
-          padding: EdgeInsets.symmetric(vertical: 15),
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: 7,
-          itemBuilder: (context, index) {
-            return Card(
-                child: InkWell(
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 15),
-                      if (list[index].image.isNotEmpty)
-                        CircleAvatar(
-                          radius: 20,
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundImage: NetworkImage(list[index].image[0]['url']),
-                          ),
-                        ),
-
-                      if (list[index].image.isEmpty)
-                        CircleAvatar(
-                          radius: 20,
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
-                          ),
-                        ),
-                      const SizedBox(width: 20),
-                      InkWell(
-                          child: Expanded(
-                            child: Text(
-                                list[index].name,
-                                overflow: TextOverflow.ellipsis,
-                                //style: const TextStyle(overflow: TextOverflow.clip,),
-                            ),
-                          ),
-                          onTap: () {
-                            image = list[index].image[0]['url'];
-                            _feedProvider.spotifyTextEditingController.text = list[index].name;
-                          }
-                      ),
-                      const SizedBox(height: 50),
-                    ],
-                  ),
-                  onTap: () {
-                    image = list[index].image[0]['url'];
-                    _feedProvider.spotifyTextEditingController.text = list[index].name;
                   },
                 )
             );

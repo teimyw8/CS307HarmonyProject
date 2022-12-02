@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,7 @@ import 'package:harmony_app/providers/chat_provider.dart';
 import 'package:harmony_app/screens/all_chats_screen.dart';
 import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
+import 'package:harmony_app/screens/public_rating_screen.dart';
 import 'package:harmony_app/screens/share_daily_activity_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
@@ -115,6 +117,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     label: "Your Posts",
                     onTap: () => Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HistoryPosts()))),
+                SpeedDialChild(
+                    child: const Icon(Icons.star, color: Colors.green),
+                    label: "Music Rating Post",
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => PublicRating())))
               ],
             ),
           ),
@@ -211,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       ),
+                                      displayRatings(e),
                                       PostDisplaySpotify(e),
                                       DailyDisplay(e),
 
@@ -423,5 +431,29 @@ class _HomeScreenState extends State<HomeScreen> {
         )
       ],
     );
+  }
+
+  displayRatings(e) {
+    if (e.rating <= 5.0) {
+      return  Row(
+        children: [Text("My Rating:", textScaleFactor: 1.5,), RatingBar.builder(
+        initialRating: e.rating,
+        minRating: 0,
+        ignoreGestures: true,
+        direction: Axis.horizontal,
+        allowHalfRating: true,
+        itemCount: 5,
+        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+        itemBuilder: (context, _) => Icon(
+          Icons.star,
+          color: Colors.green,
+        ),
+        onRatingUpdate: (rtg) {
+        },
+      )
+    ]
+      );
+    }
+    return Text("");
   }
 }

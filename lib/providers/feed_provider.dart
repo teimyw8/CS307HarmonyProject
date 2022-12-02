@@ -68,7 +68,7 @@ class FeedProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createPost(String option, String image, String album, String artist) async {
+  Future<void> createRatingsPost(String option, String image, String album, String artist, double rating) async {
     formKeyPosts.currentState!.save();
     if (option == "Artist") {
       try {
@@ -77,6 +77,7 @@ class FeedProvider with ChangeNotifier {
           await _feedService.addPostToFirestore(
               image: image,
               song: "",
+              rating: rating,
               artist: spotifyTextEditingController.text,
               album: "",
               playlist: "",
@@ -105,7 +106,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true", likes: []);
+              isPost: "true", likes: [], rating: rating);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -125,7 +126,8 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true", likes: [],);
+              isPost: "true", likes: [], rating: rating);
+
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -146,6 +148,93 @@ class FeedProvider with ChangeNotifier {
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
               isPost: "true", likes: []);
+              isPost: "true", rating: 0.0);
+        }
+      } on FirestoreException catch (e) {
+        debugPrint('failed addPostoFirestore');
+        showErrorDialog(e.cause);
+      }
+    }
+  }
+
+  Future<void> createPost(String option, String image, String album, String artist, double rating) async {
+    formKeyPosts.currentState!.save();
+    if (option == "Artist") {
+      try {
+        debugPrint(textEditingController!.text);
+        if (formKeyPosts.currentState!.validate()) {
+          await _feedService.addPostToFirestore(
+              image: image,
+              song: "",
+              rating: 10.0,
+              artist: spotifyTextEditingController.text,
+              album: "",
+              playlist: "",
+              text: textEditingController!.text,
+              username: _authProvider.currentUserModel!.username,
+              uid: _authProvider.currentUserModel!.uid,
+              dateTime: Timestamp.now(),
+              isPost: "true");
+        }
+      } on FirestoreException catch (e) {
+        debugPrint('failed addPostoFirestore');
+        showErrorDialog(e.cause);
+      }
+    } else if (option == "Song") {
+      try {
+        debugPrint(textEditingController!.text);
+        if (formKeyPosts.currentState!.validate()) {
+          await _feedService.addPostToFirestore(
+              image: image,
+              song: spotifyTextEditingController.text,
+              artist: artist,
+              album: album,
+              playlist: "",
+              text: textEditingController!.text,
+              username: _authProvider.currentUserModel!.username,
+              uid: _authProvider.currentUserModel!.uid,
+              dateTime: Timestamp.now(),
+              isPost: "true", rating: 10.0);
+        }
+      } on FirestoreException catch (e) {
+        debugPrint('failed addPostoFirestore');
+        showErrorDialog(e.cause);
+      }
+    } else if (option == "Album") {
+      try {
+        debugPrint(textEditingController!.text);
+        if (formKeyPosts.currentState!.validate()) {
+          await _feedService.addPostToFirestore(
+              image: image,
+              song: "",
+              artist: artist,
+              album: spotifyTextEditingController.text,
+              playlist: "",
+              text: textEditingController!.text,
+              username: _authProvider.currentUserModel!.username,
+              uid: _authProvider.currentUserModel!.uid,
+              dateTime: Timestamp.now(),
+              isPost: "true", rating: 10.0,);
+        }
+      } on FirestoreException catch (e) {
+        debugPrint('failed addPostoFirestore');
+        showErrorDialog(e.cause);
+      }
+    } else if (option == "Playlist") {
+      try {
+        debugPrint(textEditingController!.text);
+        if (formKeyPosts.currentState!.validate()) {
+          await _feedService.addPostToFirestore(
+              image: image,
+              song: "",
+              artist: "",
+              album: "",
+              playlist: spotifyTextEditingController.text,
+              text: textEditingController!.text,
+              username: _authProvider.currentUserModel!.username,
+              uid: _authProvider.currentUserModel!.uid,
+              dateTime: Timestamp.now(),
+              isPost: "true", rating: 10.0);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -171,7 +260,7 @@ class FeedProvider with ChangeNotifier {
             likes: [],
             album: "",
             playlist: "",
-            image: "",
+            image: "", rating: 10.0,
         );
       }
     } on FirestoreException catch (e) {

@@ -1,6 +1,6 @@
 class TopArtistModel {
   String name;
- // String iconPic;
+  // String iconPic;
   List<dynamic> genres;
   List<dynamic> image;
 

@@ -14,6 +14,8 @@ class PostModel {
   String playlist;
   String image;
 
+  double rating;
+
   PostModel(
       {
         required this.uid,
@@ -24,6 +26,7 @@ class PostModel {
         required this.song,
         required this.isPost,
         required this.album,
+        required this.rating,
         required this.playlist,
         required this.image,
         required this.likes
@@ -36,6 +39,7 @@ class PostModel {
     text: json["text"],
     dateTime: json["dateTime"],
     song: json["song"] ?? "",
+    rating: json["rating"] ?? 0.0,
     artist: json["artist"] ?? "",
     isPost: json["isPost"] ?? "",
       likes: json["likes"] ?? [],
@@ -49,6 +53,7 @@ class PostModel {
     "username": username,
     "text": text,
     "dateTime": dateTime,
+    "rating": rating,
     "song": song,
     "artist": artist,
     "isPost": isPost,

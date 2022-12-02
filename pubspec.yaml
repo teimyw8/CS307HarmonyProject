@@ -41,6 +41,7 @@ dependencies:
   cloud_functions: ^3.3.9
   firebase_messaging: ^13.1.0
   shared_preferences: ^2.0.15
+  flutter_rating_bar: ^4.0.1
 
 
 dev_dependencies:

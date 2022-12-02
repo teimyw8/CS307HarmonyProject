@@ -22,7 +22,7 @@ class FeedService {
         required List likes,
       required String album,
       required String playlist,
-      required String image,
+      required String image, required double rating,
       }) async {
     try {
       var postsDocRef = firebaseFirestore.collection('posts');
@@ -30,6 +30,7 @@ class FeedService {
         "username": username,
         "text": text,
         "uid": uid,
+        "rating": rating,
         "dateTime": dateTime,
         "song": song,
         "artist": artist,
