@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 class FriendListTileWidget extends StatefulWidget {
   UserModel friendModel;
 
+
   FriendListTileWidget(this.friendModel);
 
   @override
@@ -118,16 +119,16 @@ class _FriendListTileWidgetState extends State<FriendListTileWidget> {
                       //debugPrint(e['uid']);
                       var collection =
                           FirebaseFirestore.instance.collection('users');
-                      collection.doc(_friendsListProvider.currUser).update({
+                      collection.doc(authProvider.currentUserModel!.uid).update({
                         'friends':
                             FieldValue.arrayRemove([widget.friendModel.uid]),
                       });
+                      print("_friendsListProvider.currUser: ${authProvider.currentUserModel!.uid}");
                       collection.doc(widget.friendModel.uid).update({
                         'friends': FieldValue.arrayRemove(
-                            [_friendsListProvider.currUser]),
+                            [authProvider.currentUserModel!.uid]),
                       });
-                      print(_friendsListProvider.currUser);
-                      _friendsListProvider.currUser
+                      _friendsListProvider.authProvider.currentUserModel!.friends
                           .remove(widget.friendModel.uid);
                       setState(() {});
                     },

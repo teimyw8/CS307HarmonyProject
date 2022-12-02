@@ -19,7 +19,6 @@ class FriendsListProvider with ChangeNotifier {
   FirestoreService get firestoreService => GetIt.instance<FirestoreService>();
   AuthProvider authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
-  var currUser;
   late List<dynamic> friendsList;
   UserModel? temp;
   bool isLoading = false;
@@ -29,8 +28,6 @@ class FriendsListProvider with ChangeNotifier {
       builder:
           (BuildContext context, AuthProvider myAuthProvider, Widget? child) {
         myAuthProvider.updateCurrentUser();
-        currUser = (myAuthProvider.currentUserModel?.uid);
-        print(currUser);
         friendsList = (myAuthProvider.currentUserModel?.friends)!;
         return const SizedBox.shrink();
       },
