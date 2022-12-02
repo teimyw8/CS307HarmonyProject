@@ -12,11 +12,13 @@ import 'package:harmony_app/providers/friend_screen_provider.dart';
 import 'package:harmony_app/providers/friends_list_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/all_chats_screen.dart';
+import 'package:harmony_app/screens/home_screen.dart';
 import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/chat_service.dart';
 import 'package:harmony_app/services/feed_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
+import 'package:harmony_app/services/shared_preferences_service.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/friend_requests_provider.dart';
@@ -29,6 +31,8 @@ void setupLocator() {
   GetIt.instance.registerLazySingleton(() => FirestoreService());
   GetIt.instance.registerLazySingleton(() => ChatService());
   GetIt.instance.registerLazySingleton(() => FeedService());
+  GetIt.instance.registerLazySingleton(() => SharedPreferencesService());
+
 }
 
 
@@ -36,6 +40,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   setupLocator();
+
+  SharedPreferencesService sharedPreferencesService = SharedPreferencesService();
+
+  bool isLoggedIn = await sharedPreferencesService.getIsUserLoggedIn();
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AuthProvider()),
@@ -46,18 +54,20 @@ void main() async {
       ChangeNotifierProvider(create: (_) => FriendsListProvider()),
       ChangeNotifierProvider(create: (_) => FeedProvider()),
       ChangeNotifierProvider(create: (_) => FriendScreenProvider()),
-    ], child: const MyApp()),
+    ], child: MyApp(isLoggedIn),),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  bool isLoggedIn;
   @override
   State<MyApp> createState() => _MyAppState();
+
+  MyApp(this.isLoggedIn);
 }
 
 class _MyAppState extends State<MyApp> {
+
 
   // This widget is the root of your application.
   @override
@@ -73,9 +83,11 @@ class _MyAppState extends State<MyApp> {
           },
           debugShowCheckedModeBanner: false,
           title: 'Harmony',
-          initialRoute: '/login',
+          initialRoute: (widget.isLoggedIn) ? '/home' : '/login',
           routes: {
             '/login': (context) => const LoginScreen(),
+            '/home': (context) => const HomeScreen(),
+
           },
         );
       },

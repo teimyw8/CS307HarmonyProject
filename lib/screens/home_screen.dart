@@ -16,7 +16,9 @@ import 'package:harmony_app/providers/feed_provider.dart';
 import 'package:harmony_app/screens/share_daily_activity_screen.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_bar.dart';
 import 'package:harmony_app/widgets/common_widgets/custom_app_button.dart';
+import 'package:harmony_app/widgets/common_widgets/custom_app_loader.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/firestore_service.dart';
 import '../widgets/common_widgets/custom_app_bar.dart';
@@ -37,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final AuthProvider _authProvider =
       Provider.of<AuthProvider>(Get.context!, listen: false);
 
+
   @override
   void initState() {
     Future.delayed(Duration(seconds: 0), () {
@@ -44,9 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     super.initState();
 
-    if (_authProvider.currentUserModel!.dailyNotifStatus) {
-      _feedProvider.scheduleNotification();
-    }
   }
 
   @override
@@ -76,12 +76,17 @@ class _HomeScreenState extends State<HomeScreen> {
               },*/
             ),
             backgroundColor: AppColors.white,
-            body: Column(
-              children: [
-                Expanded(
-                  child: Container(width: double.infinity, child: getFeed()),
-                ),
-              ],
+            body: Consumer<FeedProvider>(
+              builder: (BuildContext context, FeedProvider myFeedProvider, Widget? child) {
+                if (!myFeedProvider.areVariablesInitialized) return const CustomAppLoader();
+                return Column(
+                  children: [
+                    Expanded(
+                      child: Container(width: double.infinity, child: getFeed()),
+                    ),
+                  ],
+                );
+              },
             ),
             floatingActionButton: SpeedDial(
               buttonSize: Size(75.0, 75.0),
@@ -105,6 +110,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => AllChatsScreen()))),
+                SpeedDialChild(
+                    child: Icon(Icons.logout, color: Colors.green),
+                    label: "Log Out",
+                    onTap: () {
+                      _authProvider.logOutUser();
+                    }),
               ],
             ),
           ),

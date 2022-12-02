@@ -8,9 +8,11 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/models/post_model.dart';
+import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
 import 'package:harmony_app/services/feed_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
+import 'package:harmony_app/services/shared_preferences_service.dart';
 import 'package:harmony_app/widgets/common_widgets/pop_up_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -21,12 +23,15 @@ import '../screens/share_daily_activity_screen.dart';
 class FeedProvider with ChangeNotifier {
   AuthProvider _authProvider =
   Provider.of<AuthProvider>(Get.context!, listen: false);
+
   Stream<QuerySnapshot<Object?>>? currentSnapshot;
+  FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
+  SharedPreferencesService get _sharedPreferencesService => GetIt.instance<SharedPreferencesService>();
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
   FeedService get _feedService => GetIt.instance<FeedService>();
-
 
   bool isLoading = false;
   bool areVariablesInitialized = false;
@@ -41,10 +46,20 @@ class FeedProvider with ChangeNotifier {
   TextEditingController? artistTextEditingController =
   TextEditingController();
 
-  void initializeVariables() {
+  void initializeVariables() async {
     areVariablesInitialized = false;
+    isLoading = true;
+    notifyListeners();
+    if (_authProvider.currentUserModel == null) {
+      String uid = await _sharedPreferencesService.getUserUid();
+      var userDoc = await _firestoreService.retrieveUserFromFirestore(uid: uid);
+      UserModel tempUserModel = UserModel.fromJson(userDoc);
+      _authProvider.setCurrentUserModel(tempUserModel);
+    }
+    if (_authProvider.currentUserModel!.dailyNotifStatus) {
+      scheduleNotification();
+    }
     isLoading = false;
-
     areVariablesInitialized = true;
     notifyListeners();
   }
