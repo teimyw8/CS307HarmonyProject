@@ -116,7 +116,7 @@ class _CreatePostState extends State<CreatePost> {
                             items: optionsSpotify.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: Text(value),
+                     d           child: Text(value),
                               );
                             }).toList(),
                             onChanged:  (String? value) {
@@ -165,7 +165,7 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: 7,
+          itemCount: 20,
           itemBuilder: (context, index) {
             return Card(
               child: InkWell(
