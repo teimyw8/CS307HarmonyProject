@@ -22,7 +22,8 @@ exports.sendNewMessageNotification = functions.https.onCall(
             body: body,
           },
           data: {
-            body: body,
+            click_action: "FLUTTER_NOTIFICATION_CLICK",
+            type: "message",
           },
         };
         fcm.sendToDevice(token, payload)
@@ -51,6 +52,10 @@ exports.sendFriendRequestNotification = functions.https.onCall(
           notification: {
             title: title,
             body: body,
+          },
+          data: {
+            click_action: "FLUTTER_NOTIFICATION_CLICK",
+            type: "friendRequest",
           },
         };
         fcm.sendToDevice(token, payload)

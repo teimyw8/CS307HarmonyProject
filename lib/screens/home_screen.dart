@@ -33,32 +33,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   FirestoreService get _firestoreService => GetIt.instance<FirestoreService>();
   final FeedProvider _feedProvider =
-
       Provider.of<FeedProvider>(Get.context!, listen: false);
   final AuthProvider _authProvider =
-  Provider.of<AuthProvider>(Get.context!, listen: false);
-
+      Provider.of<AuthProvider>(Get.context!, listen: false);
 
   @override
   void initState() {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      var data = message.data;
-      print(data);
-
-/*      if (message.data['type'] == 'chat') {
-        Navigator.pushNamed(context, '/notiofication',
-            arguments: ChatArguments(notification);
-      }*/
-    });
     Future.delayed(Duration(seconds: 0), () {
       _feedProvider.initializeVariables();
     });
     super.initState();
 
-    if(_authProvider.currentUserModel!.dailyNotifStatus){
+    if (_authProvider.currentUserModel!.dailyNotifStatus) {
       _feedProvider.scheduleNotification();
     }
-
   }
 
   @override
@@ -91,8 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
             body: Column(
               children: [
                 Expanded(
-                  child: Container(
-                       width: double.infinity, child: getFeed()),
+                  child: Container(width: double.infinity, child: getFeed()),
                 ),
               ],
             ),
@@ -105,24 +92,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 SpeedDialChild(
                     child: Icon(Icons.add, color: Colors.green),
                     label: "Create Post",
-                    onTap: () =>
-                        Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (context) => CreatePost()))
-                ),
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CreatePost()))),
                 SpeedDialChild(
                     child: Icon(Icons.music_note, color: Colors.green),
                     label: "Share Daily Song",
-                    onTap: () => _feedProvider.activityTimeCheck(context)
-                ),
+                    onTap: () => _feedProvider.activityTimeCheck(context)),
                 SpeedDialChild(
                     child: Icon(Icons.chat, color: Colors.green),
                     label: "Chats",
-                    onTap: () =>
-                        Navigator.push(context,
-                            MaterialPageRoute(
-                                builder: (context) => AllChatsScreen()))
-                ),
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AllChatsScreen()))),
               ],
             ),
           ),
@@ -138,7 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
         //add your UID to friends list locally for the querry
         //limitation of firestore querying, this is a work around
         List<dynamic> uidList = myFeedProvider.listOfUsers();
-
 
         //debugPrint("inside of home_screen" + myAuthProvider.currentUserModel.toString());
         return Column(
@@ -165,9 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   List<PostModel> posts = snapshot.data!.docs
-                      .map((doc) =>
-                      PostModel.fromJson(
-                          doc.data() as Map<String, dynamic>)).toList();
+                      .map((doc) => PostModel.fromJson(
+                          doc.data() as Map<String, dynamic>))
+                      .toList();
                   //sort the List in order to get chronological order
                   //posts.sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
@@ -179,150 +160,134 @@ class _HomeScreenState extends State<HomeScreen> {
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         children: postsFiltered
-                            .map((e) =>
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                  color: AppColors.grey40,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      SizedBox(
-                                        width: 8.w,
-                                      ),
-                                      Text(
-                                        e.username,
-                                        style: AppTextStyles.headline(),
-                                        textScaleFactor: 1.3,
-                                      ),
-                                      Spacer(),
-                                      Text(
-                                        "${DateTime
-                                            .parse(e.dateTime
-                                            .toDate()
-                                            .toString())
-                                            .year}-${DateTime
-                                            .parse(e.dateTime
-                                            .toDate()
-                                            .toString())
-                                            .month}-${DateTime
-                                            .parse(e.dateTime
-                                            .toDate()
-                                            .toString())
-                                            .day}  ${DateTime
-                                            .parse(e.dateTime
-                                            .toDate()
-                                            .toString())
-                                            .hour}:${DateTime
-                                            .parse(
-                                            e.dateTime.toDate().toString())
-                                            .minute}",
-                                        style: AppTextStyles.footNote(),
-                                      ),
-                                      SizedBox(
-                                        width: 4.w,
-                                      ),
-                                    ],
+                            .map((e) => Card(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color: AppColors.grey40,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  mainDisplay(e),
-                                  Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      FutureBuilder(
-                                          future: _feedProvider.isLiked(
-                                              e.uid, e.dateTime),
-                                          builder: (BuildContext context,
-                                              AsyncSnapshot<
-                                                  bool> snapshot) {
-                                            if (snapshot.connectionState ==
-                                                "waiting") {
-                                              return IconButton(
-                                                icon: Icon(Icons
-                                                    .thumb_up_alt_outlined),
-                                                onPressed: () {
-                                                  _feedProvider.handleLikes(
-                                                      e.uid, e.dateTime);
-                                                  setState(() {});
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          SizedBox(
+                                            width: 8.w,
+                                          ),
+                                          Text(
+                                            e.username,
+                                            style: AppTextStyles.headline(),
+                                            textScaleFactor: 1.3,
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            "${DateTime.parse(e.dateTime.toDate().toString()).year}-${DateTime.parse(e.dateTime.toDate().toString()).month}-${DateTime.parse(e.dateTime.toDate().toString()).day}  ${DateTime.parse(e.dateTime.toDate().toString()).hour}:${DateTime.parse(e.dateTime.toDate().toString()).minute}",
+                                            style: AppTextStyles.footNote(),
+                                          ),
+                                          SizedBox(
+                                            width: 4.w,
+                                          ),
+                                        ],
+                                      ),
+                                      mainDisplay(e),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          FutureBuilder(
+                                              future: _feedProvider.isLiked(
+                                                  e.uid, e.dateTime),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot<bool>
+                                                      snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    "waiting") {
+                                                  return IconButton(
+                                                    icon: Icon(Icons
+                                                        .thumb_up_alt_outlined),
+                                                    onPressed: () {
+                                                      _feedProvider.handleLikes(
+                                                          e.uid, e.dateTime);
+                                                      setState(() {});
+                                                    },
+                                                  );
+                                                } else {
+                                                  if (snapshot.data ??
+                                                      false == true) {
+                                                    return IconButton(
+                                                      icon:
+                                                          Icon(Icons.thumb_up),
+                                                      iconSize: 19.0,
+                                                      onPressed: () {
+                                                        _feedProvider
+                                                            .handleLikes(e.uid,
+                                                                e.dateTime);
+                                                        //setState(() {});
+                                                      },
+                                                    );
+                                                  } else {
+                                                    return IconButton(
+                                                      icon: Icon(Icons
+                                                          .thumb_up_alt_outlined),
+                                                      onPressed: () {
+                                                        _feedProvider
+                                                            .handleLikes(e.uid,
+                                                                e.dateTime);
+                                                        //setState(() {});
+                                                      },
+                                                    );
+                                                  }
+                                                }
+                                              }),
+                                          FutureBuilder(
+                                            future: _feedProvider.getLikes(
+                                                e.uid, e.dateTime),
+                                            builder: (BuildContext context,
+                                                AsyncSnapshot<String>
+                                                    snapshot) {
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.done) {
+                                                print("done");
+                                                return Text(snapshot.data ?? "",
+                                                    style: TextStyle(
+                                                        fontSize: 20));
+                                              }
+                                              return Text("",
+                                                  style:
+                                                      TextStyle(fontSize: 20));
+                                            },
+                                          ),
+                                          Spacer(),
+                                          if (myAuthProvider
+                                                  .currentUserModel!.uid !=
+                                              e.uid)
+                                            GestureDetector(
+                                                onTap: () {
+                                                  print(e);
+                                                  ChatProvider chatProvider =
+                                                      Provider.of<ChatProvider>(
+                                                          Get.context!,
+                                                          listen: false);
+                                                  chatProvider
+                                                      .showPostResponseDialog(
+                                                          postModel: e);
                                                 },
-                                              );
-                                            }
-                                            else {
-                                              if (snapshot.data ??
-                                                  false == true) {
-                                                return IconButton(
-                                                  icon: Icon(
-                                                      Icons.thumb_up),
-                                                  iconSize: 19.0,
-                                                  onPressed: () {
-                                                    _feedProvider
-                                                        .handleLikes(
-                                                        e.uid, e.dateTime);
-                                                    //setState(() {});
-                                                  },
-                                                );
-                                              }
-                                              else {
-                                                return IconButton(
-                                                  icon: Icon(Icons
-                                                      .thumb_up_alt_outlined),
-                                                  onPressed: () {
-                                                    _feedProvider
-                                                        .handleLikes(
-                                                        e.uid, e.dateTime);
-                                                    //setState(() {});
-                                                  },
-                                                );
-                                              }
-                                            }
-                                          }
+                                                child: Icon(Icons.message)),
+                                          SizedBox(
+                                            width: 10.w,
+                                          )
+                                        ],
                                       ),
-                                      FutureBuilder(
-                                        future: _feedProvider.getLikes(
-                                            e.uid, e.dateTime),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<
-                                                String> snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.done) {
-                                            print("done");
-                                            return Text(snapshot.data ?? "",
-                                                style: TextStyle(
-                                                    fontSize: 20));
-                                          }
-                                          return Text("", style: TextStyle(
-                                              fontSize: 20));
-                                        },
+                                      const Divider(
+                                        color: Colors.grey,
                                       ),
-                                      Spacer(),
-                                      if (myAuthProvider.currentUserModel!.uid != e.uid)
-                                      GestureDetector(
-                                          onTap: () {
-                                            print(e);
-                                            ChatProvider chatProvider = Provider
-                                                .of<ChatProvider>(
-                                                Get.context!, listen: false);
-                                            chatProvider.showPostResponseDialog(postModel: e);
-                                          },
-                                          child: Icon(Icons.message)),
-                                      SizedBox(width: 10.w,)
-
+                                      Center(child: handleBottomText(e)),
                                     ],
                                   ),
-                                  const Divider(
-                                    color: Colors.grey,
-                                  ),
-                                  Center(
-                                      child: handleBottomText(e)
-                                  ),
-                                ],
-                              ),
-                            ))
+                                ))
                             .toList()),
                   );
                 }),
@@ -341,11 +306,13 @@ class _HomeScreenState extends State<HomeScreen> {
           subtitle: Text(e.artist),
         ),
       );
-    }
-    else {
+    } else {
       return Container(
         child: ListTile(
-          title: Text(e.text, textScaleFactor: 1.2,),
+          title: Text(
+            e.text,
+            textScaleFactor: 1.2,
+          ),
         ),
       );
     }
@@ -353,13 +320,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   handleBottomText(e) {
     if (e.isPost == 'false') {
-      return Text(e.text,
-          style: AppTextStyles.headline());
-    }
-    else {
-      return Text("",
-          style: AppTextStyles.headline());
+      return Text(e.text, style: AppTextStyles.headline());
+    } else {
+      return Text("", style: AppTextStyles.headline());
     }
   }
-
 }

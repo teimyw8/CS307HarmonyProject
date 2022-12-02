@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import 'package:harmony_app/providers/edit_profile_provider.dart';
 import 'package:harmony_app/providers/friend_screen_provider.dart';
 import 'package:harmony_app/providers/friends_list_provider.dart';
 import 'package:harmony_app/providers/feed_provider.dart';
+import 'package:harmony_app/screens/all_chats_screen.dart';
 import 'package:harmony_app/screens/login_screen.dart';
 import 'package:harmony_app/services/auth_service.dart';
 import 'package:harmony_app/services/chat_service.dart';
@@ -48,8 +50,14 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
 
   // This widget is the root of your application.
   @override
