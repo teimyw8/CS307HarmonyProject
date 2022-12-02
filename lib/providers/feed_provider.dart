@@ -66,7 +66,8 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true");
+              isPost: "true",
+              likes: []);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -86,7 +87,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true");
+              isPost: "true", likes: []);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -106,7 +107,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true",);
+              isPost: "true", likes: [],);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -126,7 +127,7 @@ class FeedProvider with ChangeNotifier {
               username: _authProvider.currentUserModel!.username,
               uid: _authProvider.currentUserModel!.uid,
               dateTime: Timestamp.now(),
-              isPost: "true");
+              isPost: "true", likes: []);
         }
       } on FirestoreException catch (e) {
         debugPrint('failed addPostoFirestore');
@@ -149,8 +150,7 @@ class FeedProvider with ChangeNotifier {
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
             isPost: "false",
-            likes: []
-            isPost: "false",
+            likes: [],
             album: "",
             playlist: "",
             image: "",

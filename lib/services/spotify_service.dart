@@ -124,11 +124,9 @@ class SpotifyService {
     final response = await http.get(
         Uri.parse('https://api.spotify.com/v1/search?q=$query&type=track'),
         headers: {'Authorization': 'Bearer $secret'});
-    print(response);
 //    print(jsonDecode(response.body)['artists']['items']);
 
     List testList = jsonDecode(response.body)['tracks']['items'];
-    print(testList.toString());
     List<TopSongModel> artistList =
         testList.map((i) => TopSongModel.fromJson(i)).toList();
 
@@ -161,7 +159,6 @@ class SpotifyService {
   }
 
   static Future<List<AlbumModel>> searchAlbum(String query) async {
-    print("album");
 
     if (secret == "") {
       secret = await SpotifySdk.getAccessToken(

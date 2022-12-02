@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -174,13 +175,24 @@ class _CreatePostState extends State<CreatePost> {
                 child: Row(
                   children: [
                     const SizedBox(width: 15),
-                    CircleAvatar(
-                      radius: 20,
-                      child: CircleAvatar(
+                    if (list[index].image.isNotEmpty)
+                      CircleAvatar(
                         radius: 20,
-                        backgroundImage: NetworkImage(list[index].image[0]['url']),
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                        ),
                       ),
-                    ),
+
+                    if (list[index].image.isEmpty)
+                      CircleAvatar(
+                        radius: 20,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                        ),
+                      ),
+
                     const SizedBox(width: 20),
                     InkWell(
                       child: Text(list[index].name),
@@ -216,13 +228,24 @@ class _CreatePostState extends State<CreatePost> {
                   child: Row(
                     children: [
                       const SizedBox(width: 15),
-                      CircleAvatar(
-                        radius: 20,
-                        child: CircleAvatar(
+
+                      if (list[index].image.isNotEmpty)
+                        CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(list[index].image),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(list[index].image),
+                          ),
                         ),
-                      ),
+
+                      if (list[index].image.isEmpty)
+                        CircleAvatar(
+                          radius: 20,
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                          ),
+                        ),
                       const SizedBox(width: 20),
                       InkWell(
                           child: Text(list[index].name),
@@ -259,13 +282,23 @@ class _CreatePostState extends State<CreatePost> {
                   child: Row(
                     children: [
                       const SizedBox(width: 15),
-                      CircleAvatar(
-                        radius: 20,
-                        child: CircleAvatar(
+                      if (list[index].image.isNotEmpty)
+                        CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          ),
                         ),
-                      ),
+
+                      if (list[index].image.isEmpty)
+                        CircleAvatar(
+                          radius: 20,
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                          ),
+                        ),
                       const SizedBox(width: 20),
                       InkWell(
                           child: Text(
@@ -305,13 +338,23 @@ class _CreatePostState extends State<CreatePost> {
                   child: Row(
                     children: [
                       const SizedBox(width: 15),
-                      CircleAvatar(
-                        radius: 20,
-                        child: CircleAvatar(
+                      if (list[index].image.isNotEmpty)
+                        CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          ),
                         ),
-                      ),
+
+                      if (list[index].image.isEmpty)
+                        CircleAvatar(
+                          radius: 20,
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                          ),
+                        ),
                       const SizedBox(width: 20),
                       InkWell(
                           child: Expanded(

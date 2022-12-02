@@ -282,7 +282,10 @@ class _HomeScreenState extends State<HomeScreen> {
         if ((e.playlist != null))
           Column(
             children: [
-              Text(e.playlist),
+              Text(
+                  e.playlist,
+                  style: AppTextStyles.headline(),
+              ),
             ]
           )
       ],

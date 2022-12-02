@@ -20,7 +20,6 @@ class FeedService {
       required String artist,
       required String isPost,
         required List likes,
-      required String isPost,
       required String album,
       required String playlist,
       required String image,
@@ -35,8 +34,7 @@ class FeedService {
         "song": song,
         "artist": artist,
         "isPost": isPost,
-        "likes": likes
-        "isPost": isPost,
+        "likes": likes,
         "album": album,
         "playlist": playlist,
         "image": image
