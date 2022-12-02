@@ -191,13 +191,24 @@ class _PublicRatingState extends State<PublicRating> {
                   child: Row(
                     children: [
                       const SizedBox(width: 15),
-                      CircleAvatar(
-                        radius: 20,
-                        child: CircleAvatar(
+                      if (list[index].image.isNotEmpty)
+                        CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          ),
                         ),
-                      ),
+
+                      if (list[index].image.isEmpty)
+                        CircleAvatar(
+                          radius: 20,
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                          ),
+                        ),
+
                       const SizedBox(width: 20),
                       InkWell(
                           child: Text(list[index].name),
@@ -220,7 +231,7 @@ class _PublicRatingState extends State<PublicRating> {
 
     } else if (option == "Song" && query.isNotEmpty) {
 
-      List<TopArtistModel> list = await  SpotifyService.searchArtist(query);
+      List<TopSongModel> list = await  SpotifyService.searchSong(query);
 
       return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 15),
@@ -233,18 +244,29 @@ class _PublicRatingState extends State<PublicRating> {
                   child: Row(
                     children: [
                       const SizedBox(width: 15),
-                      CircleAvatar(
-                        radius: 20,
-                        child: CircleAvatar(
+
+                      if (list[index].image.isNotEmpty)
+                        CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(list[index].image),
+                          ),
                         ),
-                      ),
+
+                      if (list[index].image.isEmpty)
+                        CircleAvatar(
+                          radius: 20,
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                          ),
+                        ),
                       const SizedBox(width: 20),
                       InkWell(
                           child: Text(list[index].name),
                           onTap: () {
-                            image = list[index].image[0]['url'];
+                            image = list[index].image;
                             _feedProvider.spotifyTextEditingController.text = list[index].name;
                           }
                       ),
@@ -252,8 +274,9 @@ class _PublicRatingState extends State<PublicRating> {
                     ],
                   ),
                   onTap: () {
-                    image = list[index].image[0]['url'];
+                    image = list[index].image;
                     _feedProvider.spotifyTextEditingController.text = list[index].name;
+                    artist = list[index].artist;
                   },
                 )
             );
@@ -262,8 +285,8 @@ class _PublicRatingState extends State<PublicRating> {
 
     } else if (option == "Album" && query.isNotEmpty) {
 
-      List<TopArtistModel> list = await  SpotifyService.searchArtist(query);
-
+      List<AlbumModel> list = await  SpotifyService.searchAlbum(query);
+      print("album");
       return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
@@ -275,16 +298,29 @@ class _PublicRatingState extends State<PublicRating> {
                   child: Row(
                     children: [
                       const SizedBox(width: 15),
-                      CircleAvatar(
-                        radius: 20,
-                        child: CircleAvatar(
+                      if (list[index].image.isNotEmpty)
+                        CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(list[index].image[0]['url']),
+                          ),
                         ),
-                      ),
+
+                      if (list[index].image.isEmpty)
+                        CircleAvatar(
+                          radius: 20,
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage("https://i.scdn.co/image/ab67616d00001e0299760923cfbfe739fb870817"),
+                          ),
+                        ),
                       const SizedBox(width: 20),
                       InkWell(
-                          child: Text(list[index].name),
+                          child: Text(
+                            list[index].name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           onTap: () {
                             image = list[index].image[0]['url'];
                             _feedProvider.spotifyTextEditingController.text = list[index].name;
@@ -296,6 +332,7 @@ class _PublicRatingState extends State<PublicRating> {
                   onTap: () {
                     image = list[index].image[0]['url'];
                     _feedProvider.spotifyTextEditingController.text = list[index].name;
+                    artist = list[index].artist;
                   },
                 )
             );
