@@ -264,8 +264,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               ),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Enable Daily Notifications                                  "),
+                                Text("Enable Daily Notifications"),
                                 FutureBuilder(
                                 future: _editProfileProvider.getDailyNotifStatus(),
                                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -275,9 +276,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       value: b,
                                       activeColor: Colors.green,
                                       onChanged: (bool value) {
-                                        _authProvider.swapDailyNotification(b);
-                                        setState(() {});
-                                        _authProvider.updateCurrentUser();
+                                    _authProvider.swapDailyNotification(b);
+                                    setState(() {});
+                                    _authProvider.updateCurrentUser();
                                       },
                                     );
                                   }
@@ -287,8 +288,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ]
                               ),
                               Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Enable Chat Notifications                                  "),
+                                    Text("Enable Chat Notifications"),
                                     FutureBuilder(
                                       future: _editProfileProvider.getChatNotifStatus(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -310,8 +312,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ]
                               ),
                               Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Enable Friend Request Notifications                "),
+                                    Text("Enable Friend Request Notifications"),
                                     FutureBuilder(
                                       future: _editProfileProvider.getFRNotifStatus(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot) {
