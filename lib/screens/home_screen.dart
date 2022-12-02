@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
@@ -192,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ],
                                       ),
+                                      displayRatings(e),
                                       PostDisplaySpotify(e),
                                       DailyDisplay(e),
                                       DailyBottomText(e)
@@ -291,6 +293,27 @@ class _HomeScreenState extends State<HomeScreen> {
       return Text(e.text, style: AppTextStyles.headline());
     } else {
       return const SizedBox.shrink();
+    }
+  }
+
+  displayRatings(e) {
+    var l = 2.0;
+    if (l <= 5.0) {
+      return  RatingBar.builder(
+        initialRating: l,
+        minRating: 0,
+        ignoreGestures: true,
+        direction: Axis.horizontal,
+        allowHalfRating: true,
+        itemCount: 5,
+        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+        itemBuilder: (context, _) => Icon(
+          Icons.star,
+          color: Colors.green,
+        ),
+        onRatingUpdate: (rtg) {
+        },
+      );
     }
   }
 }
