@@ -134,7 +134,12 @@ class _CreatePostState extends State<CreatePost> {
                     future: searchSpotifyResults(option, _feedProvider.spotifyTextEditingController.text.trim()),
                     builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
                       if (snapshot.hasData) {
-                        return snapshot.data!;
+                        return Container(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: snapshot.data!,
+                          ),
+                        );
                       } else {
                         return const SizedBox(
                           width: 60,
@@ -155,28 +160,40 @@ class _CreatePostState extends State<CreatePost> {
  Future<Widget> searchSpotifyResults(String option, String query) async{
 
     if (option == "Artist" && query.isNotEmpty) {
-      print("before spotify call");
       List<TopArtistModel> list = await  SpotifyService.searchArtist(query);
-      print("after spotify call");
       return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: 10,
+          itemCount: 7,
           itemBuilder: (context, index) {
             return Card(
-              child: Row(
-                children: [
-                  //Image(image: NetworkImage(list[index].image.toString()),),
-                  InkWell(
-                    child: Text(list[index].name),
-                    onTap: () {
-                      image = list[index].image.toString();
-                      _feedProvider.spotifyTextEditingController.text = list[index].name;
-                    }
-                  ),
-                  const SizedBox(height: 25),
-                ],
+              child: InkWell(
+                child: Row(
+                  children: [
+                    const SizedBox(width: 15),
+                    CircleAvatar(
+                      radius: 20,
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(list[index].image[0]['url']),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    InkWell(
+                      child: Text(list[index].name),
+                      onTap: () {
+                        image = list[index].image[0]['url'];
+                        _feedProvider.spotifyTextEditingController.text = list[index].name;
+                      }
+                    ),
+                    const SizedBox(height: 50),
+                  ],
+                ),
+                onTap: () {
+                  image = list[index].image[0]['url'];
+                  _feedProvider.spotifyTextEditingController.text = list[index].name;
+                },
               )
             );
           }
@@ -190,23 +207,35 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: list.length,
+          itemCount: 7,
           itemBuilder: (context, index) {
             return Card(
-                child: Row(
-                  children: [
-                    //Image(image: NetworkImage(list[index].image.toString()),),
-                    InkWell(
-                        child: Text(list[index].name),
-                        onTap: () {
-                          //album = list[index].album;
-                          //artist = list[index].artist;
-                          image = list[index].image.toString();
-                          _feedProvider.spotifyTextEditingController.text = list[index].name;
-                        }
-                    ),
-                    const SizedBox(height: 25),
-                  ],
+                child: InkWell(
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 15),
+                      CircleAvatar(
+                        radius: 20,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      InkWell(
+                          child: Text(list[index].name),
+                          onTap: () {
+                            image = list[index].image[0]['url'];
+                            _feedProvider.spotifyTextEditingController.text = list[index].name;
+                          }
+                      ),
+                      const SizedBox(height: 50),
+                    ],
+                  ),
+                  onTap: () {
+                    image = list[index].image[0]['url'];
+                    _feedProvider.spotifyTextEditingController.text = list[index].name;
+                  },
                 )
             );
           }
@@ -220,22 +249,35 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: list.length,
+          itemCount: 7,
           itemBuilder: (context, index) {
             return Card(
-                child: Row(
-                  children: [
-                    //Image(image: NetworkImage(list[index].image.toString()),),
-                    InkWell(
-                        child: Text(list[index].name),
-                        onTap: () {
-                          //artist = list[index].artist;
-                          image = list[index].image.toString();
-                          _feedProvider.spotifyTextEditingController.text = list[index].name;
-                        }
-                    ),
-                    const SizedBox(height: 25),
-                  ],
+                child: InkWell(
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 15),
+                      CircleAvatar(
+                        radius: 20,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      InkWell(
+                          child: Text(list[index].name),
+                          onTap: () {
+                            image = list[index].image[0]['url'];
+                            _feedProvider.spotifyTextEditingController.text = list[index].name;
+                          }
+                      ),
+                      const SizedBox(height: 50),
+                    ],
+                  ),
+                  onTap: () {
+                    image = list[index].image[0]['url'];
+                    _feedProvider.spotifyTextEditingController.text = list[index].name;
+                  },
                 )
             );
           }
@@ -249,21 +291,35 @@ class _CreatePostState extends State<CreatePost> {
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: list.length,
+          itemCount: 7,
           itemBuilder: (context, index) {
             return Card(
-                child: Row(
-                  children: [
-                    //Image(image: NetworkImage(list[index].image.toString()),),
-                    InkWell(
-                        child: Text(list[index].name),
-                        onTap: () {
-                          image = list[index].image.toString();
-                          _feedProvider.spotifyTextEditingController.text = list[index].name;
-                        }
-                    ),
-                    const SizedBox(height: 25),
-                  ],
+                child: InkWell(
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 15),
+                      CircleAvatar(
+                        radius: 20,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(list[index].image[0]['url']),
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      InkWell(
+                          child: Text(list[index].name),
+                          onTap: () {
+                            image = list[index].image[0]['url'];
+                            _feedProvider.spotifyTextEditingController.text = list[index].name;
+                          }
+                      ),
+                      const SizedBox(height: 50),
+                    ],
+                  ),
+                  onTap: () {
+                    image = list[index].image[0]['url'];
+                    _feedProvider.spotifyTextEditingController.text = list[index].name;
+                  },
                 )
             );
           }
