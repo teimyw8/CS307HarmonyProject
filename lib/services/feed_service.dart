@@ -157,9 +157,11 @@ class FeedService {
     int count = 0;
     for (int i = 0; i < userDoc.size; i++) {
       if(userDoc.docs[i].get('dateTime').toDate().day == DateTime.now().day && userDoc.docs[i].get('dateTime').toDate().month == DateTime.now().month && userDoc.docs[i].get('dateTime').toDate().year == DateTime.now().year) {
+        print(userDoc.docs[i].get('dateTime').toDate());
         count++;
       }
     }
+
 
     return count == 1;
   }

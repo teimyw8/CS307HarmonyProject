@@ -384,13 +384,14 @@ class FeedProvider with ChangeNotifier {
       showErrorDialog(
           "You have already posted your song of the day. Check back again tomorrow!");
     }
-
-    if (await _feedService.checkTime()) {
-      return Navigator.push(
-          context, MaterialPageRoute(builder: (context) => DailyActivity()));
-    } else {
-      showErrorDialog(
-          "It is not time for the daily activity yet! Check back again soon!");
+    else {
+      if (await _feedService.checkTime()) {
+        return Navigator.push(
+            context, MaterialPageRoute(builder: (context) => DailyActivity()));
+      } else {
+        showErrorDialog(
+            "It is not time for the daily activity yet! Check back again soon!");
+      }
     }
   }
 
