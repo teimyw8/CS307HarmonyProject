@@ -187,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         shrinkWrap: true,
                         children: postsFiltered
                             .map((e) => Card(
+                                  color: getColor(e),
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(
                                       color: AppColors.grey40,
@@ -315,13 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   DailyDisplay(e) {
     if (e.isPost == "false") {
-      return Container(
-        child: ListTile(
-          leading: Icon(Icons.album),
-          title: Text(e.song),
-          subtitle: Text(e.artist),
-        ),
-      );
+      return Text("");
     } else {
       return Container(
         child: ListTile(
@@ -455,5 +450,13 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     return Text("");
+  }
+
+  getColor(e) {
+    bool b = e.isPost.toLowerCase() == 'true';
+    if (!b) {
+      return Colors.yellow;
+    }
+    return Colors.white;
   }
 }

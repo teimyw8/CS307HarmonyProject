@@ -242,27 +242,32 @@ class FeedProvider with ChangeNotifier {
     }
   }
 
-  Future<void> createDailyPost() async {
+  Future<void> createDailyPost(String image, String album, String artist) async {
     formKeyDaily.currentState!.save();
 
     try {
-      print(textEditingController!.text);
+      debugPrint(textEditingController!.text);
       if (formKeyDaily.currentState!.validate()) {
+        print("erljk !");
+        print(image);
+        print(spotifyTextEditingController.text);
+        print(artist);
+        print(album);
+        print(textEditingController!.text);
         await _feedService.addPostToFirestore(
-            song: songTextEditingController!.text,
-            artist: artistTextEditingController!.text,
-            text: "Here is my song of the day!",
+            image: image,
+            song: spotifyTextEditingController.text,
+            artist: artist,
+            album: album,
+            playlist: "",
+            text: _authProvider.currentUserModel!.username + "'s Song of the Day!",
             username: _authProvider.currentUserModel!.username,
             uid: _authProvider.currentUserModel!.uid,
             dateTime: Timestamp.now(),
-            isPost: "false",
-            likes: [],
-            album: "",
-            playlist: "",
-            image: "", rating: 10.0,
-        );
+            isPost: "false", rating: 10.0, likes: []);
       }
     } on FirestoreException catch (e) {
+      debugPrint('failed addPostoFirestore');
       showErrorDialog(e.cause);
     }
   }

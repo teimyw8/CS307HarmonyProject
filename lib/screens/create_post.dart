@@ -72,6 +72,10 @@ class _CreatePostState extends State<CreatePost> {
                         //we need to send to createPost() the following
                         //album,artist --> these are sent but not always have values
                         //we always send image and the option
+                        print(image);
+                        print(album);
+                        print(artist);
+                        print("eeqwr");
                         _feedProvider.createPost(option, image, album, artist, 10.0);
                         _feedProvider.spotifyTextEditingController.clear();
                         _feedProvider.textEditingController?.clear();
