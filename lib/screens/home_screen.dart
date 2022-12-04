@@ -302,13 +302,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
         ///This is for when the post is for a playlist
         if ((e.playlist != ""))
-          Column(
-            children: [
-              Text(
-                  e.playlist,
-                  style: AppTextStyles.headline(),
-              ),
-            ]
+          Expanded(
+            child: Text(
+                e.playlist,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+                style: AppTextStyles.headline(),
+            ),
           )
       ],
     );
