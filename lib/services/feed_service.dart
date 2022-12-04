@@ -152,4 +152,16 @@ class FeedService {
     }
   }
 
+  Future<bool> alreadyPosted(String uid) async {
+    var userDoc = await firebaseFirestore.collection('posts').where('uid', isEqualTo: uid).where("isPost", isEqualTo: "false").get();
+    int count = 0;
+    for (int i = 0; i < userDoc.size; i++) {
+      if(userDoc.docs[i].get('dateTime').toDate().day == DateTime.now().day && userDoc.docs[i].get('dateTime').toDate().month == DateTime.now().month && userDoc.docs[i].get('dateTime').toDate().year == DateTime.now().year) {
+        count++;
+      }
+    }
+
+    return count == 1;
+  }
+
 }

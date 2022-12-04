@@ -10,6 +10,7 @@ import 'package:harmony_app/helpers/custom_exceptions.dart';
 import 'package:harmony_app/models/post_model.dart';
 import 'package:harmony_app/models/user_model.dart';
 import 'package:harmony_app/providers/auth_provider.dart';
+import 'package:harmony_app/screens/friends_list_screen.dart';
 import 'package:harmony_app/services/feed_service.dart';
 import 'package:harmony_app/services/firestore_service.dart';
 import 'package:harmony_app/services/shared_preferences_service.dart';
@@ -377,6 +378,13 @@ class FeedProvider with ChangeNotifier {
   }
 
   activityTimeCheck(BuildContext context) async {
+    final AuthProvider _authProvider =
+    Provider.of<AuthProvider>(Get.context!, listen: false);
+    if(await _feedService.alreadyPosted(_authProvider.currentUserModel!.uid)) {
+      showErrorDialog(
+          "You have already posted your song of the day. Check back again tomorrow!");
+    }
+
     if (await _feedService.checkTime()) {
       return Navigator.push(
           context, MaterialPageRoute(builder: (context) => DailyActivity()));

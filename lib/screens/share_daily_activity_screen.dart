@@ -41,7 +41,7 @@ class _CreatePostState extends State<DailyActivity> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(
-        title: "Create post",
+        title: "Share Daily Song",
         needBackArrow: true,
       ),
       body: Column(
