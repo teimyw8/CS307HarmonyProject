@@ -267,6 +267,7 @@ class _CreatePostState extends State<CreatePost> {
                             onTap: () {
                               image = list[index].image;
                               _feedProvider.spotifyTextEditingController.text = list[index].name;
+                              artist = list[index].artist;
                             }
                         ),
                       ),
@@ -286,7 +287,6 @@ class _CreatePostState extends State<CreatePost> {
     } else if (option == "Album" && query.isNotEmpty) {
 
       List<AlbumModel> list = await  SpotifyService.searchAlbum(query);
-      print("album");
       return ListView.builder(
           padding: EdgeInsets.symmetric(vertical: 15),
           scrollDirection: Axis.vertical,
@@ -326,6 +326,7 @@ class _CreatePostState extends State<CreatePost> {
                             onTap: () {
                               image = list[index].image[0]['url'];
                               _feedProvider.spotifyTextEditingController.text = list[index].name;
+                              artist = list[index].artist;
                             }
                         ),
                       ),
@@ -335,6 +336,7 @@ class _CreatePostState extends State<CreatePost> {
                   onTap: () {
                     image = list[index].image[0]['url'];
                     _feedProvider.spotifyTextEditingController.text = list[index].name;
+                    print(list[index].artist);
                     artist = list[index].artist;
                   },
                 )

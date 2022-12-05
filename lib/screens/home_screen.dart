@@ -222,7 +222,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       displayRatings(e),
                                       PostDisplaySpotify(e),
                                       DailyDisplay(e),
-
                                       //mainDisplay(e),
                                       showLikes(e, myAuthProvider),
                                       const Divider(
@@ -254,50 +253,65 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         const SizedBox(width: 20,),
-
         ///This is for when the post is for a song
         if ((e.song != "") && (e.artist != "") && (e.album == ""))
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                e.song,
-                style: AppTextStyles.headline(),
-              ),
-              Text(
-                e.artist,
-                style: AppTextStyles.footNote(),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  e.song,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.headline(),
+                ),
+                Text(
+                  e.artist,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.footNote(),
+                ),
+              ],
+            ),
           ),
 
 
         ///Sharing an artist
         if ((e.artist != "") && (e.song == "") && (e.album == ""))
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                e.artist,
-                style: AppTextStyles.headline(),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  e.artist,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.headline(),
+                ),
+              ],
+            ),
           ),
 
         ///sharing an album
         if ((e.artist != "") && (e.song == "") && (e.album != ""))
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                e.album,
-                style: AppTextStyles.headline(),
-              ),
-              Text(
-                e.artist,
-                style: AppTextStyles.footNote(),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  e.album,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.headline(),
+                ),
+                Text(
+                  e.artist,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.footNote(),
+                ),
+              ],
+            ),
           ),
 
         ///This is for when the post is for a playlist
