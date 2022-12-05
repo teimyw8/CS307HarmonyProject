@@ -230,12 +230,18 @@ class _CreatePostState extends State<DailyActivity> {
                           ),
                         ),
                       const SizedBox(width: 20),
-                      InkWell(
-                          child: Text(list[index].name),
-                          onTap: () {
-                            image = list[index].image;
-                            _feedProvider.spotifyTextEditingController.text = list[index].name;
-                          }
+                      Expanded(
+                        child: InkWell(
+                            child: Text(
+                              list[index].name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            onTap: () {
+                              image = list[index].image;
+                              _feedProvider.spotifyTextEditingController.text = list[index].name;
+                            }
+                        ),
                       ),
                       const SizedBox(height: 50),
                     ],
