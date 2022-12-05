@@ -279,6 +279,8 @@ class _PublicRatingState extends State<PublicRating> {
                             onTap: () {
                               image = list[index].image;
                               _feedProvider.spotifyTextEditingController.text = list[index].name;
+                              artist = list[index].artist;
+
                             }
                         ),
                       ),
@@ -338,6 +340,7 @@ class _PublicRatingState extends State<PublicRating> {
                             onTap: () {
                               image = list[index].image[0]['url'];
                               _feedProvider.spotifyTextEditingController.text = list[index].name;
+                              artist = list[index].artist;
                             }
                         ),
                       ),
