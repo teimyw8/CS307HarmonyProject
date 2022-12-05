@@ -147,7 +147,6 @@ class _HistoryPostsState extends State<HistoryPosts> {
     );
   }
 
-
   PostDisplaySpotify(e) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -162,32 +161,80 @@ class _HistoryPostsState extends State<HistoryPosts> {
         ),
         const SizedBox(width: 20,),
         ///This is for when the post is for a song
-        if (!(e.song == null))
-          Column(
-            children: [
-              Text(
-                e.song,
-                style: AppTextStyles.headline(),
-              ),
-              Text(
-                e.artist,
-                style: AppTextStyles.footNote(),
-              ),
-            ],
+        if ((e.song != "") && (e.artist != "") && (e.album == ""))
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  e.song,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.headline(),
+                ),
+                Text(
+                  e.artist,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.footNote(),
+                ),
+              ],
+            ),
+          ),
+
+
+        ///Sharing an artist
+        if ((e.artist != "") && (e.song == "") && (e.album == ""))
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  e.artist,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.headline(),
+                ),
+              ],
+            ),
+          ),
+
+        ///sharing an album
+        if ((e.artist != "") && (e.song == "") && (e.album != ""))
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  e.album,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.headline(),
+                ),
+                Text(
+                  e.artist,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: AppTextStyles.footNote(),
+                ),
+              ],
+            ),
           ),
 
         ///This is for when the post is for a playlist
-        if (!(e.playlist == null))
-          Column(
-              children: [
-                Text(e.playlist),
-              ]
+        if ((e.playlist != ""))
+          Expanded(
+            child: Text(
+              e.playlist,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: AppTextStyles.headline(),
+            ),
           )
-
-        ///This is
       ],
     );
   }
+
 
   DailyDisplay(e) {
     if (e.isPost == "false") {

@@ -232,8 +232,7 @@ class _CreatePostState extends State<DailyActivity> {
                       const SizedBox(width: 20),
                       Expanded(
                         child: InkWell(
-                            child: Text(
-                              list[index].name,
+                            child: Text(list[index].name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
